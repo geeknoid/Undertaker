@@ -1,0 +1,461 @@
+ASSEMBLY TestExe.dll
+  <Module> [TYPE, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Runtime.CompilerServices.RefSafetyRulesAttribute
+      System.Int32
+      System.Runtime.CompilerServices.CompilationRelaxationsAttribute
+      System.Runtime.CompilerServices.RuntimeCompatibilityAttribute
+      System.Boolean
+      System.Diagnostics.DebuggableAttribute
+      System.Diagnostics.DebuggableAttribute.DebuggingModes
+      System.Runtime.Versioning.TargetFrameworkAttribute
+      System.String
+      System.Reflection.AssemblyCompanyAttribute
+      System.Reflection.AssemblyConfigurationAttribute
+      System.Reflection.AssemblyFileVersionAttribute
+      System.Reflection.AssemblyInformationalVersionAttribute
+      System.Reflection.AssemblyProductAttribute
+      System.Reflection.AssemblyTitleAttribute
+      System.Reflection.AssemblyVersionAttribute
+  TestExe.Program [TYPE, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Object
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+      TestExe.Program.<>c
+      TestExe.Program.<>c..cctor()
+      TestExe.Program.<>c..ctor()
+      TestExe.Program.<>c.<Main>b__0_0()
+      TestExe.Program.<>c.<>9
+      TestExe.Program.<>c.<>9__0_0
+  TestExe.Program.Main() [METHOD, ALIVE, ROOT]
+    DIRECTLY REFERENCES
+      TestExe.Program
+      System.Void
+      TestLibrary.AliveClassButDeadMembers
+      System.Type.GetTypeFromHandle(RuntimeTypeHandle)
+      System.Type
+      System.Console.WriteLine(Object)
+      System.Console
+      TestLibrary.AliveClass..ctor()
+      TestLibrary.AliveClass
+      TestLibrary.AliveStruct
+      TestExe.Program.<>c.<>9__0_0
+      TestExe.Program.<>c
+      TestExe.Program.<>c.<>9
+      TestExe.Program.<>c.<Main>b__0_0()
+      TestLibrary.AliveDelegate..ctor(Object, nint)
+      TestLibrary.AliveDelegate
+      TestLibrary.AliveClassAndAliveMembers..ctor()
+      TestLibrary.AliveClassAndAliveMembers
+      TestLibrary.AliveClassAndAliveMembers.AliveMethod()
+      TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(Int32)
+      TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(Int32)
+      TestLibrary.AliveClassAndAliveMembers.AliveField
+      System.Object.ToString()
+      System.Object
+      System.Console.WriteLine(String)
+      System.Console.WriteLine(Int32)
+      TestLibrary.AliveClassAndAliveMembers.AliveNestedType..ctor()
+      TestLibrary.AliveClassAndAliveMembers.AliveNestedType
+      TestLibrary.AliveEnum
+      TestLibrary.MyException
+  TestExe.Program.<>c.<>9__0_0 [FIELD, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestExe.Program.<>c
+      TestExe.Program
+      TestLibrary.AliveDelegate
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+  TestExe.Program.<>c [TYPE, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Object
+      TestExe.Program
+      System.SerializableAttribute
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+      TestExe.Program.<>c..cctor()
+      TestExe.Program.<>c..ctor()
+      TestExe.Program.<>c.<Main>b__0_0()
+      TestExe.Program.<>c.<>9
+      TestExe.Program.<>c.<>9__0_0
+  TestExe.Program.<>c.<>9 [FIELD, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestExe.Program.<>c
+      TestExe.Program
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+      TestExe.Program.<>c..cctor()
+  TestExe.Program.<>c.<Main>b__0_0() [METHOD, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestExe.Program.<>c
+      TestExe.Program
+      System.Void
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+  TestExe.Program.<>c..cctor() [CTOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestExe.Program.<>c
+      TestExe.Program
+      System.Void
+      TestExe.Program.<>c..ctor()
+      TestExe.Program.<>c.<>9
+  TestExe.Program.<>c..ctor() [CTOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestExe.Program.<>c
+      TestExe.Program
+      System.Void
+      System.Object..ctor()
+      System.Object
+    DIRECTLY REFERENCED BY
+      TestExe.Program.<>c..cctor()
+ASSEMBLY System.Private.CoreLib.dll
+  UNPROCESSED ASSEMBLY
+ASSEMBLY TestLibrary.dll
+  TestLibrary.AliveClassButDeadMembers [TYPE, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Object
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+      TestLibrary.AliveClassButDeadMembers.DeadMethod()
+      TestLibrary.AliveClassButDeadMembers..ctor()
+      TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty()
+      TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(Int32)
+      TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()
+      TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(Int32)
+      TestLibrary.AliveClassButDeadMembers._value
+      TestLibrary.AliveClassButDeadMembers.<DeadSimpleProperty>k__BackingField
+      TestLibrary.AliveClassButDeadMembers.DeadField
+      TestLibrary.AliveClassButDeadMembers.DeadNestedType
+      TestLibrary.AliveClassButDeadMembers.DeadNestedType..ctor()
+  TestLibrary.AliveClass..ctor() [CTOR, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClass
+      System.Void
+      System.Object..ctor()
+      System.Object
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+  TestLibrary.AliveClass [TYPE, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Object
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+      TestLibrary.AliveClass..ctor()
+  TestLibrary.AliveStruct [TYPE, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.ValueType
+      System.Runtime.InteropServices.StructLayoutAttribute
+      System.Int32
+      System.Runtime.InteropServices.LayoutKind
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+      TestLibrary.AliveStruct..ctor()
+  TestLibrary.AliveDelegate..ctor(Object, nint) [CTOR, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveDelegate
+      System.Object
+      System.Void
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+  TestLibrary.AliveDelegate [TYPE, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.MulticastDelegate
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+      TestExe.Program.<>c.<>9__0_0
+      TestLibrary.AliveDelegate..ctor(Object, nint)
+      TestLibrary.AliveDelegate.Invoke()
+      TestLibrary.AliveDelegate.BeginInvoke(AsyncCallback, Object)
+      TestLibrary.AliveDelegate.EndInvoke(IAsyncResult)
+  TestLibrary.AliveClassAndAliveMembers..ctor() [CTOR, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+      System.Void
+      System.Object..ctor()
+      System.Object
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+  TestLibrary.AliveClassAndAliveMembers [TYPE, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Object
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+      TestLibrary.AliveClassAndAliveMembers.AliveMethod()
+      TestLibrary.AliveClassAndAliveMembers..ctor()
+      TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()
+      TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(Int32)
+      TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()
+      TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(Int32)
+      TestLibrary.AliveClassAndAliveMembers._value
+      TestLibrary.AliveClassAndAliveMembers.<AliveSimpleProperty>k__BackingField
+      TestLibrary.AliveClassAndAliveMembers.AliveField
+      TestLibrary.AliveClassAndAliveMembers.AliveNestedType
+      TestLibrary.AliveClassAndAliveMembers.AliveNestedType..ctor()
+  TestLibrary.AliveClassAndAliveMembers.AliveMethod() [METHOD, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+      System.Void
+      System.Collections.Generic.List..ctor()
+      System.Collections.Generic.List
+      TestLibrary.GenericTypeArgument
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+  TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(Int32) [ACCESSOR, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+      System.Int32
+      System.Void
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveClassAndAliveMembers.<AliveSimpleProperty>k__BackingField
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+  TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(Int32) [ACCESSOR, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+      System.Int32
+      System.Void
+      TestLibrary.AliveClassAndAliveMembers._value
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+  TestLibrary.AliveClassAndAliveMembers.AliveField [FIELD, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+      System.Int32
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+  TestLibrary.AliveClassAndAliveMembers.AliveNestedType..ctor() [CTOR, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers.AliveNestedType
+      TestLibrary.AliveClassAndAliveMembers
+      System.Void
+      System.Object..ctor()
+      System.Object
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+  TestLibrary.AliveClassAndAliveMembers.AliveNestedType [TYPE, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Object
+      TestLibrary.AliveClassAndAliveMembers
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+      TestLibrary.AliveClassAndAliveMembers.AliveNestedType..ctor()
+  TestLibrary.AliveEnum [TYPE, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Enum
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+  TestLibrary.MyException [TYPE, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Exception
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+      TestLibrary.MyException..ctor()
+  <Module> [TYPE, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Runtime.CompilerServices.RefSafetyRulesAttribute
+      System.Int32
+      System.Runtime.CompilerServices.CompilationRelaxationsAttribute
+      System.Runtime.CompilerServices.RuntimeCompatibilityAttribute
+      System.Boolean
+      System.Diagnostics.DebuggableAttribute
+      System.Diagnostics.DebuggableAttribute.DebuggingModes
+      System.Runtime.Versioning.TargetFrameworkAttribute
+      System.String
+      System.Reflection.AssemblyCompanyAttribute
+      System.Reflection.AssemblyConfigurationAttribute
+      System.Reflection.AssemblyFileVersionAttribute
+      System.Reflection.AssemblyInformationalVersionAttribute
+      System.Reflection.AssemblyProductAttribute
+      System.Reflection.AssemblyTitleAttribute
+      System.Reflection.AssemblyVersionAttribute
+  TestLibrary.AliveStruct..ctor() [CTOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveStruct
+      System.Void
+  TestLibrary.AliveDelegate.Invoke() [METHOD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveDelegate
+      System.Void
+  TestLibrary.AliveDelegate.BeginInvoke(AsyncCallback, Object) [METHOD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveDelegate
+      System.AsyncCallback
+      System.Object
+      System.IAsyncResult
+  TestLibrary.AliveDelegate.EndInvoke(IAsyncResult) [METHOD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveDelegate
+      System.IAsyncResult
+      System.Void
+  TestLibrary.GenericTypeArgument [TYPE, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Object
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveClassAndAliveMembers.AliveMethod()
+      TestLibrary.GenericTypeArgument..ctor()
+  TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty() [ACCESSOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+      System.Int32
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveClassAndAliveMembers.<AliveSimpleProperty>k__BackingField
+  TestLibrary.AliveClassAndAliveMembers.<AliveSimpleProperty>k__BackingField [FIELD, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+      System.Int32
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      System.Diagnostics.DebuggerBrowsableAttribute
+      System.Diagnostics.DebuggerBrowsableState
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()
+      TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(Int32)
+  TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty() [ACCESSOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+      System.Int32
+      TestLibrary.AliveClassAndAliveMembers._value
+  TestLibrary.AliveClassAndAliveMembers._value [FIELD, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+      System.Int32
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()
+      TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(Int32)
+  TestLibrary.MyException..ctor() [CTOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.MyException
+      System.Void
+      System.Exception..ctor()
+      System.Exception
+  TestLibrary.GenericTypeArgument..ctor() [CTOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.GenericTypeArgument
+      System.Void
+      System.Object..ctor()
+      System.Object
+  TestLibrary.DeadClass [TYPE, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Object
+    DIRECTLY REFERENCED BY
+      TestLibrary.DeadClass..ctor()
+  TestLibrary.DeadClass..ctor() [CTOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.DeadClass
+      System.Void
+      System.Object..ctor()
+      System.Object
+  TestLibrary.DeadStruct [TYPE, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.ValueType
+      System.Runtime.InteropServices.StructLayoutAttribute
+      System.Int32
+      System.Runtime.InteropServices.LayoutKind
+    DIRECTLY REFERENCED BY
+      TestLibrary.DeadStruct..ctor()
+  TestLibrary.DeadStruct..ctor() [CTOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.DeadStruct
+      System.Void
+  TestLibrary.DeadEnum [TYPE, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Enum
+  TestLibrary.DeadDelegate [TYPE, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.MulticastDelegate
+    DIRECTLY REFERENCED BY
+      TestLibrary.DeadDelegate..ctor(Object, nint)
+      TestLibrary.DeadDelegate.Invoke()
+      TestLibrary.DeadDelegate.BeginInvoke(AsyncCallback, Object)
+      TestLibrary.DeadDelegate.EndInvoke(IAsyncResult)
+  TestLibrary.DeadDelegate..ctor(Object, nint) [CTOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.DeadDelegate
+      System.Object
+      System.Void
+  TestLibrary.DeadDelegate.Invoke() [METHOD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.DeadDelegate
+      System.Void
+  TestLibrary.DeadDelegate.BeginInvoke(AsyncCallback, Object) [METHOD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.DeadDelegate
+      System.AsyncCallback
+      System.Object
+      System.IAsyncResult
+  TestLibrary.DeadDelegate.EndInvoke(IAsyncResult) [METHOD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.DeadDelegate
+      System.IAsyncResult
+      System.Void
+  TestLibrary.AliveClassButDeadMembers.DeadMethod() [METHOD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+      System.Void
+  TestLibrary.AliveClassButDeadMembers..ctor() [CTOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+      System.Void
+      System.Object..ctor()
+      System.Object
+  TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty() [ACCESSOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+      System.Int32
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveClassButDeadMembers.<DeadSimpleProperty>k__BackingField
+  TestLibrary.AliveClassButDeadMembers.<DeadSimpleProperty>k__BackingField [FIELD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+      System.Int32
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      System.Diagnostics.DebuggerBrowsableAttribute
+      System.Diagnostics.DebuggerBrowsableState
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty()
+      TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(Int32)
+  TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(Int32) [ACCESSOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+      System.Int32
+      System.Void
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveClassButDeadMembers.<DeadSimpleProperty>k__BackingField
+  TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty() [ACCESSOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+      System.Int32
+      TestLibrary.AliveClassButDeadMembers._value
+  TestLibrary.AliveClassButDeadMembers._value [FIELD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+      System.Int32
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()
+      TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(Int32)
+  TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(Int32) [ACCESSOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+      System.Int32
+      System.Void
+      TestLibrary.AliveClassButDeadMembers._value
+  TestLibrary.AliveClassButDeadMembers.DeadField [FIELD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+      System.Int32
+  TestLibrary.AliveClassButDeadMembers.DeadNestedType [TYPE, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Object
+      TestLibrary.AliveClassButDeadMembers
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveClassButDeadMembers.DeadNestedType..ctor()
+  TestLibrary.AliveClassButDeadMembers.DeadNestedType..ctor() [CTOR, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers.DeadNestedType
+      TestLibrary.AliveClassButDeadMembers
+      System.Void
+      System.Object..ctor()
+      System.Object
+ASSEMBLY System.Console.dll
+  UNPROCESSED ASSEMBLY

@@ -1,0 +1,35 @@
+{
+  "Assemblies": [
+    {
+      "Assembly": "TestExe",
+      "DeadTypes": [],
+      "DeadMembers": []
+    },
+    {
+      "Assembly": "TestLibrary",
+      "DeadTypes": [
+        "TestLibrary.AliveClassButDeadMembers.DeadNestedType",
+        "TestLibrary.DeadClass",
+        "TestLibrary.DeadDelegate",
+        "TestLibrary.DeadEnum",
+        "TestLibrary.DeadStruct"
+      ],
+      "DeadMembers": [
+        "TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()",
+        "TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()",
+        "TestLibrary.AliveClassButDeadMembers._value",
+        "TestLibrary.AliveClassButDeadMembers..ctor()",
+        "TestLibrary.AliveClassButDeadMembers.DeadField",
+        "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
+        "TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()",
+        "TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty()",
+        "TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(Int32)",
+        "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(Int32)",
+        "TestLibrary.AliveDelegate.Invoke()",
+        "TestLibrary.AliveStruct..ctor()",
+        "TestLibrary.GenericTypeArgument..ctor()",
+        "TestLibrary.MyException..ctor()"
+      ]
+    }
+  ]
+}

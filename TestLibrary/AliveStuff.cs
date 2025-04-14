@@ -1,0 +1,52 @@
+﻿namespace TestLibrary;
+
+public class AliveClass
+{
+}
+
+public struct AliveStruct
+{
+
+}
+
+public enum AliveEnum
+{
+    Red,
+    Green,
+    Blue,
+}
+
+public delegate void AliveDelegate();
+
+public class AliveClassAndAliveMembers
+{
+    private int _value;
+
+    public class AliveNestedType
+    {
+    }
+
+    public void AliveMethod()
+    {
+        _ = new List<GenericTypeArgument>();
+    }
+
+    public int AliveSimpleProperty { get; set; }
+
+    public int AliveComplexProperty
+    {
+        get { return _value / 2; }
+        set { _value = value * 2; }
+    }
+
+    public int AliveField;
+    public const int AliveConst = 42;
+}
+
+public class MyException : Exception
+{
+}
+
+public class GenericTypeArgument
+{
+}
