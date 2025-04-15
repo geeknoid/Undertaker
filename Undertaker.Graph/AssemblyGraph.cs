@@ -38,7 +38,11 @@ public sealed class AssemblyGraph
     /// <param name="path">The file system path to the assembly to load.</param>
     public void LoadAssembly(string path)
     { 
-        var decomp = new CSharpDecompiler(path, new DecompilerSettings());
+        var decomp = new CSharpDecompiler(path, new DecompilerSettings {
+            AutoLoadAssemblyReferences = false,
+            LoadInMemory = true,
+            ThrowOnAssemblyResolveErrors = false,
+        });
         AssemblyLoader.Load(decomp, GetAssembly);
     }
 

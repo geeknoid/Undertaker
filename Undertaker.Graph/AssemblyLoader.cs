@@ -87,7 +87,7 @@ internal static class AssemblyLoader
                 var name = GetEntitySymbolName(method);
                 foreach (var t in method.DeclaringType.GetNonInterfaceBaseTypes())
                 {
-                    foreach (var m in t.GetDefinition()!.Methods)
+                    foreach (var m in t.GetMethods())
                     {
                         if (m.Name == method.Name)
                         {
@@ -161,8 +161,18 @@ internal static class AssemblyLoader
                             {
                                 var token = blobReader.ReadInt32();
                                 var handle = (EntityHandle)MetadataTokens.Handle(token);
-                                var type = metadataModule.ResolveType(handle, default);
-                                RecordReferenceToType(methodSym, type);
+
+                                if (handle.Kind is HandleKind.TypeDefinition or HandleKind.TypeReference)
+                                {
+                                    var type = metadataModule.ResolveType(handle, default);
+                                    RecordReferenceToType(methodSym, type);
+                                }
+                                else if (handle.Kind == HandleKind.MethodDefinition)
+                                {
+                                    var m = metadataModule.ResolveMethod(handle, default);
+                                    RecordReferenceToMember(methodSym, m);
+                                }
+
                                 break;
                             }
 
@@ -267,11 +277,15 @@ internal static class AssemblyLoader
         }
     }
 
+    // avoid reallocting new string builders all the time
+    private static readonly StringBuilder _sb = new();
+
     public static string GetEntitySymbolName(IEntity entity)
     {
         if (entity is IMethod method)
         {
-            var sb = new StringBuilder()
+            var sb = _sb
+                .Clear()
                 .Append(entity.FullName)
                 .Append('(');
 
