@@ -1,6 +1,7 @@
 ﻿using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Text.Json;
+using ICSharpCode.Decompiler.Metadata;
 using Undertaker.Graph;
 
 namespace Undertaker;
@@ -89,6 +90,14 @@ internal static class Program
                 }
 
                 graph.LoadAssembly(file.FullName);
+            }
+            catch (BadImageFormatException ex)
+            {
+                Console.Error.WriteLine($"ERROR: {file.FullName} is not a valid .NET assembly, skipping");
+            }
+            catch (MetadataFileNotSupportedException)
+            {
+                Console.Error.WriteLine($"ERROR: {file.FullName} is not a valid .NET assembly, skipping");
             }
             catch (Exception ex)
             {
