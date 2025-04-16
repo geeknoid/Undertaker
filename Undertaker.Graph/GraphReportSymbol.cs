@@ -1,9 +1,9 @@
 ﻿namespace Undertaker.Graph;
 
 /// <summary>
-/// Information about an alive symbol.
+/// Information about a symbol.
 /// </summary>
-public sealed class SymbolReferences
+public sealed class GraphReportSymbol
 {
     /// <summary>
     /// The name of the symbol.
@@ -13,17 +13,17 @@ public sealed class SymbolReferences
     /// <summary>
     /// The name of the other symbols that have a dependence on this symbol.
     /// </summary>
-    public IReadOnlyList<string> AliveBecause { get; }
+    public IReadOnlyList<string> Dependents { get; }
 
     /// <summary>
     /// Gets a value indicating whether the symbol is considered a root.
     /// </summary>
     public bool Root { get; }
 
-    internal SymbolReferences(string symbol, IReadOnlyList<string> aliveBecause, bool root)
+    internal GraphReportSymbol(string symbol, IReadOnlyList<string> dependents, bool root)
     {
         Symbol = symbol;
-        AliveBecause = aliveBecause;
+        Dependents = dependents;
         Root = root;
     }
 }

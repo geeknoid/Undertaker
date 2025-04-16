@@ -14,6 +14,7 @@ internal sealed class Symbol(Assembly assembly, string name)
     public Symbol? ParentType { get; private set; }
     public IReadOnlyList<Symbol> Children => _children;
     public TypeKind TypeKind { get; private set; }
+    public bool IsPublic { get; private set; }
 
     // set by RecordReferencedSymbol
     public IReadOnlySet<Symbol> Referencers => _referencers;
@@ -29,17 +30,15 @@ internal sealed class Symbol(Assembly assembly, string name)
     private readonly Dictionary<string, Symbol> _referencedSymbols = [];
     private readonly List<Symbol> _children = [];
 
-    public void Define(SymbolKind kind, TypeKind typeKind, bool hidden, Symbol? parent)
+    public void Define(SymbolKind kind, TypeKind typeKind, bool hidden, bool isPublic, Symbol? parent)
     {
         Kind = kind;
         TypeKind = typeKind;
         Hidden = hidden;
         ParentType = parent;
+        IsPublic = isPublic;
 
-        if (parent != null)
-        {
-            parent._children.Add(this);
-        }
+        parent?._children.Add(this);
     }
 
     public void RecordReferencedSymbol(Symbol sym)

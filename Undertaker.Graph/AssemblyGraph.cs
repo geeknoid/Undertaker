@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
 
@@ -67,112 +69,6 @@ public sealed class AssemblyGraph
         return asm;
     }
 
-    /// <summary>
-    /// Gets information about the dead symbols in the graph.
-    /// </summary>
-    /// <remarks>Dead symbols are ones which aren't reachable from the various roots known to the graph.</remarks>
-    public DeadReport CollectDeadReport()
-    {
-        MarkUsedSymbols();
-
-        var assemblies = new List<DeadSymbols>();
-        foreach (var asm in _assemblies.Values)
-        {
-            if (!asm.Loaded)
-            {
-                // unprocessed referenced assembly, skip it
-                continue;
-            }
-
-            var deadTypes = new List<string>();
-            var deadMembers = new List<string>();
-
-            foreach (var sym in asm.Symbols.Values)
-            {
-                if (sym.Kind != SymbolKind.Type || sym.Hidden)
-                {
-                    continue;
-                }
-
-                if (sym.Marked)
-                {
-                    foreach (var member in sym.Children)
-                    {
-                        if (member.Marked || member.Hidden || member.Kind == SymbolKind.Type)
-                        {
-                            continue;
-                        }
-
-                        deadMembers.Add(member.Name);
-                    }
-                }
-                else
-                {
-                    deadTypes.Add(sym.Name);
-                }
-            }
-
-            deadTypes.Sort();
-            deadMembers.Sort();
-            assemblies.Add(new(asm.Name, deadTypes, deadMembers));
-        }
-
-        assemblies.Sort((x, y) => string.CompareOrdinal(x.Assembly, y.Assembly));
-        return new(assemblies);
-    }
-
-    /// <summary>
-    /// Gets information about the alive symbols in the graph.
-    /// </summary>
-    /// <remarks>Alive symbols are ones which are reachable from the various roots known to the graph.</remarks>
-    public AliveReport CollectAliveReport()
-    {
-        MarkUsedSymbols();
-
-        var assemblies = new List<AliveSymbols>();
-        foreach (var asm in _assemblies.Values)
-        {
-            if (!asm.Loaded)
-            {
-                // unprocessed referenced assembly, skip it
-                continue;
-            }
-
-            var aliveTypes = new List<SymbolReferences>();
-            var aliveMembers = new List<SymbolReferences>();
-
-            foreach (var sym in asm.Symbols.Values)
-            {
-                if (sym.Kind != SymbolKind.Type || sym.Hidden)
-                {
-                    continue;
-                }
-
-                if (sym.Marked)
-                {
-                    var because = sym.Referencers.Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x).ToList();
-                    aliveTypes.Add(new SymbolReferences(sym.Name, because, sym.Root));
-
-                    foreach (var member in sym.Children)
-                    {
-                        if (member.Marked && !member.Hidden)
-                        {
-                            because = member.Referencers.Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x).ToList();
-                            aliveMembers.Add(new SymbolReferences(member.Name, because, member.Root));
-                        }
-                    }
-                }
-            }
-
-            aliveTypes.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
-            aliveMembers.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
-            assemblies.Add(new(asm.Name, aliveTypes, aliveMembers));
-        }
-
-        assemblies.Sort((x, y) => string.CompareOrdinal(x.Assembly, y.Assembly));
-        return new(assemblies);
-    }
-
     private void MarkUsedSymbols()
     {
         foreach (var asm in _assemblies.Values)
@@ -192,6 +88,246 @@ public sealed class AssemblyGraph
                 sym.Mark();
             }
         }
+    }
+
+    /// <summary>
+    /// Gets information about the dead symbols in the graph.
+    /// </summary>
+    /// <remarks>Dead symbols are ones which aren't reachable from the various roots known to the graph.</remarks>
+    public GraphReport CollectDeadReport()
+    {
+        MarkUsedSymbols();
+
+        var assemblies = new List<GraphReportAssembly>();
+        foreach (var asm in _assemblies.Values)
+        {
+            if (!asm.Loaded)
+            {
+                // unprocessed referenced assembly, skip it
+                continue;
+            }
+
+            var deadTypes = new List<GraphReportSymbol>();
+            var deadMembers = new List<GraphReportSymbol>();
+
+            foreach (var sym in asm.Symbols.Values)
+            {
+                if (sym.Kind != SymbolKind.Type || sym.Hidden)
+                {
+                    continue;
+                }
+
+                if (sym.Marked)
+                {
+                    foreach (var member in sym.Children)
+                    {
+                        if (member.Marked || member.Hidden || member.Kind == SymbolKind.Type)
+                        {
+                            continue;
+                        }
+
+                        deadMembers.Add(new(member.Name, [], member.Root));
+                    }
+                }
+                else
+                {
+                    deadTypes.Add(new(sym.Name, [], sym.Root));
+                }
+            }
+
+            deadTypes.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+            deadMembers.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+            assemblies.Add(new(asm.Name, deadTypes, deadMembers));
+        }
+
+        assemblies.Sort((x, y) => string.CompareOrdinal(x.Assembly, y.Assembly));
+        return new(assemblies);
+    }
+
+    /// <summary>
+    /// Gets information about the alive symbols in the graph.
+    /// </summary>
+    /// <remarks>Alive symbols are ones which are reachable from the various roots known to the graph.</remarks>
+    public GraphReport CollectAliveReport()
+    {
+        MarkUsedSymbols();
+
+        var assemblies = new List<GraphReportAssembly>();
+        foreach (var asm in _assemblies.Values)
+        {
+            if (!asm.Loaded)
+            {
+                // unprocessed referenced assembly, skip it
+                continue;
+            }
+
+            var aliveTypes = new List<GraphReportSymbol>();
+            var aliveMembers = new List<GraphReportSymbol>();
+
+            foreach (var sym in asm.Symbols.Values)
+            {
+                if (sym.Kind != SymbolKind.Type || sym.Hidden)
+                {
+                    continue;
+                }
+
+                if (sym.Marked)
+                {
+                    var dependents = sym.Referencers.Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x).ToList();
+                    aliveTypes.Add(new(sym.Name, dependents, sym.Root));
+
+                    foreach (var member in sym.Children)
+                    {
+                        if (member.Marked && !member.Hidden)
+                        {
+                            dependents = [.. member.Referencers.Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x)];
+                            aliveMembers.Add(new(member.Name, dependents, member.Root));
+                        }
+                    }
+                }
+            }
+
+            aliveTypes.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+            aliveMembers.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+            assemblies.Add(new(asm.Name, aliveTypes, aliveMembers));
+        }
+
+        assemblies.Sort((x, y) => string.CompareOrdinal(x.Assembly, y.Assembly));
+        return new(assemblies);
+    }
+
+    /// <summary>
+    /// Gets the set of types and symbols which could be made internal.
+    /// </summary>
+    public GraphReport CollectNeedlesslyPublicReport()
+    {
+        var assemblies = new List<GraphReportAssembly>();
+        foreach (var asm in _assemblies.Values)
+        {
+            if (!asm.Loaded)
+            {
+                // unprocessed referenced assembly, skip it
+                continue;
+            }
+
+            var affectedTypes = new List<GraphReportSymbol>();
+            var affectedMembers = new List<GraphReportSymbol>();
+
+            foreach (var sym in asm.Symbols.Values)
+            {
+                if (sym.Hidden || sym.Root)
+                {
+                    continue;
+                }
+
+                bool usedOutside = false;
+                foreach (var r in sym.Referencers)
+                {
+                    if (r.Assembly != asm)
+                    {
+                        usedOutside = true;
+                        break;
+                    }
+                }
+
+                if (!usedOutside)
+                {
+                    if (sym.Kind == SymbolKind.Type)
+                    {
+                        affectedTypes.Add(new(sym.Name, [], sym.Root));
+                    } else
+                    {
+                        affectedMembers.Add(new(sym.Name, [], sym.Root));
+                    }
+                }
+            }
+
+            affectedTypes.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+            affectedMembers.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+            assemblies.Add(new(asm.Name, affectedTypes, affectedMembers));
+        }
+
+        assemblies.Sort((x, y) => string.CompareOrdinal(x.Assembly, y.Assembly));
+        return new(assemblies);
+    }
+
+    /// <summary>
+    /// Creates a layer cake of assembly dependencies.
+    /// </summary>
+    /// <remarks>
+    /// Returns a layer cake of assembly dependencies. Each layer depends only on assemblies in
+    /// the layers below.
+    /// </remarks>
+    /// <returns>A list of layers, where each layer is a list of assembly names.</returns>
+    public List<List<string>> CreateLayerCake()
+    {
+        // Step 1: Build a dependency map for each assembly
+        var dependencies = new Dictionary<string, HashSet<string>>();
+        foreach (var asm in _assemblies.Values)
+        {
+            var referenced = new HashSet<string>();
+            foreach (var sym in asm.Symbols.Values)
+            {
+                foreach (var rs in sym.ReferencedSymbols.Values)
+                {
+                    if (rs.Assembly != asm)
+                    {
+                        _ = referenced.Add(rs.Assembly.Name);
+                    }
+                }
+            }
+
+            dependencies.Add(asm.Name, referenced);
+        }
+
+        // Step 2: Initialize dependency counts for each assembly
+        var dependencyCount = _assemblies.Values.ToDictionary(a => a.Name, a => 0);
+        foreach (var asm in _assemblies.Values)
+        {
+            foreach (var dependency in dependencies[asm.Name])
+            {
+                if (_assemblies.ContainsKey(dependency))
+                {
+                    dependencyCount[dependency]++;
+                }
+            }
+        }
+
+        // Step 3: Create layers
+        var layers = new List<List<string>>();
+        while (dependencyCount.Any(dc => dc.Value == 0))
+        {
+            var currentLayer = new List<string>();
+            var assembliesToRemove = new List<string>();
+
+            // Find assemblies with no dependencies
+            foreach (var asm in dependencyCount.Where(dc => dc.Value == 0).Select(dc => dc.Key))
+            {
+                if (_assemblies[asm].Loaded)
+                {
+                    currentLayer.Add(asm);
+                }
+
+                assembliesToRemove.Add(asm);
+            }
+
+            // Remove assemblies from the dependency map and update dependency counts
+            foreach (var assemblyName in assembliesToRemove)
+            {
+                _ = dependencyCount.Remove(assemblyName);
+                foreach (var dependency in dependencies[assemblyName])
+                {
+                    if (dependencyCount.TryGetValue(dependency, out int value))
+                    {
+                        dependencyCount[dependency] = --value;
+                    }
+                }
+            }
+
+            layers.Add(currentLayer);
+        }
+
+        return layers;
     }
 
     public override string ToString()

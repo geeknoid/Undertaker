@@ -82,7 +82,7 @@ internal sealed class Assembly(string name, Version version, bool root)
             parent = GetSymbol(entity.DeclaringType.FullName);
         }
 
-        sym.Define(kind, typeKind, hidden, parent);
+        sym.Define(kind, typeKind, hidden, entity.EffectiveAccessibility() == Accessibility.Public, parent);
 
         if (sym.Assembly.Root)
         {

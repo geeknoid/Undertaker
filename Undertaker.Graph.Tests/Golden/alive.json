@@ -2,10 +2,10 @@
   "Assemblies": [
     {
       "Assembly": "TestExe",
-      "AliveTypes": [
+      "Types": [
         {
           "Symbol": "TestExe.Program",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.\u003C\u003Ec",
             "TestExe.Program.\u003C\u003Ec.\u003C\u003E9",
             "TestExe.Program.\u003C\u003Ec.\u003C\u003E9__0_0",
@@ -15,20 +15,20 @@
           "Root": false
         }
       ],
-      "AliveMembers": [
+      "Members": [
         {
           "Symbol": "TestExe.Program.Main()",
-          "AliveBecause": [],
+          "Dependents": [],
           "Root": true
         }
       ]
     },
     {
       "Assembly": "TestLibrary",
-      "AliveTypes": [
+      "Types": [
         {
           "Symbol": "TestLibrary.AliveClass",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()",
             "TestLibrary.AliveClass..ctor()"
           ],
@@ -36,7 +36,7 @@
         },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()",
             "TestLibrary.AliveClassAndAliveMembers._value",
             "TestLibrary.AliveClassAndAliveMembers..ctor()",
@@ -52,7 +52,7 @@
         },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveNestedType",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()",
             "TestLibrary.AliveClassAndAliveMembers.AliveNestedType..ctor()"
           ],
@@ -60,14 +60,14 @@
         },
         {
           "Symbol": "TestLibrary.AliveClassButDeadMembers",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()"
           ],
           "Root": false
         },
         {
           "Symbol": "TestLibrary.AliveDelegate",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.\u003C\u003Ec.\u003C\u003E9__0_0",
             "TestExe.Program.Main()",
             "TestLibrary.AliveDelegate..ctor(Object, nint)"
@@ -76,65 +76,65 @@
         },
         {
           "Symbol": "TestLibrary.AliveEnum",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()"
           ],
           "Root": false
         },
         {
           "Symbol": "TestLibrary.AliveStruct",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()"
           ],
           "Root": false
         },
         {
           "Symbol": "TestLibrary.GenericTypeArgument",
-          "AliveBecause": [
+          "Dependents": [
             "TestLibrary.AliveClassAndAliveMembers.AliveMethod()"
           ],
           "Root": false
         },
         {
           "Symbol": "TestLibrary.MyException",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()"
           ],
           "Root": false
         }
       ],
-      "AliveMembers": [
+      "Members": [
         {
           "Symbol": "TestLibrary.AliveClass..ctor()",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()"
           ],
           "Root": false
         },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers..ctor()",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()"
           ],
           "Root": false
         },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveField",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()"
           ],
           "Root": false
         },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveMethod()",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()"
           ],
           "Root": false
         },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveNestedType",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()",
             "TestLibrary.AliveClassAndAliveMembers.AliveNestedType..ctor()"
           ],
@@ -142,35 +142,35 @@
         },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveNestedType..ctor()",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()"
           ],
           "Root": false
         },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers._value",
-          "AliveBecause": [
+          "Dependents": [
             "TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(Int32)"
           ],
           "Root": false
         },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(Int32)",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()"
           ],
           "Root": false
         },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(Int32)",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()"
           ],
           "Root": false
         },
         {
           "Symbol": "TestLibrary.AliveDelegate..ctor(Object, nint)",
-          "AliveBecause": [
+          "Dependents": [
             "TestExe.Program.Main()"
           ],
           "Root": false

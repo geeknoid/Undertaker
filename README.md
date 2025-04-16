@@ -11,6 +11,14 @@ the set of defined symbols which are never referenced (dead symbols), along with
 showing the defined symbols that are referenced (alive symbols) and which other symbol
 references them.
 
+## Other Features
+
+The --needless-public-report option emits a JSON file capturing the set of symbols across the
+set of assemblies which are currently defined as public, but could in fact be defined as internal.
+
+The --assembly-layer-cake option emits a JSON file capturing a full layer cake of dependencies
+between the assemblies. Each assembly in a layer only depends on assemblies in lower layers.
+
 ## Roots
 
 The analysis to discover dead code depends on knowing the roots, the symbols that are
@@ -19,7 +27,7 @@ begins. There are two kinds of roots:
 
 * Any static method called Main in any assembly is considered a root.
 
-* You can provide a list of assemblies as root assembly. Any public symbol exposed by
+* You can provide a list of assemblies as root assemblies. Any public symbol exposed by
 these assemblies are considered roots. Any assemblies in the set which are considered
 part of a public API should normally be flagged as root assemblies.
 
@@ -32,19 +40,17 @@ The program doesn't identity unused const values or unused enum values (but unus
 
 ## Ideas
 
-* Add another report which flags all non-root public symbols which could be made internal.
-
 * Add another report which flags any unecessary uses of InternalsVisibleTo.
 
 * Add the ability to emit a dependency diagram in mermaid format for all the assemblies.
 
-* Add the ability to emit a layer cake diagram for all the assemblies.
-
 * Flag assemblies that use reflection since they might be cheating and
 have dependencies on otherwise dead symbols.
 
-## TODO
+* Can the symbol info include file & line numbers?
 
-* Hasn't yet been tested against .NET Framework assemblies, only .NET Core.
+* Explicitly identify unused assemblies
+
+## TODO
 
 * Doesn't yet have support for C# events and indexers.

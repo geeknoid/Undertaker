@@ -1,10 +1,9 @@
 ﻿using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
-using System.IO;
+using System.Text;
 using System.Text.Json;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
-using ICSharpCode.Decompiler.IL;
 using ICSharpCode.Decompiler.Metadata;
 using Undertaker.Graph;
 
@@ -20,7 +19,9 @@ internal static class Program
         public FileInfo? RootAssemblies { get; set; }
         public string? DeadReport { get; set; }
         public string? AliveReport { get; set; }
+        public string? NeedlesslyPublicReport { get; set; }
         public string? GraphDump { get; set; }
+        public string? AssemblyLayerCake { get; set; }
         public bool ContinueOnLoadErrors { get; set; }
         public bool Verbose { get; set; }
     }
@@ -42,6 +43,14 @@ internal static class Program
             new Option<string>(
                 ["-ar", "--alive-report"],
                 "Path of the alive code report file to produce"),
+
+            new Option<string>(
+                ["-npr", "--needlessly-public-report"],
+                "Path of the needlessly public report file to produce"),
+
+            new Option<string>(
+                ["-alc", "--assembly-layer-cake"],
+                "Path of the assembly layer cake file to produce"),
 
             new Option<string>(
                 ["-gd", "--graph-dump"],
@@ -156,11 +165,13 @@ internal static class Program
 
         ProduceDeadReport();
         ProduceAliveReport();
+        ProduceNeedlesslyPublicReport();
+        ProduceAssemblyLayerCake();
         ProduceGraphDump();
 
         if (args.Verbose)
         {
-            if (args.DeadReport == null && args.AliveReport == null && args.GraphDump == null)
+            if (args.DeadReport == null && args.AliveReport == null && args.NeedlesslyPublicReport == null && args.AssemblyLayerCake == null && args.GraphDump == null)
             {
                 Console.WriteLine("No output requested");
             }
@@ -210,6 +221,52 @@ internal static class Program
                 catch (Exception ex)
                 {
                     Console.Error.WriteLine($"ERROR: Unable to write alive report to {path}: {ex.Message}");
+                }
+            }
+        }
+
+        void ProduceNeedlesslyPublicReport()
+        {
+            if (args.NeedlesslyPublicReport != null)
+            {
+                var path = Path.GetFullPath(args.NeedlesslyPublicReport);
+                try
+                {
+                    var report = graph.CollectNeedlesslyPublicReport();
+                    var json = JsonSerializer.Serialize(report, _serializationOptions);
+                    File.WriteAllText(path, json);
+
+                    if (args.Verbose)
+                    {
+                        Console.WriteLine($"Output 'needlessly public' report to {path}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine($"ERROR: Unable to write 'needlessly public' report to {path}: {ex.Message}");
+                }
+            }
+        }
+
+        void ProduceAssemblyLayerCake()
+        {
+            if (args.AssemblyLayerCake != null)
+            {
+                var path = Path.GetFullPath(args.AssemblyLayerCake);
+                try
+                {
+                    var cake = graph.CreateLayerCake();
+                    var json = JsonSerializer.Serialize(cake, _serializationOptions);
+                    File.WriteAllText(path, json);
+
+                    if (args.Verbose)
+                    {
+                        Console.WriteLine($"Output assembly layer cake to {path}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine($"ERROR: Unable to output assembly layer cake to {path}: {ex.Message}");
                 }
             }
         }

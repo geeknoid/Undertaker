@@ -2,8 +2,25 @@
   "Assemblies": [
     {
       "Assembly": "TestExe",
-      "Types": [],
-      "Members": []
+      "Types": [
+        {
+          "Symbol": "TestExe.Program",
+          "Dependents": [],
+          "Root": false
+        }
+      ],
+      "Members": [
+        {
+          "Symbol": "TestExe.Program.\u003C\u003Ec..cctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestExe.Program.\u003C\u003Ec..ctor()",
+          "Dependents": [],
+          "Root": false
+        }
+      ]
     },
     {
       "Assembly": "TestLibrary",
@@ -32,9 +49,19 @@
           "Symbol": "TestLibrary.DeadStruct",
           "Dependents": [],
           "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.GenericTypeArgument",
+          "Dependents": [],
+          "Root": false
         }
       ],
       "Members": [
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers._value",
+          "Dependents": [],
+          "Root": false
+        },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()",
           "Dependents": [],
@@ -57,6 +84,11 @@
         },
         {
           "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadNestedType..ctor()",
           "Dependents": [],
           "Root": false
         },
@@ -92,6 +124,26 @@
         },
         {
           "Symbol": "TestLibrary.AliveStruct..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.DeadClass..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.DeadDelegate..ctor(Object, nint)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.DeadDelegate.Invoke()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.DeadStruct..ctor()",
           "Dependents": [],
           "Root": false
         },
