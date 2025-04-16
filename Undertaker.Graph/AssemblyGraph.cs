@@ -37,12 +37,22 @@ public sealed class AssemblyGraph
     /// </summary>
     /// <param name="path">The file system path to the assembly to load.</param>
     public void LoadAssembly(string path)
-    { 
-        var decomp = new CSharpDecompiler(path, new DecompilerSettings {
+    {
+        var decomp = new CSharpDecompiler(path, new DecompilerSettings
+        {
             AutoLoadAssemblyReferences = false,
             LoadInMemory = true,
             ThrowOnAssemblyResolveErrors = false,
         });
+
+        LoadAssembly(decomp);
+    }
+
+    /// <summary>
+    /// LOads a new asssembly into the graph.
+    /// </summary>
+    public void LoadAssembly(CSharpDecompiler decomp)
+    { 
         AssemblyLoader.Load(decomp, GetAssembly);
     }
 

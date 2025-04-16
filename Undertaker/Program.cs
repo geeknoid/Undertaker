@@ -1,6 +1,10 @@
 ﻿using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
+using System.IO;
 using System.Text.Json;
+using ICSharpCode.Decompiler;
+using ICSharpCode.Decompiler.CSharp;
+using ICSharpCode.Decompiler.IL;
 using ICSharpCode.Decompiler.Metadata;
 using Undertaker.Graph;
 
@@ -17,6 +21,7 @@ internal static class Program
         public string? DeadReport { get; set; }
         public string? AliveReport { get; set; }
         public string? GraphDump { get; set; }
+        public bool ContinueOnLoadErrors { get; set; }
         public bool Verbose { get; set; }
     }
 
@@ -43,6 +48,10 @@ internal static class Program
                 "Path of the graph dump file to produce"),
 
             new Option<bool>(
+                ["-ce", "--continue-on-load-errors"],
+                "Proceed to the analysis and output phase even if some assemblies didn't load"),
+
+            new Option<bool>(
                 ["-v", "--verbose"],
                 "Output progress reports"),
         };
@@ -52,7 +61,7 @@ internal static class Program
         return rootCommand.InvokeAsync(args);
     }
 
-    private static Task<int> ExecuteAsync(UndertakerArgs args)
+    private static async Task<int> ExecuteAsync(UndertakerArgs args)
     {
         var graph = new AssemblyGraph();
 
@@ -75,114 +84,155 @@ internal static class Program
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"ERROR: Unable to read root assembly file {args.RootAssemblies.FullName}: {ex.Message}");
-                return Task.FromResult(1);
+                return 1;
             }
         }
 
-        int errorCount = 0;
+        // parallelize reading all the assemblies
+        var tasks = new List<Task<CSharpDecompiler>>();
+        var files = new Dictionary<Task, string>();
         foreach (var file in args.Assemblies!.EnumerateFiles("*.dll", SearchOption.AllDirectories))
         {
-            try
+            var task = Task.Run(() =>
             {
                 if (args.Verbose)
                 {
                     Console.WriteLine($"Loading assembly {file.FullName}");
                 }
 
-                graph.LoadAssembly(file.FullName);
-            }
-            catch (BadImageFormatException ex)
+                return new CSharpDecompiler(file.FullName, new DecompilerSettings
+                {
+                    AutoLoadAssemblyReferences = false,
+                    LoadInMemory = true,
+                    ThrowOnAssemblyResolveErrors = false,
+                });
+            });
+
+            tasks.Add(task);
+            files.Add(task, file.FullName);
+        }
+
+        // insert each loaded assembly into the graph in a single-threaded context
+        int errorCount = 0;
+        await foreach (var task in Task.WhenEach(tasks))
+        {
+            try
             {
-                Console.Error.WriteLine($"ERROR: {file.FullName} is not a valid .NET assembly, skipping");
+                var decomp = await task;
+                graph.LoadAssembly(decomp);
+            }
+            catch (BadImageFormatException)
+            {
+                Console.Error.WriteLine($"ERROR: {files[task]} is not a .NET assembly, skipping");
             }
             catch (MetadataFileNotSupportedException)
             {
-                Console.Error.WriteLine($"ERROR: {file.FullName} is not a valid .NET assembly, skipping");
+                Console.Error.WriteLine($"ERROR: {files[task]} is not a .NET assembly, skipping");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"ERROR: Unable to load assembly {file.FullName}: {ex.Message}");
+                Console.Error.WriteLine($"ERROR: Unable to load assembly {files[task]}: {ex.Message}");
                 errorCount++;
             }
         }
 
         if (errorCount > 0)
         {
-            Console.Error.WriteLine($"ERROR: Unable to load {errorCount} assemblies, exiting");
-            return Task.FromResult(1);
+            if (args.ContinueOnLoadErrors)
+            {
+                Console.Error.WriteLine($"ERROR: Unable to load {errorCount} assemblies, ignoring");
+            }
+            else
+            {
+                Console.Error.WriteLine($"ERROR: Unable to load {errorCount} assemblies, exiting");
+                return 1;
+            }
         }
 
         if (args.Verbose)
         {
-            Console.WriteLine("Done reading assemblies");
+            Console.WriteLine("Done loading assemblies");
         }
 
-        if (args.DeadReport != null)
+        ProduceDeadReport();
+        ProduceAliveReport();
+        ProduceGraphDump();
+
+        if (args.Verbose)
         {
-            var path = Path.GetFullPath(args.DeadReport);
-            try
-            {
-                var report = graph.CollectDeadReport();
-                var json = JsonSerializer.Serialize(report, _serializationOptions);
-                File.WriteAllText(path, json);
-
-                if (args.Verbose)
-                {
-                    Console.WriteLine($"Output dead report to {path}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"ERROR: Unable to write dead report to {path}: {ex.Message}");
-            }
-        }
-
-        if (args.AliveReport != null)
-        {
-            var path = Path.GetFullPath(args.AliveReport);
-            try
-            {
-                var report = graph.CollectAliveReport();
-                var json = JsonSerializer.Serialize(report, _serializationOptions);
-                File.WriteAllText(path, json);
-
-                if (args.Verbose)
-                {
-                    Console.WriteLine($"Output alive report to {path}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"ERROR: Unable to write alive report to {path}: {ex.Message}");
-            }
-        }
-
-        if (args.GraphDump != null)
-        {
-            var path = Path.GetFullPath(args.GraphDump);
-            try
-            {
-                File.WriteAllText(path, graph.ToString());
-
-                if (args.Verbose)
-                {
-                    Console.WriteLine($"Output graph dump to {path}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"ERROR: Unable to graph dump to {path}: {ex.Message}");
-            }
-        }
-
-        if (args.DeadReport == null && args.AliveReport == null && args.GraphDump == null)
-        {
-            if (args.Verbose)
+            if (args.DeadReport == null && args.AliveReport == null && args.GraphDump == null)
             {
                 Console.WriteLine("No output requested");
             }
         }
 
-        return Task.FromResult(0);
+        return 0;
+
+        void ProduceDeadReport()
+        {
+            if (args.DeadReport != null)
+            {
+                var path = Path.GetFullPath(args.DeadReport);
+                try
+                {
+                    var report = graph.CollectDeadReport();
+                    var json = JsonSerializer.Serialize(report, _serializationOptions);
+                    File.WriteAllText(path, json);
+
+                    if (args.Verbose)
+                    {
+                        Console.WriteLine($"Output dead report to {path}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine($"ERROR: Unable to write dead report to {path}: {ex.Message}");
+                }
+            }
+        }
+
+        void ProduceAliveReport()
+        {
+            if (args.AliveReport != null)
+            {
+                var path = Path.GetFullPath(args.AliveReport);
+                try
+                {
+                    var report = graph.CollectAliveReport();
+                    var json = JsonSerializer.Serialize(report, _serializationOptions);
+                    File.WriteAllText(path, json);
+
+                    if (args.Verbose)
+                    {
+                        Console.WriteLine($"Output alive report to {path}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine($"ERROR: Unable to write alive report to {path}: {ex.Message}");
+                }
+            }
+        }
+
+        void ProduceGraphDump()
+        {
+            if (args.GraphDump != null)
+            {
+                var path = Path.GetFullPath(args.GraphDump);
+                try
+                {
+                    File.WriteAllText(path, graph.ToString());
+
+                    if (args.Verbose)
+                    {
+                        Console.WriteLine($"Output graph dump to {path}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine($"ERROR: Unable to write graph dump to {path}: {ex.Message}");
+                }
+            }
+        }
     }
 }
