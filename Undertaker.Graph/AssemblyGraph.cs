@@ -56,11 +56,11 @@ public sealed class AssemblyGraph
         AssemblyLoader.Load(decomp, GetAssembly);
     }
 
-    private Assembly GetAssembly(string assemblyName, Version assemblyVersion)
+    private Assembly GetAssembly(string assemblyName)
     {
         if (!_assemblies.TryGetValue(assemblyName, out var asm))
         {
-            asm = new Assembly(assemblyName, assemblyVersion, _rootAssemblies.Contains(assemblyName));
+            asm = new Assembly(assemblyName, _rootAssemblies.Contains(assemblyName));
             _assemblies[assemblyName] = asm;
         }
 
@@ -257,7 +257,7 @@ public sealed class AssemblyGraph
     /// the layers below.
     /// </remarks>
     /// <returns>A list of layers, where each layer is a list of assembly names.</returns>
-    public List<List<string>> CreateAssemblyLayerCake()
+    public IReadOnlyList<IReadOnlyList<string>> CreateAssemblyLayerCake()
     {
         // Step 1: Build a dependency map for each assembly
         var dependencies = new Dictionary<string, HashSet<string>>();
@@ -331,7 +331,7 @@ public sealed class AssemblyGraph
     /// <summary>
     /// Returns a list of assemblies which are not reachable from any roots.
     /// </summary>
-    public List<string> CollectUnreferencedAssembliesReport()
+    public IReadOnlyList<string> CollectUnreferencedAssembliesReport()
     {
         var result = new List<string>();
 
@@ -341,6 +341,56 @@ public sealed class AssemblyGraph
             if (asm.Types.Count == 0 && asm.Members.Count == 0)
             {
                 result.Add(asm.Assembly);
+            }
+        }
+
+        return result;
+    }
+
+    public IReadOnlyList<NeedlessInternalsVisibleToReport> CollectNeedlessInternalsVisibleToReport()
+    {
+        var result = new List<NeedlessInternalsVisibleToReport>();
+
+        foreach (var asm in _assemblies.Values)
+        {
+            if (!asm.Loaded)
+            {
+                // unprocessed referenced assembly, skip it
+                continue;
+            }
+
+            var otherAssemblies = new List<string>();
+
+            foreach (var other in asm.InternalsVisibleTo)
+            {
+                bool usesInternals = false;
+                foreach (var sym in other.Symbols.Values)
+                {
+                    foreach (var refSym in sym.ReferencedSymbols.Values)
+                    {
+                        if (refSym.Assembly == asm && !refSym.IsPublic)
+                        {
+                            usesInternals = true;
+                            break;
+                        }
+                    }
+
+                    if (usesInternals)
+                    {
+                        break;
+                    }
+                }
+
+                if (!usesInternals)
+                {
+                    otherAssemblies.Add(other.Name);
+                }
+            }
+
+            if (otherAssemblies.Count > 0)
+            {
+                otherAssemblies.Sort((x, y) => string.CompareOrdinal(x, y));
+                result.Add(new(asm.Name, otherAssemblies));
             }
         }
 

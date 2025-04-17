@@ -1,32 +1,45 @@
 {
   "Assemblies": [
     {
-      "Assembly": "TestExe",
+      "Assembly": "TestLibrary",
       "Types": [
         {
-          "Symbol": "TestExe.Program",
-          "Dependents": [],
-          "Root": false
-        }
-      ],
-      "Members": [
-        {
-          "Symbol": "TestExe.Program.\u003C\u003Ec..cctor()",
+          "Symbol": "TestLibrary.AliveClass",
           "Dependents": [],
           "Root": false
         },
         {
-          "Symbol": "TestExe.Program.\u003C\u003Ec..ctor()",
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers",
           "Dependents": [],
           "Root": false
-        }
-      ]
-    },
-    {
-      "Assembly": "TestLibrary",
-      "Types": [
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveNestedType",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers",
+          "Dependents": [],
+          "Root": false
+        },
         {
           "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadNestedType",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveDelegate",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveEnum",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveStruct",
           "Dependents": [],
           "Root": false
         },
@@ -54,9 +67,39 @@
           "Symbol": "TestLibrary.GenericTypeArgument",
           "Dependents": [],
           "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.MyException",
+          "Dependents": [],
+          "Root": false
         }
       ],
       "Members": [
+        {
+          "Symbol": "TestLibrary.AliveClass..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveField",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveMethod()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveNestedType..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers._value",
           "Dependents": [],
@@ -69,6 +112,16 @@
         },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(Int32)",
           "Dependents": [],
           "Root": false
         },
@@ -114,6 +167,11 @@
         },
         {
           "Symbol": "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveDelegate..ctor(Object, nint)",
           "Dependents": [],
           "Root": false
         },

@@ -1,15 +1,45 @@
 {
   "Assemblies": [
     {
-      "Assembly": "TestExe",
-      "Types": [],
-      "Members": []
-    },
-    {
       "Assembly": "TestLibrary",
       "Types": [
         {
+          "Symbol": "TestLibrary.AliveClass",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveNestedType",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers",
+          "Dependents": [],
+          "Root": false
+        },
+        {
           "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadNestedType",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveDelegate",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveEnum",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveStruct",
           "Dependents": [],
           "Root": false
         },
@@ -32,80 +62,19 @@
           "Symbol": "TestLibrary.DeadStruct",
           "Dependents": [],
           "Root": false
-        }
-      ],
-      "Members": [
+        },
         {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()",
+          "Symbol": "TestLibrary.GenericTypeArgument",
           "Dependents": [],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers..ctor()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadField",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers._value",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(Int32)",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(Int32)",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveDelegate.Invoke()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveStruct..ctor()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.GenericTypeArgument..ctor()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.MyException..ctor()",
+          "Symbol": "TestLibrary.MyException",
           "Dependents": [],
           "Root": false
         }
-      ]
+      ],
+      "Members": []
     }
   ]
 }

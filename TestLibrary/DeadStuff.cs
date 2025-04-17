@@ -1,4 +1,8 @@
-﻿namespace TestLibrary;
+﻿using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("TestExe")]
+
+namespace TestLibrary;
 
 public class DeadClass
 {

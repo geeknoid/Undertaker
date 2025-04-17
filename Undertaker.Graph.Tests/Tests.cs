@@ -11,7 +11,7 @@ public class Tests
     {
         var graph = new AssemblyGraph();
 
-        graph.LoadAssembly("../../../../TestExe/bin/debug/net9.0/TestExe.dll");
+//        graph.LoadAssembly("../../../../TestExe/bin/debug/net9.0/TestExe.dll");
         graph.LoadAssembly("../../../../TestExe/bin/debug/net9.0/TestLibrary.dll");
 
         var serializerOptions = new JsonSerializerOptions { WriteIndented = true };
@@ -20,6 +20,7 @@ public class Tests
         var needlesslyPublicReport = JsonSerializer.Serialize(graph.CollectNeedlesslyPublicSymbolsReport(), serializerOptions);
         var unreferencedReport = JsonSerializer.Serialize(graph.CollectUnreferencedAssembliesReport(), serializerOptions);
         var assemblyLayerCake = JsonSerializer.Serialize(graph.CreateAssemblyLayerCake(), serializerOptions);
+        var needlessIVTReport = JsonSerializer.Serialize(graph.CollectNeedlessInternalsVisibleToReport(), serializerOptions);
         var graphDump = graph.ToString();
 
 #if false
@@ -29,6 +30,7 @@ public class Tests
         File.WriteAllText("../../../Golden/needlessly-public.json", needlesslyPublicReport);
         File.WriteAllText("../../../Golden/unreferenced.json", unreferencedReport);
         File.WriteAllText("../../../Golden/assembly-layer-cake.json", assemblyLayerCake);
+        File.WriteAllText("../../../Golden/needless-ivt.json", needlessIVTReport);
         File.WriteAllText("../../../Golden/graph.txt", graphDump);
 #else
         var goldenDeadReport = File.ReadAllText("../../../Golden/dead.json");
@@ -36,6 +38,7 @@ public class Tests
         var goldenNeedlesslyPublicReport = File.ReadAllText("../../../Golden/needlessly-public.json");
         var goldenUnreferencedReport = File.ReadAllText("../../../Golden/unreferenced.json");
         var goldenAssemblyLayerCake = File.ReadAllText("../../../Golden/assembly-layer-cake.json");
+        var goldenNeedlessIVTReport = File.ReadAllText("../../../Golden/needless-ivt.json");
         var goldenGraphDump = File.ReadAllText("../../../Golden/graph.txt");
 
         Assert.Equal(goldenDeadReport, deadReport);
@@ -43,6 +46,7 @@ public class Tests
         Assert.Equal(goldenNeedlesslyPublicReport, needlesslyPublicReport);
         Assert.Equal(goldenUnreferencedReport, unreferencedReport);
         Assert.Equal(goldenAssemblyLayerCake, assemblyLayerCake);
+        Assert.Equal(goldenNeedlessIVTReport, needlessIVTReport);
         Assert.Equal(goldenGraphDump, graphDump);
 #endif
     }

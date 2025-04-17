@@ -52,12 +52,15 @@ Options:
 * `--assembly-layer-cake` lets you specify the path to the file where the full layer cake of dependencies
   should be written. Each assembly in a layer only depends on assemblies in lower layers.
 
-  * `--graph-dump` lets you specify the path to the file where the internal graph dump should be written.
-	This is a text file containing the graph of all the symbols and their references. This is useful for
-	debugging and understanding the internal workings of the tool.
+* `--needless-internals-visible-to-report` lets you specify the path to the file where the report
+  on needless uses of [InternalsVisibleTo] should be written.
+
+* `--graph-dump` lets you specify the path to the file where the internal graph dump should be written.
+This is a text file containing the graph of all the symbols and their references. This is useful for
+debugging and understanding the internal workings of the tool.
 	
-  * `--continue-on-load-errors` lets you specify that the program should continue to run even if some assemblies
-  fail to load.
+* `--continue-on-load-errors` lets you specify that the program should continue to run even if some assemblies
+fail to load.
 
 ## Roots
 
@@ -79,8 +82,6 @@ symbols in the assemblies, starting from any root.
 The program doesn't identity unused const values or unused enum values (but unused enum types are identified).
 
 ## Ideas
-
-* Add another report which flags any unecessary uses of InternalsVisibleTo.
 
 * Add the ability to emit a dependency diagram in mermaid format for all the assemblies.
 

@@ -3,15 +3,16 @@ using ICSharpCode.Decompiler.TypeSystem;
 
 namespace Undertaker.Graph;
 
-internal sealed class Assembly(string name, Version version, bool root)
+internal sealed class Assembly(string name, bool root)
 {
     public string Name { get; } = name;
-    public Version Version { get; } = version;
     public bool Root { get; } = root;
     public IReadOnlyDictionary<string, Symbol> Symbols => _symbols;
+    public IReadOnlySet<Assembly> InternalsVisibleTo => _internalsVisibleTo; 
     public bool Loaded { get; set; }
 
     private readonly Dictionary<string, Symbol> _symbols = [];
+    private readonly HashSet<Assembly> _internalsVisibleTo = [];
 
     public Symbol GetSymbol(string name)
     {
@@ -94,6 +95,11 @@ internal sealed class Assembly(string name, Version version, bool root)
 
         return sym;
     }
+
+    public void RecordInternalsVisibleTo(Assembly other)
+    {
+        _ = _internalsVisibleTo.Add(other);
+    }   
 
     public override int GetHashCode() => Name.GetHashCode();
     public override bool Equals(object? obj) => obj is Assembly asm && Name.Equals(asm.Name, StringComparison.Ordinal);

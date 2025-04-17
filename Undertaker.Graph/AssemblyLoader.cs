@@ -10,9 +10,9 @@ namespace Undertaker.Graph;
 
 internal static class AssemblyLoader
 {
-    public static void Load(CSharpDecompiler decomp, Func<string, Version, Assembly> getAssembly)
+    public static void Load(CSharpDecompiler decomp, Func<string, Assembly> getAssembly)
     {
-        var asm = getAssembly(decomp.TypeSystem.MainModule.AssemblyName, decomp.TypeSystem.MainModule.AssemblyVersion);
+        var asm = getAssembly(decomp.TypeSystem.MainModule.AssemblyName);
 
         foreach (var type in decomp.TypeSystem.MainModule.TypeDefinitions)
         {
@@ -84,6 +84,26 @@ internal static class AssemblyLoader
             {
                 RecordSymbolsReferencedByAttributes(typeSym, decomp.TypeSystem.MainModule.GetModuleAttributes());
                 RecordSymbolsReferencedByAttributes(typeSym, decomp.TypeSystem.MainModule.GetAssemblyAttributes());
+
+                foreach (var attr in decomp.TypeSystem.MainModule.GetAssemblyAttributes())
+                {
+                    Console.WriteLine($"Assembly {asm.Name}, attr {attr.AttributeType.FullName}");
+
+                    if (attr.AttributeType.FullName == "System.Runtime.CompilerServices.InternalsVisibleToAttribute")
+                    {
+                        var assemblyName = attr.FixedArguments[0].Value;
+                        if (assemblyName is string name)
+                        {
+                            var comma = name.IndexOf(',');
+                            if (comma > 0)
+                            {
+                                name = name[..comma];
+                            }   
+
+                            asm.RecordInternalsVisibleTo(getAssembly(name));
+                        }
+                    }
+                }
             }
         }
 
@@ -268,7 +288,7 @@ internal static class AssemblyLoader
             var td = toMember.DeclaringTypeDefinition;
             if (td != null && td.ParentModule != null)
             {
-                var definingAsm = getAssembly(td.ParentModule.AssemblyName, td.ParentModule.AssemblyVersion);
+                var definingAsm = getAssembly(td.ParentModule.AssemblyName);
                 var toSym = definingAsm.GetSymbol(GetEntitySymbolName(toMember));
                 fromSym.RecordReferencedSymbol(toSym);
             }
@@ -282,7 +302,7 @@ internal static class AssemblyLoader
                 var td = t.GetDefinition();
                 if (td != null && td.ParentModule != null)
                 {
-                    var definingAsm = getAssembly(td.ParentModule.AssemblyName, td.ParentModule.AssemblyVersion);
+                    var definingAsm = getAssembly(td.ParentModule.AssemblyName);
                     var toSym = definingAsm.GetSymbol(t.FullName);
                     fromSym.RecordReferencedSymbol(toSym);
                 }

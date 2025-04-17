@@ -23,8 +23,9 @@ internal static class Program
         public string? AliveSymbolsReport { get; set; }
         public string? NeedlesslyPublicSymbolsReport { get; set; }
         public string? UnreferencedAssembliesReport { get; set; }
-        public string? GraphDump { get; set; }
         public string? AssemblyLayerCake { get; set; }
+        public string? NeedlessInternalsVisibleToReport { get; set; }
+        public string? GraphDump { get; set; }
         public bool ContinueOnLoadErrors { get; set; }
         public bool Verbose { get; set; }
     }
@@ -53,11 +54,15 @@ internal static class Program
 
             new Option<string>(
                 ["-uar", "--unreferenced-assemblies-report"],
-                "Path of the report on unreferenced assemblies"),
+                "Path of the report on unreferenced assemblies to produce"),
 
             new Option<string>(
                 ["-alc", "--assembly-layer-cake"],
                 "Path of the assembly layer cake file to produce"),
+
+            new Option<string>(
+                ["-nivtr", "--needless-internals-visible-to-report"],
+                "Path of the report on superfluous uses of [InternalsVisibleTo] to produce"),
 
             new Option<string>(
                 ["-gd", "--graph-dump"],
@@ -159,7 +164,13 @@ internal static class Program
 
         Out($"Done loading assemblies: loaded {successCount}, skipped {skipCount}, failed {errorCount}");
 
-        if (args.DeadSymbolsReport == null && args.AliveSymbolsReport == null && args.NeedlesslyPublicSymbolsReport == null && args.UnreferencedAssembliesReport == null && args.AssemblyLayerCake == null && args.GraphDump == null)
+        if (args.DeadSymbolsReport == null
+            && args.AliveSymbolsReport == null
+            && args.NeedlesslyPublicSymbolsReport == null
+            && args.UnreferencedAssembliesReport == null
+            && args.AssemblyLayerCake == null
+            && args.NeedlessInternalsVisibleToReport == null
+            && args.GraphDump == null)
         {
             Out("No output requested");
         }
@@ -167,6 +178,7 @@ internal static class Program
             !OutputAliveSymbolsReport() ||
             !OutputNeedlesslyPublicSymbolsReport() ||
             !OutputAssemblyLayerCake() ||
+            !OutputNeedlessInternalsVisibleToReport() ||
             !OutputUnreferencedAssembliesReport() ||
             !OutputGraphDump())
         {
@@ -333,6 +345,28 @@ internal static class Program
             return true;
         }
 
+        bool OutputNeedlessInternalsVisibleToReport()
+        {
+            if (args.NeedlessInternalsVisibleToReport != null)
+            {
+                var path = Path.GetFullPath(args.NeedlessInternalsVisibleToReport);
+                try
+                {
+                    var report = graph.CollectNeedlessInternalsVisibleToReport();
+                    var json = JsonSerializer.Serialize(report, _serializationOptions);
+                    File.WriteAllText(path, json);
+                    Out($"Output needless [InternalsVisibleTo] report to {path}");
+                }
+                catch (Exception ex)
+                {
+                    Error($"Unable to output needless [InternalsVisibleTo] report to {path}: {ex.Message}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         void Out(string message)
         {
             if (args.Verbose)
@@ -341,14 +375,7 @@ internal static class Program
             }
         }
 
-        void Warn(string message)
-        {
-            Console.WriteLine("WARN: " + message);
-        }
-
-        void Error(string message)
-        {
-            Console.Error.WriteLine("ERROR: " + message);
-        }
+        void Warn(string message) => Console.WriteLine("WARNING: " + message);
+        void Error(string message) => Console.Error.WriteLine("ERROR: " + message);
     }
 }
