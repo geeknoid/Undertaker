@@ -33,17 +33,21 @@ Options:
 * `--root-assemblies` lets you specify the set of root assemblies. This is a text file
   containing the names of assemblies, one per line.
 
-* `--dead-report` lets you specify the path to the file where the report on dead symbols
+* `--dead-symbols-report` lets you specify the path to the file where the report on dead symbols
   should be written. This report contains a list of all the symbols that are defined in the
   assemblies but are never referenced by any other symbol.
 
-* `--alive-report` lets you specify the path to the file where the report on alive symbols
+* `--alive-symbols-report` lets you specify the path to the file where the report on alive symbols
   should be written. This report contains a list of all the symbols that are defined in the
   assemblies and are referenced by other symbols.
 
-* `--needlessly-public-report` lets you specify the path to the file where the report on needlessly
+* `--needlessly-public-symbols-report` lets you specify the path to the file where the report on needlessly
   public symbols should be written. This report contains a list of all the symbols that are
   defined as public but are never referenced by any other assembly and so could be made internal.
+
+* `--unreferenced-assemblies-report` lets you specify the path to the file where the report on unreferenced
+  assemblies should be written. This report contains a list of all the assemblies that were loaded as input
+  but don't contain any symbols reachable from the roots.
  
 * `--assembly-layer-cake` lets you specify the path to the file where the full layer cake of dependencies
   should be written. Each assembly in a layer only depends on assemblies in lower layers.
@@ -84,8 +88,6 @@ The program doesn't identity unused const values or unused enum values (but unus
 have dependencies on otherwise dead symbols.
 
 * Can the symbol info include file & line numbers?
-
-* Explicitly identify unused assemblies
 
 ## TODO
 

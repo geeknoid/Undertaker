@@ -92,7 +92,7 @@ public sealed class AssemblyGraph
     /// Gets information about the dead symbols in the graph.
     /// </summary>
     /// <remarks>Dead symbols are ones which aren't reachable from the various roots known to the graph.</remarks>
-    public GraphReport CollectDeadReport()
+    public GraphReport CollectDeadSymbolsReport()
     {
         MarkUsedSymbols();
 
@@ -146,7 +146,7 @@ public sealed class AssemblyGraph
     /// Gets information about the alive symbols in the graph.
     /// </summary>
     /// <remarks>Alive symbols are ones which are reachable from the various roots known to the graph.</remarks>
-    public GraphReport CollectAliveReport()
+    public GraphReport CollectAliveSymbolsReport()
     {
         MarkUsedSymbols();
 
@@ -197,7 +197,7 @@ public sealed class AssemblyGraph
     /// <summary>
     /// Gets the set of types and symbols which could be made internal.
     /// </summary>
-    public GraphReport CollectNeedlesslyPublicReport()
+    public GraphReport CollectNeedlesslyPublicSymbolsReport()
     {
         var assemblies = new List<GraphReportAssembly>();
         foreach (var asm in _assemblies.Values)
@@ -257,7 +257,7 @@ public sealed class AssemblyGraph
     /// the layers below.
     /// </remarks>
     /// <returns>A list of layers, where each layer is a list of assembly names.</returns>
-    public List<List<string>> CreateLayerCake()
+    public List<List<string>> CreateAssemblyLayerCake()
     {
         // Step 1: Build a dependency map for each assembly
         var dependencies = new Dictionary<string, HashSet<string>>();
@@ -326,6 +326,25 @@ public sealed class AssemblyGraph
         }
 
         return layers;
+    }
+
+    /// <summary>
+    /// Returns a list of assemblies which are not reachable from any roots.
+    /// </summary>
+    public List<string> CollectUnreferencedAssembliesReport()
+    {
+        var result = new List<string>();
+
+        var aliveReport = CollectAliveSymbolsReport();
+        foreach (var asm in aliveReport.Assemblies)
+        {
+            if (asm.Types.Count == 0 && asm.Members.Count == 0)
+            {
+                result.Add(asm.Assembly);
+            }
+        }
+
+        return result;
     }
 
     public override string ToString()

@@ -19,9 +19,10 @@ internal static class Program
     {
         public DirectoryInfo? Assemblies { get; set; }
         public FileInfo? RootAssemblies { get; set; }
-        public string? DeadReport { get; set; }
-        public string? AliveReport { get; set; }
-        public string? NeedlesslyPublicReport { get; set; }
+        public string? DeadSymbolsReport { get; set; }
+        public string? AliveSymbolsReport { get; set; }
+        public string? NeedlesslyPublicSymbolsReport { get; set; }
+        public string? UnreferencedAssembliesReport { get; set; }
         public string? GraphDump { get; set; }
         public string? AssemblyLayerCake { get; set; }
         public bool ContinueOnLoadErrors { get; set; }
@@ -39,16 +40,20 @@ internal static class Program
                 "Path to a text file listing assemblies to be treated as root, one assembly name per line"),
 
             new Option<string>(
-                ["-dr", "--dead-report"],
+                ["-dsr", "--dead-symbols-report"],
                 "Path of the report on dead symbols to produce"),
 
             new Option<string>(
-                ["-ar", "--alive-report"],
+                ["-asr", "--alive-symbols-report"],
                 "Path of the report on alive symbols to produce"),
 
             new Option<string>(
-                ["-npr", "--needlessly-public-report"],
+                ["-npsr", "--needlessly-public-symbols-report"],
                 "Path of the report on needlessly public symbols to produce"),
+
+            new Option<string>(
+                ["-uar", "--unreferenced-assemblies-report"],
+                "Path of the report on unreferenced assemblies"),
 
             new Option<string>(
                 ["-alc", "--assembly-layer-cake"],
@@ -154,15 +159,18 @@ internal static class Program
 
         Out($"Done loading assemblies: loaded {successCount}, skipped {skipCount}, failed {errorCount}");
 
-        ProduceDeadReport();
-        ProduceAliveReport();
-        ProduceNeedlesslyPublicReport();
-        ProduceAssemblyLayerCake();
-        ProduceGraphDump();
-
-        if (args.DeadReport == null && args.AliveReport == null && args.NeedlesslyPublicReport == null && args.AssemblyLayerCake == null && args.GraphDump == null)
+        if (args.DeadSymbolsReport == null && args.AliveSymbolsReport == null && args.NeedlesslyPublicSymbolsReport == null && args.UnreferencedAssembliesReport == null && args.AssemblyLayerCake == null && args.GraphDump == null)
         {
             Out("No output requested");
+        }
+        else if (!OutputDeadSymbolsReport() ||
+            !OutputAliveSymbolsReport() ||
+            !OutputNeedlesslyPublicSymbolsReport() ||
+            !OutputAssemblyLayerCake() ||
+            !OutputUnreferencedAssembliesReport() ||
+            !OutputGraphDump())
+        {
+            return 1;
         }
 
         return 0;
@@ -195,14 +203,14 @@ internal static class Program
             }
         }
 
-        void ProduceDeadReport()
+        bool OutputDeadSymbolsReport()
         {
-            if (args.DeadReport != null)
+            if (args.DeadSymbolsReport != null)
             {
-                var path = Path.GetFullPath(args.DeadReport);
+                var path = Path.GetFullPath(args.DeadSymbolsReport);
                 try
                 {
-                    var report = graph.CollectDeadReport();
+                    var report = graph.CollectDeadSymbolsReport();
                     var json = JsonSerializer.Serialize(report, _serializationOptions);
                     File.WriteAllText(path, json);
                     Out($"Output report on dead symbols to {path}");
@@ -210,18 +218,21 @@ internal static class Program
                 catch (Exception ex)
                 {
                     Error($"Unable to write report on dead symbols to {path}: {ex.Message}");
+                    return false;
                 }
             }
+
+            return true;
         }
 
-        void ProduceAliveReport()
+        bool OutputAliveSymbolsReport()
         {
-            if (args.AliveReport != null)
+            if (args.AliveSymbolsReport != null)
             {
-                var path = Path.GetFullPath(args.AliveReport);
+                var path = Path.GetFullPath(args.AliveSymbolsReport);
                 try
                 {
-                    var report = graph.CollectAliveReport();
+                    var report = graph.CollectAliveSymbolsReport();
                     var json = JsonSerializer.Serialize(report, _serializationOptions);
                     File.WriteAllText(path, json);
                     Out($"Output report on alive symbols to {path}");
@@ -229,18 +240,21 @@ internal static class Program
                 catch (Exception ex)
                 {
                     Error($"Unable to write report on alive symbols to {path}: {ex.Message}");
+                    return false;
                 }
             }
+
+            return true;
         }
 
-        void ProduceNeedlesslyPublicReport()
+        bool OutputNeedlesslyPublicSymbolsReport()
         {
-            if (args.NeedlesslyPublicReport != null)
+            if (args.NeedlesslyPublicSymbolsReport != null)
             {
-                var path = Path.GetFullPath(args.NeedlesslyPublicReport);
+                var path = Path.GetFullPath(args.NeedlesslyPublicSymbolsReport);
                 try
                 {
-                    var report = graph.CollectNeedlesslyPublicReport();
+                    var report = graph.CollectNeedlesslyPublicSymbolsReport();
                     var json = JsonSerializer.Serialize(report, _serializationOptions);
                     File.WriteAllText(path, json);
                     Out($"Output report on needlessly public symbols to {path}");
@@ -248,18 +262,21 @@ internal static class Program
                 catch (Exception ex)
                 {
                     Error($"Unable to write report on needlessly public symbols to {path}: {ex.Message}");
+                    return false;
                 }
             }
+
+            return true;
         }
 
-        void ProduceAssemblyLayerCake()
+        bool OutputAssemblyLayerCake()
         {
             if (args.AssemblyLayerCake != null)
             {
                 var path = Path.GetFullPath(args.AssemblyLayerCake);
                 try
                 {
-                    var cake = graph.CreateLayerCake();
+                    var cake = graph.CreateAssemblyLayerCake();
                     var json = JsonSerializer.Serialize(cake, _serializationOptions);
                     File.WriteAllText(path, json);
                     Out($"Output assembly layer cake to {path}");
@@ -267,11 +284,14 @@ internal static class Program
                 catch (Exception ex)
                 {
                     Error($"Unable to output assembly layer cake to {path}: {ex.Message}");
+                    return false;
                 }
             }
+
+            return true;
         }
 
-        void ProduceGraphDump()
+        bool OutputGraphDump()
         {
             if (args.GraphDump != null)
             {
@@ -284,8 +304,33 @@ internal static class Program
                 catch (Exception ex)
                 {
                     Error($"Unable to write graph dump to {path}: {ex.Message}");
+                    return false;
                 }
             }
+
+            return true;
+        }
+
+        bool OutputUnreferencedAssembliesReport()
+        {
+            if (args.UnreferencedAssembliesReport != null)
+            {
+                var path = Path.GetFullPath(args.UnreferencedAssembliesReport);
+                try
+                {
+                    var report = graph.CollectUnreferencedAssembliesReport();
+                    var json = JsonSerializer.Serialize(report, _serializationOptions);
+                    File.WriteAllText(path, json);
+                    Out($"Output unreferenced assemblies report to {path}");
+                }
+                catch (Exception ex)
+                {
+                    Error($"Unable to output unreferenced assemblies report to {path}: {ex.Message}");
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         void Out(string message)
@@ -304,6 +349,6 @@ internal static class Program
         void Error(string message)
         {
             Console.Error.WriteLine("ERROR: " + message);
-        }   
+        }
     }
 }

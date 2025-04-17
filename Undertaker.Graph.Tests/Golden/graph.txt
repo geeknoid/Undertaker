@@ -201,7 +201,6 @@ ASSEMBLY TestLibrary.dll
       System.Collections.Generic.List..ctor()
       System.Collections.Generic.List
       TestLibrary.GenericTypeArgument
-      System.Object
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
   TestLibrary.AliveClassAndAliveMembers.AliveNestedType [TYPE, ALIVE, NOT ROOT]
