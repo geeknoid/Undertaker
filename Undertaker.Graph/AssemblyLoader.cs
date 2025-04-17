@@ -63,6 +63,16 @@ internal static class AssemblyLoader
                 RecordReferenceToType(typeSym, ta);
             }
 
+            foreach (var tp in type.TypeParameters)
+            {
+                foreach (var tc in tp.TypeConstraints)
+                {
+                    RecordReferenceToType(typeSym, tc.Type);
+                }
+
+                RecordSymbolsReferencedByAttributes(typeSym, tp.GetAttributes());
+            }
+
             if (type.DeclaringType != null)
             {
                 RecordReferenceToType(typeSym, type.DeclaringType);
@@ -282,30 +292,16 @@ internal static class AssemblyLoader
                     RecordReferenceToType(fromSym, ta);
                 }
 
-                foreach (var tp in t.TypeParameters)
-                {
-                    foreach (var tc in tp.TypeConstraints)
-                    {
-                        RecordReferenceToType(fromSym, tc.Type);
-                    }
-
-                    RecordSymbolsReferencedByAttributes(fromSym, tp.GetAttributes());
-                }
-
                 t = t.DeclaringType;
             }
         }
     }
 
-    // avoid reallocting new string builders all the time
-    private static readonly StringBuilder _sb = new();
-
     public static string GetEntitySymbolName(IEntity entity)
     {
         if (entity is IMethod method)
         {
-            var sb = _sb
-                .Clear()
+            var sb = new StringBuilder()
                 .Append(entity.FullName)
                 .Append('(');
 
