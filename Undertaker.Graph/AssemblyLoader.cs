@@ -20,7 +20,7 @@ internal static class AssemblyLoader
 
             if (type.Kind == TypeKind.Enum)
             {
-                // we don't handle enum values, so pretebd they don't exist
+                // we don't handle enum values, so pretend they don't exist
                 continue;
             }
 
@@ -103,6 +103,16 @@ internal static class AssemblyLoader
             foreach (var ta in method.TypeArguments)
             {
                 RecordReferenceToType(methodSym, ta);
+            }
+
+            foreach (var tp in method.TypeParameters)
+            {
+                foreach (var tc in tp.TypeConstraints)
+                {
+                    RecordReferenceToType(methodSym, tc.Type);
+                }
+
+                RecordSymbolsReferencedByAttributes(methodSym, tp.GetAttributes());
             }
 
             foreach (var parameter in method.Parameters)
@@ -270,6 +280,16 @@ internal static class AssemblyLoader
                 foreach (var ta in t.TypeArguments)
                 {
                     RecordReferenceToType(fromSym, ta);
+                }
+
+                foreach (var tp in t.TypeParameters)
+                {
+                    foreach (var tc in tp.TypeConstraints)
+                    {
+                        RecordReferenceToType(fromSym, tc.Type);
+                    }
+
+                    RecordSymbolsReferencedByAttributes(fromSym, tp.GetAttributes());
                 }
 
                 t = t.DeclaringType;

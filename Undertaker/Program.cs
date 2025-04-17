@@ -70,7 +70,7 @@ internal static class Program
         return rootCommand.InvokeAsync(args);
     }
 
-    private static async Task<int> ExecuteAsync(UndertakerArgs args)
+    private static Task<int> ExecuteAsync(UndertakerArgs args)
     {
         var graph = new AssemblyGraph();
 
@@ -93,10 +93,11 @@ internal static class Program
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"ERROR: Unable to read root assembly file {args.RootAssemblies.FullName}: {ex.Message}");
-                return 1;
+                return Task.FromResult(1);
             }
         }
 
+#if false
         // parallelize reading all the assemblies
         var tasks = new List<Task<CSharpDecompiler>>();
         var files = new Dictionary<Task, string>();
@@ -112,7 +113,7 @@ internal static class Program
                 return new CSharpDecompiler(file.FullName, new DecompilerSettings
                 {
                     AutoLoadAssemblyReferences = false,
-                    LoadInMemory = true,
+                    LoadInMemory = false,
                     ThrowOnAssemblyResolveErrors = false,
                 });
             });
@@ -132,11 +133,11 @@ internal static class Program
             }
             catch (BadImageFormatException)
             {
-                Console.Error.WriteLine($"ERROR: {files[task]} is not a .NET assembly, skipping");
+                Console.WriteLine($"WARNING: {files[task]} is not a .NET assembly, ignoring");
             }
             catch (MetadataFileNotSupportedException)
             {
-                Console.Error.WriteLine($"ERROR: {files[task]} is not a .NET assembly, skipping");
+                Console.WriteLine($"WARNING: {files[task]} is not a .NET assembly, ignoring");
             }
             catch (Exception ex)
             {
@@ -144,6 +145,43 @@ internal static class Program
                 errorCount++;
             }
         }
+#else
+
+        int errorCount = 0;
+        foreach (var file in args.Assemblies!.EnumerateFiles("*.dll", SearchOption.AllDirectories))
+        {
+            if (args.Verbose)
+            {
+                Console.WriteLine($"Loading assembly {file.FullName}");
+            }
+
+            try
+            {
+                var decomp = new CSharpDecompiler(file.FullName, new DecompilerSettings
+                {
+                    AutoLoadAssemblyReferences = false,
+                    LoadInMemory = false,
+                    ThrowOnAssemblyResolveErrors = false,
+                });
+
+                graph.LoadAssembly(decomp);
+            }
+            catch (BadImageFormatException)
+            {
+                Console.WriteLine($"WARNING: {file.FullName} is not a .NET assembly, ignoring");
+            }
+            catch (MetadataFileNotSupportedException)
+            {
+                Console.WriteLine($"WARNING: {file.FullName} is not a .NET assembly, ignoring");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"ERROR: Unable to load assembly {file.FullName}: {ex.Message}");
+                errorCount++;
+            }
+        }
+
+#endif
 
         if (errorCount > 0)
         {
@@ -154,13 +192,13 @@ internal static class Program
             else
             {
                 Console.Error.WriteLine($"ERROR: Unable to load {errorCount} assemblies, exiting");
-                return 1;
+                return Task.FromResult(1);
             }
         }
 
         if (args.Verbose)
         {
-            Console.WriteLine("Done loading assemblies");
+            Console.WriteLine("Done processing assemblies");
         }
 
         ProduceDeadReport();
@@ -177,7 +215,7 @@ internal static class Program
             }
         }
 
-        return 0;
+        return Task.FromResult(0);
 
         void ProduceDeadReport()
         {

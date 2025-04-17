@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
+﻿using System.Text;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
 
@@ -336,7 +334,7 @@ public sealed class AssemblyGraph
 
         var sb = new StringBuilder();
 
-        foreach (var asm in _assemblies.Values)
+        foreach (var asm in _assemblies.Values.OrderBy(a => a.Name))
         {
             _ = sb.Append("ASSEMBLY ").Append(asm.Name).AppendLine(".dll");
 
@@ -346,7 +344,7 @@ public sealed class AssemblyGraph
                 continue;
             }
 
-            foreach (var sym in asm.Symbols.Values)
+            foreach (var sym in asm.Symbols.Values.OrderBy(s => s.Name))
             {
                 _ = sb.Append("  ").Append(sym.Name).Append(" [").Append(sym.Kind.ToString().ToUpperInvariant());
                 _ = sym.Marked ? sb.Append(", ALIVE") : sb.Append(", DEAD");
