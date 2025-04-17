@@ -40,15 +40,15 @@ internal static class Program
 
             new Option<string>(
                 ["-dr", "--dead-report"],
-                "Path of the dead code report file to produce"),
+                "Path of the report on dead symbols to produce"),
 
             new Option<string>(
                 ["-ar", "--alive-report"],
-                "Path of the alive code report file to produce"),
+                "Path of the report on alive symbols to produce"),
 
             new Option<string>(
                 ["-npr", "--needlessly-public-report"],
-                "Path of the needlessly public report file to produce"),
+                "Path of the report on needlessly public symbols to produce"),
 
             new Option<string>(
                 ["-alc", "--assembly-layer-cake"],
@@ -59,8 +59,8 @@ internal static class Program
                 "Path of the graph dump file to produce"),
 
             new Option<bool>(
-                ["-ce", "--continue-on-load-errors"],
-                "Proceed to the analysis and output phase even if some assemblies didn't load"),
+                ["-cle", "--continue-on-load-errors"],
+                "Proceed to the analysis and output phases even if some assemblies didn't load"),
 
             new Option<bool>(
                 ["-v", "--verbose"],

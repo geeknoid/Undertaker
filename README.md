@@ -11,13 +11,49 @@ the set of defined symbols which are never referenced (dead symbols), along with
 showing the defined symbols that are referenced (alive symbols) and which other symbol
 references them.
 
-## Other Features
+## Options
 
-The --needless-public-report option emits a JSON file capturing the set of symbols across the
-set of assemblies which are currently defined as public, but could in fact be defined as internal.
+```text
+Usage:
+  Undertaker <assemblies> [options]
 
-The --assembly-layer-cake option emits a JSON file capturing a full layer cake of dependencies
-between the assemblies. Each assembly in a layer only depends on assemblies in lower layers.
+Arguments:
+  <assemblies>  Path to folder containing all the assemblies to work with.
+
+Options:
+  -ra, --root-assemblies <root-assemblies>                     Path to a text file listing assemblies to be treated as root, one assembly name per line
+  -dr, --dead-report <dead-report>                             Path of the dead code report file to produce
+  -ar, --alive-report <alive-report>                           Path of the alive code report file to produce
+  -npr, --needlessly-public-report <needlessly-public-report>  Path of the needlessly public report file to produce
+  -alc, --assembly-layer-cake <assembly-layer-cake>            Path of the assembly layer cake file to produce
+  -gd, --graph-dump <graph-dump>                               Path of the graph dump file to produce
+  -cle, --continue-on-load-errors                               Proceed to the analysis and output phase even if some assemblies didn't load
+``` 
+
+* `--root-assemblies` lets you specify the set of root assemblies. This is a text file
+  containing the names of assemblies, one per line.
+
+* `--dead-report` lets you specify the path to the file where the report on dead symbols
+  should be written. This report contains a list of all the symbols that are defined in the
+  assemblies but are never referenced by any other symbol.
+
+* `--alive-report` lets you specify the path to the file where the report on alive symbols
+  should be written. This report contains a list of all the symbols that are defined in the
+  assemblies and are referenced by other symbols.
+
+* `--needlessly-public-report` lets you specify the path to the file where the report on needlessly
+  public symbols should be written. This report contains a list of all the symbols that are
+  defined as public but are never referenced by any other assembly and so could be made internal.
+ 
+* `--assembly-layer-cake` lets you specify the path to the file where the full layer cake of dependencies
+  should be written. Each assembly in a layer only depends on assemblies in lower layers.
+
+  * `--graph-dump` lets you specify the path to the file where the internal graph dump should be written.
+	This is a text file containing the graph of all the symbols and their references. This is useful for
+	debugging and understanding the internal workings of the tool.
+	
+  * `--continue-on-load-errors` lets you specify that the program should continue to run even if some assemblies
+  fail to load.
 
 ## Roots
 
@@ -25,7 +61,7 @@ The analysis to discover dead code depends on knowing the roots, the symbols tha
 known to be necessary. It is from those necessary symbols that the dead symbol analysis
 begins. There are two kinds of roots:
 
-* Any static method called Main in any assembly is considered a root.
+* Any static method called `Main` in any assembly is considered a root.
 
 * You can provide a list of assemblies as root assemblies. Any public symbol exposed by
 these assemblies are considered roots. Any assemblies in the set which are considered
