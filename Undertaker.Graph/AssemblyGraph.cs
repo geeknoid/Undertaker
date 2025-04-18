@@ -411,6 +411,7 @@ public sealed class AssemblyGraph
             .AppendLine("title: Assembly Dependency Diagram")
             .AppendLine("---")
             .AppendLine()
+            .AppendLine("```mermaid")
             .AppendLine("stateDiagram-v2");
 
         foreach (var asm in _assemblies.Values.OrderBy(a => a.Name))
@@ -436,7 +437,9 @@ public sealed class AssemblyGraph
             }
         }
 
-        return sb.ToString();
+        return sb.
+            AppendLine("```").
+            ToString();
     }
 
     public override string ToString()
