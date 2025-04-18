@@ -32,9 +32,11 @@ Options:
   -ivt, --internals-visible-to <internals-visible-to>       Path of the report to produce on spurious uses of
                                                             [InternalsVisibleTo]
   -alc, --assembly-layer-cake <assembly-layer-cake>         Path of the assembly layer cake to produce
+  -dd, --dependency-diagram <dependency-diagram>            Path of the Mermaid-based assembly dependency diagram to
+                                                            produce
   -gd, --graph-dump <graph-dump>                            Path of the graph dump file to produce
   -cle, --continue-on-load-errors                           Proceed to the analysis and output phases even if some
- ``` 
+  ``` 
 
 * `--root-assemblies` lets you specify the set of root assemblies. This is a text file
   containing the names of assemblies, one per line.
@@ -60,6 +62,10 @@ Options:
 
 * `--assembly-layer-cake` lets you specify the path to the file where the full layer cake of dependencies
   should be written. Each assembly in a layer only depends on assemblies in lower layers.
+
+* `--dependency-diagram` lets you specify the path to the file where the assembly dependency diagram in
+  Mermaid format should be written. This diagram shows the dependencies between the assemblies in a
+  visual format, making it easier to understand the relationships between them.
 
 * `--graph-dump` lets you specify the path to the file where the internal graph dump should be written.
 This is a text file containing the graph of all the symbols and their references. This is useful for
