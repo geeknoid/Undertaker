@@ -11,7 +11,7 @@ public class Tests
     {
         var graph = new AssemblyGraph();
 
-//        graph.LoadAssembly("../../../../TestExe/bin/debug/net9.0/TestExe.dll");
+        graph.LoadAssembly("../../../../TestExe/bin/debug/net9.0/TestExe.dll");
         graph.LoadAssembly("../../../../TestExe/bin/debug/net9.0/TestLibrary.dll");
 
         var serializerOptions = new JsonSerializerOptions { WriteIndented = true };

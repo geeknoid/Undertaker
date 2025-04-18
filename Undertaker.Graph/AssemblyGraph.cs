@@ -372,7 +372,6 @@ public sealed class AssemblyGraph
                 bool usesInternals = false;
                 foreach (var sym in other.Symbols.Values)
                 {
-
                     foreach (var refSym in sym.ReferencedSymbols.Values)
                     {
                         if (refSym.Assembly == asm && !refSym.IsPublic)
@@ -401,6 +400,7 @@ public sealed class AssemblyGraph
             }
         }
 
+        result.Sort((x, y) => string.CompareOrdinal(x.Assembly, y.Assembly));
         return result;
     }
 
