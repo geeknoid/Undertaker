@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
 
@@ -363,9 +364,15 @@ public sealed class AssemblyGraph
 
             foreach (var other in asm.InternalsVisibleTo)
             {
+                if (!other.Loaded)
+                {
+                    continue;
+                }
+
                 bool usesInternals = false;
                 foreach (var sym in other.Symbols.Values)
                 {
+
                     foreach (var refSym in sym.ReferencedSymbols.Values)
                     {
                         if (refSym.Assembly == asm && !refSym.IsPublic)

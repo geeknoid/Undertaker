@@ -87,8 +87,6 @@ internal static class AssemblyLoader
 
                 foreach (var attr in decomp.TypeSystem.MainModule.GetAssemblyAttributes())
                 {
-                    Console.WriteLine($"Assembly {asm.Name}, attr {attr.AttributeType.FullName}");
-
                     if (attr.AttributeType.FullName == "System.Runtime.CompilerServices.InternalsVisibleToAttribute")
                     {
                         var assemblyName = attr.FixedArguments[0].Value;
