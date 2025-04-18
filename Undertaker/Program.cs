@@ -25,6 +25,7 @@ internal static class Program
         public string? UnreferencedAssemblies { get; set; }
         public string? AssemblyLayerCake { get; set; }
         public string? InternalsVisibleTo { get; set; }
+        public string? DependencyDiagram { get; set; }
         public string? GraphDump { get; set; }
         public bool ContinueOnLoadErrors { get; set; }
         public bool Verbose { get; set; }
@@ -63,6 +64,10 @@ internal static class Program
             new Option<string>(
                 ["-alc", "--assembly-layer-cake"],
                 "Path of the assembly layer cake to produce"),
+
+            new Option<string>(
+                ["-dd", "--dependency-diagram"],
+                "Path of the Mermaid-based assembly dependency diagram to produce"),
 
             new Option<string>(
                 ["-gd", "--graph-dump"],
@@ -170,6 +175,7 @@ internal static class Program
             && args.UnreferencedAssemblies == null
             && args.InternalsVisibleTo == null
             && args.AssemblyLayerCake == null
+            && args.DependencyDiagram == null
             && args.GraphDump == null)
         {
             Out("No output requested");
@@ -180,6 +186,7 @@ internal static class Program
             !OutputUnreferencedAssemblies() ||
             !OutputInternalsVisibleTo() ||
             !OutputAssemblyLayerCake() ||
+            !OutputDependencyDiagram() ||
             !OutputGraphDump())
         {
             return 1;
@@ -340,6 +347,27 @@ internal static class Program
                 catch (Exception ex)
                 {
                     Error($"Unable to output assembly layer cake to {path}: {ex.Message}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        bool OutputDependencyDiagram()
+        {
+            if (args.DependencyDiagram != null)
+            {
+                var path = Path.GetFullPath(args.DependencyDiagram);
+                try
+                {
+                    var dd = graph.CreateDependencyDiagram();
+                    File.WriteAllText(path, dd);
+                    Out($"Output assembly dependency diagram to {path}");
+                }
+                catch (Exception ex)
+                {
+                    Error($"Unable to output dependency diagram to {path}: {ex.Message}");
                     return false;
                 }
             }

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
@@ -401,6 +402,41 @@ public sealed class AssemblyGraph
         }
 
         return layers;
+    }
+
+    public string CreateDependencyDiagram()
+    {
+        var sb = new StringBuilder()
+            .AppendLine("---")
+            .AppendLine("title: Assembly Dependency Diagram")
+            .AppendLine("---")
+            .AppendLine()
+            .AppendLine("stateDiagram-v2");
+
+        foreach (var asm in _assemblies.Values.OrderBy(a => a.Name))
+        {
+            if (!asm.Loaded)
+            {
+                continue;
+            }
+
+            var done = new HashSet<string>();
+            foreach (var sym in asm.Symbols.Values.OrderBy(sym => sym.Name))
+            {
+                foreach (var rs in sym.ReferencedSymbols.Values.OrderBy(rs => rs.Name))
+                {
+                    if (rs.Assembly != asm && rs.Assembly.Loaded)
+                    {
+                        if (done.Add(rs.Assembly.Name))
+                        {
+                            _ = sb.AppendLine(CultureInfo.InvariantCulture, $"    [{asm.Name}] --> [{rs.Assembly.Name}]");
+                        }
+                    }
+                }
+            }
+        }
+
+        return sb.ToString();
     }
 
     public override string ToString()
