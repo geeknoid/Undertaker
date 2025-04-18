@@ -429,7 +429,7 @@ public sealed class AssemblyGraph
                     {
                         if (done.Add(rs.Assembly.Name))
                         {
-                            _ = sb.AppendLine(CultureInfo.InvariantCulture, $"    [{asm.Name}] --> [{rs.Assembly.Name}]");
+                            _ = sb.AppendLine(CultureInfo.InvariantCulture, $"    {asm.Name} --> {rs.Assembly.Name}");
                         }
                     }
                 }
