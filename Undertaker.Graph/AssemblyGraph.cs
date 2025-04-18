@@ -93,7 +93,7 @@ public sealed class AssemblyGraph
     /// Gets information about the dead symbols in the graph.
     /// </summary>
     /// <remarks>Dead symbols are ones which aren't reachable from the various roots known to the graph.</remarks>
-    public GraphReport CollectDeadSymbolsReport()
+    public GraphReport CollectDeadSymbols()
     {
         MarkUsedSymbols();
 
@@ -147,7 +147,7 @@ public sealed class AssemblyGraph
     /// Gets information about the alive symbols in the graph.
     /// </summary>
     /// <remarks>Alive symbols are ones which are reachable from the various roots known to the graph.</remarks>
-    public GraphReport CollectAliveSymbolsReport()
+    public GraphReport CollectAliveSymbols()
     {
         MarkUsedSymbols();
 
@@ -198,7 +198,7 @@ public sealed class AssemblyGraph
     /// <summary>
     /// Gets the set of types and symbols which could be made internal.
     /// </summary>
-    public GraphReport CollectNeedlesslyPublicSymbolsReport()
+    public GraphReport CollectPublicSymbols()
     {
         var assemblies = new List<GraphReportAssembly>();
         foreach (var asm in _assemblies.Values)
@@ -250,6 +250,80 @@ public sealed class AssemblyGraph
         return new(assemblies);
     }
 
+    /// <summary>
+    /// Returns a list of assemblies which are not reachable from any roots.
+    /// </summary>
+    public IReadOnlyList<string> CollectUnreferencedAssemblies()
+    {
+        var result = new List<string>();
+
+        var aliveReport = CollectAliveSymbols();
+        foreach (var asm in aliveReport.Assemblies)
+        {
+            if (asm.Types.Count == 0 && asm.Members.Count == 0)
+            {
+                result.Add(asm.Assembly);
+            }
+        }
+
+        return result;
+    }
+
+    public IReadOnlyList<NeedlessInternalsVisibleToReport> CollectInternalsVisibleTo()
+    {
+        var result = new List<NeedlessInternalsVisibleToReport>();
+
+        foreach (var asm in _assemblies.Values)
+        {
+            if (!asm.Loaded)
+            {
+                // unprocessed referenced assembly, skip it
+                continue;
+            }
+
+            var otherAssemblies = new List<string>();
+
+            foreach (var other in asm.InternalsVisibleTo)
+            {
+                if (!other.Loaded)
+                {
+                    continue;
+                }
+
+                bool usesInternals = false;
+                foreach (var sym in other.Symbols.Values)
+                {
+                    foreach (var refSym in sym.ReferencedSymbols.Values)
+                    {
+                        if (refSym.Assembly == asm && !refSym.IsPublic)
+                        {
+                            usesInternals = true;
+                            break;
+                        }
+                    }
+
+                    if (usesInternals)
+                    {
+                        break;
+                    }
+                }
+
+                if (!usesInternals)
+                {
+                    otherAssemblies.Add(other.Name);
+                }
+            }
+
+            if (otherAssemblies.Count > 0)
+            {
+                otherAssemblies.Sort((x, y) => string.CompareOrdinal(x, y));
+                result.Add(new(asm.Name, otherAssemblies));
+            }
+        }
+
+        result.Sort((x, y) => string.CompareOrdinal(x.Assembly, y.Assembly));
+        return result;
+    }
     /// <summary>
     /// Creates a layer cake of assembly dependencies.
     /// </summary>
@@ -327,81 +401,6 @@ public sealed class AssemblyGraph
         }
 
         return layers;
-    }
-
-    /// <summary>
-    /// Returns a list of assemblies which are not reachable from any roots.
-    /// </summary>
-    public IReadOnlyList<string> CollectUnreferencedAssembliesReport()
-    {
-        var result = new List<string>();
-
-        var aliveReport = CollectAliveSymbolsReport();
-        foreach (var asm in aliveReport.Assemblies)
-        {
-            if (asm.Types.Count == 0 && asm.Members.Count == 0)
-            {
-                result.Add(asm.Assembly);
-            }
-        }
-
-        return result;
-    }
-
-    public IReadOnlyList<NeedlessInternalsVisibleToReport> CollectNeedlessInternalsVisibleToReport()
-    {
-        var result = new List<NeedlessInternalsVisibleToReport>();
-
-        foreach (var asm in _assemblies.Values)
-        {
-            if (!asm.Loaded)
-            {
-                // unprocessed referenced assembly, skip it
-                continue;
-            }
-
-            var otherAssemblies = new List<string>();
-
-            foreach (var other in asm.InternalsVisibleTo)
-            {
-                if (!other.Loaded)
-                {
-                    continue;
-                }
-
-                bool usesInternals = false;
-                foreach (var sym in other.Symbols.Values)
-                {
-                    foreach (var refSym in sym.ReferencedSymbols.Values)
-                    {
-                        if (refSym.Assembly == asm && !refSym.IsPublic)
-                        {
-                            usesInternals = true;
-                            break;
-                        }
-                    }
-
-                    if (usesInternals)
-                    {
-                        break;
-                    }
-                }
-
-                if (!usesInternals)
-                {
-                    otherAssemblies.Add(other.Name);
-                }
-            }
-
-            if (otherAssemblies.Count > 0)
-            {
-                otherAssemblies.Sort((x, y) => string.CompareOrdinal(x, y));
-                result.Add(new(asm.Name, otherAssemblies));
-            }
-        }
-
-        result.Sort((x, y) => string.CompareOrdinal(x.Assembly, y.Assembly));
-        return result;
     }
 
     public override string ToString()

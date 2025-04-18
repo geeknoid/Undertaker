@@ -15,12 +15,12 @@ public class Tests
         graph.LoadAssembly("../../../../TestExe/bin/debug/net9.0/TestLibrary.dll");
 
         var serializerOptions = new JsonSerializerOptions { WriteIndented = true };
-        var deadReport = JsonSerializer.Serialize(graph.CollectDeadSymbolsReport(), serializerOptions);
-        var aliveReport = JsonSerializer.Serialize(graph.CollectAliveSymbolsReport(), serializerOptions);
-        var needlesslyPublicReport = JsonSerializer.Serialize(graph.CollectNeedlesslyPublicSymbolsReport(), serializerOptions);
-        var unreferencedReport = JsonSerializer.Serialize(graph.CollectUnreferencedAssembliesReport(), serializerOptions);
+        var deadReport = JsonSerializer.Serialize(graph.CollectDeadSymbols(), serializerOptions);
+        var aliveReport = JsonSerializer.Serialize(graph.CollectAliveSymbols(), serializerOptions);
+        var needlesslyPublicReport = JsonSerializer.Serialize(graph.CollectPublicSymbols(), serializerOptions);
+        var unreferencedReport = JsonSerializer.Serialize(graph.CollectUnreferencedAssemblies(), serializerOptions);
         var assemblyLayerCake = JsonSerializer.Serialize(graph.CreateAssemblyLayerCake(), serializerOptions);
-        var needlessIVTReport = JsonSerializer.Serialize(graph.CollectNeedlessInternalsVisibleToReport(), serializerOptions);
+        var needlessIVTReport = JsonSerializer.Serialize(graph.CollectInternalsVisibleTo(), serializerOptions);
         var graphDump = graph.ToString();
 
 #if false

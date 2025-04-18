@@ -19,12 +19,12 @@ internal static class Program
     {
         public DirectoryInfo? Assemblies { get; set; }
         public FileInfo? RootAssemblies { get; set; }
-        public string? DeadSymbolsReport { get; set; }
-        public string? AliveSymbolsReport { get; set; }
-        public string? NeedlesslyPublicSymbolsReport { get; set; }
-        public string? UnreferencedAssembliesReport { get; set; }
+        public string? DeadSymbols { get; set; }
+        public string? AliveSymbols { get; set; }
+        public string? PublicSymbols { get; set; }
+        public string? UnreferencedAssemblies { get; set; }
         public string? AssemblyLayerCake { get; set; }
-        public string? NeedlessInternalsVisibleToReport { get; set; }
+        public string? InternalsVisibleTo { get; set; }
         public string? GraphDump { get; set; }
         public bool ContinueOnLoadErrors { get; set; }
         public bool Verbose { get; set; }
@@ -38,31 +38,31 @@ internal static class Program
 
             new Option<FileInfo>(
                 ["-ra", "--root-assemblies"],
-                "Path to a text file listing assemblies to be treated as root, one assembly name per line"),
+                "Path to a text file listing assemblies to be treated as roots, one assembly name per line"),
 
             new Option<string>(
-                ["-dsr", "--dead-symbols-report"],
-                "Path of the report on dead symbols to produce"),
+                ["-ds", "--dead-symbols"],
+                "Path of the report to produce on dead symbols"),
 
             new Option<string>(
-                ["-asr", "--alive-symbols-report"],
-                "Path of the report on alive symbols to produce"),
+                ["-as", "--alive-symbols"],
+                "Path of the report to produce on alive symbols"),
 
             new Option<string>(
-                ["-npsr", "--needlessly-public-symbols-report"],
-                "Path of the report on needlessly public symbols to produce"),
+                ["-ps", "--public-symbols"],
+                "Path of the report to produce on public symbols which could be made internal"),
 
             new Option<string>(
-                ["-uar", "--unreferenced-assemblies-report"],
-                "Path of the report on unreferenced assemblies to produce"),
+                ["-ua", "--unreferenced-assemblies"],
+                "Path of the report to produce on completely unreferenced assemblies"),
+
+            new Option<string>(
+                ["-ivt", "--internals-visible-to"],
+                "Path of the report to produce on spurious uses of [InternalsVisibleTo]"),
 
             new Option<string>(
                 ["-alc", "--assembly-layer-cake"],
-                "Path of the assembly layer cake file to produce"),
-
-            new Option<string>(
-                ["-nivtr", "--needless-internals-visible-to-report"],
-                "Path of the report on superfluous uses of [InternalsVisibleTo] to produce"),
+                "Path of the assembly layer cake to produce"),
 
             new Option<string>(
                 ["-gd", "--graph-dump"],
@@ -164,22 +164,22 @@ internal static class Program
 
         Out($"Done loading assemblies: loaded {successCount}, skipped {skipCount}, failed {errorCount}");
 
-        if (args.DeadSymbolsReport == null
-            && args.AliveSymbolsReport == null
-            && args.NeedlesslyPublicSymbolsReport == null
-            && args.UnreferencedAssembliesReport == null
+        if (args.DeadSymbols == null
+            && args.AliveSymbols == null
+            && args.PublicSymbols == null
+            && args.UnreferencedAssemblies == null
+            && args.InternalsVisibleTo == null
             && args.AssemblyLayerCake == null
-            && args.NeedlessInternalsVisibleToReport == null
             && args.GraphDump == null)
         {
             Out("No output requested");
         }
-        else if (!OutputDeadSymbolsReport() ||
-            !OutputAliveSymbolsReport() ||
-            !OutputNeedlesslyPublicSymbolsReport() ||
+        else if (!OutputDeadSymbols() ||
+            !OutputAliveSymbols() ||
+            !OutputPublicSymbols() ||
+            !OutputUnreferencedAssemblies() ||
+            !OutputInternalsVisibleTo() ||
             !OutputAssemblyLayerCake() ||
-            !OutputNeedlessInternalsVisibleToReport() ||
-            !OutputUnreferencedAssembliesReport() ||
             !OutputGraphDump())
         {
             return 1;
@@ -215,14 +215,14 @@ internal static class Program
             }
         }
 
-        bool OutputDeadSymbolsReport()
+        bool OutputDeadSymbols()
         {
-            if (args.DeadSymbolsReport != null)
+            if (args.DeadSymbols != null)
             {
-                var path = Path.GetFullPath(args.DeadSymbolsReport);
+                var path = Path.GetFullPath(args.DeadSymbols);
                 try
                 {
-                    var report = graph.CollectDeadSymbolsReport();
+                    var report = graph.CollectDeadSymbols();
                     var json = JsonSerializer.Serialize(report, _serializationOptions);
                     File.WriteAllText(path, json);
                     Out($"Output report on dead symbols to {path}");
@@ -237,14 +237,14 @@ internal static class Program
             return true;
         }
 
-        bool OutputAliveSymbolsReport()
+        bool OutputAliveSymbols()
         {
-            if (args.AliveSymbolsReport != null)
+            if (args.AliveSymbols != null)
             {
-                var path = Path.GetFullPath(args.AliveSymbolsReport);
+                var path = Path.GetFullPath(args.AliveSymbols);
                 try
                 {
-                    var report = graph.CollectAliveSymbolsReport();
+                    var report = graph.CollectAliveSymbols();
                     var json = JsonSerializer.Serialize(report, _serializationOptions);
                     File.WriteAllText(path, json);
                     Out($"Output report on alive symbols to {path}");
@@ -259,14 +259,14 @@ internal static class Program
             return true;
         }
 
-        bool OutputNeedlesslyPublicSymbolsReport()
+        bool OutputPublicSymbols()
         {
-            if (args.NeedlesslyPublicSymbolsReport != null)
+            if (args.PublicSymbols != null)
             {
-                var path = Path.GetFullPath(args.NeedlesslyPublicSymbolsReport);
+                var path = Path.GetFullPath(args.PublicSymbols);
                 try
                 {
-                    var report = graph.CollectNeedlesslyPublicSymbolsReport();
+                    var report = graph.CollectPublicSymbols();
                     var json = JsonSerializer.Serialize(report, _serializationOptions);
                     File.WriteAllText(path, json);
                     Out($"Output report on needlessly public symbols to {path}");
@@ -274,6 +274,50 @@ internal static class Program
                 catch (Exception ex)
                 {
                     Error($"Unable to write report on needlessly public symbols to {path}: {ex.Message}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        bool OutputUnreferencedAssemblies()
+        {
+            if (args.UnreferencedAssemblies != null)
+            {
+                var path = Path.GetFullPath(args.UnreferencedAssemblies);
+                try
+                {
+                    var report = graph.CollectUnreferencedAssemblies();
+                    var json = JsonSerializer.Serialize(report, _serializationOptions);
+                    File.WriteAllText(path, json);
+                    Out($"Output unreferenced assemblies report to {path}");
+                }
+                catch (Exception ex)
+                {
+                    Error($"Unable to output unreferenced assemblies report to {path}: {ex.Message}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        bool OutputInternalsVisibleTo()
+        {
+            if (args.InternalsVisibleTo != null)
+            {
+                var path = Path.GetFullPath(args.InternalsVisibleTo);
+                try
+                {
+                    var report = graph.CollectInternalsVisibleTo();
+                    var json = JsonSerializer.Serialize(report, _serializationOptions);
+                    File.WriteAllText(path, json);
+                    Out($"Output needless [InternalsVisibleTo] report to {path}");
+                }
+                catch (Exception ex)
+                {
+                    Error($"Unable to output needless [InternalsVisibleTo] report to {path}: {ex.Message}");
                     return false;
                 }
             }
@@ -316,50 +360,6 @@ internal static class Program
                 catch (Exception ex)
                 {
                     Error($"Unable to write graph dump to {path}: {ex.Message}");
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        bool OutputUnreferencedAssembliesReport()
-        {
-            if (args.UnreferencedAssembliesReport != null)
-            {
-                var path = Path.GetFullPath(args.UnreferencedAssembliesReport);
-                try
-                {
-                    var report = graph.CollectUnreferencedAssembliesReport();
-                    var json = JsonSerializer.Serialize(report, _serializationOptions);
-                    File.WriteAllText(path, json);
-                    Out($"Output unreferenced assemblies report to {path}");
-                }
-                catch (Exception ex)
-                {
-                    Error($"Unable to output unreferenced assemblies report to {path}: {ex.Message}");
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        bool OutputNeedlessInternalsVisibleToReport()
-        {
-            if (args.NeedlessInternalsVisibleToReport != null)
-            {
-                var path = Path.GetFullPath(args.NeedlessInternalsVisibleToReport);
-                try
-                {
-                    var report = graph.CollectNeedlessInternalsVisibleToReport();
-                    var json = JsonSerializer.Serialize(report, _serializationOptions);
-                    File.WriteAllText(path, json);
-                    Out($"Output needless [InternalsVisibleTo] report to {path}");
-                }
-                catch (Exception ex)
-                {
-                    Error($"Unable to output needless [InternalsVisibleTo] report to {path}: {ex.Message}");
                     return false;
                 }
             }

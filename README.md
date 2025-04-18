@@ -21,39 +21,45 @@ Arguments:
   <assemblies>  Path to folder containing all the assemblies to work with.
 
 Options:
-  -ra, --root-assemblies <root-assemblies>                     Path to a text file listing assemblies to be treated as root, one assembly name per line
-  -dr, --dead-report <dead-report>                             Path of the dead code report file to produce
-  -ar, --alive-report <alive-report>                           Path of the alive code report file to produce
-  -npr, --needlessly-public-report <needlessly-public-report>  Path of the needlessly public report file to produce
-  -alc, --assembly-layer-cake <assembly-layer-cake>            Path of the assembly layer cake file to produce
-  -gd, --graph-dump <graph-dump>                               Path of the graph dump file to produce
-  -cle, --continue-on-load-errors                               Proceed to the analysis and output phase even if some assemblies didn't load
-``` 
+  -ra, --root-assemblies <root-assemblies>                  Path to a text file listing assemblies to be treated as
+                                                            roots, one assembly name per line
+  -ds, --dead-symbols <dead-symbols>                        Path of the report to produce on dead symbols
+  -as, --alive-symbols <alive-symbols>                      Path of the report to produce on alive symbols
+  -ps, --public-symbols <public-symbols>                    Path of the report to produce on public symbols which could
+                                                            be made internal
+  -ua, --unreferenced-assemblies <unreferenced-assemblies>  Path of the report to produce on completely unreferenced
+                                                            assemblies
+  -ivt, --internals-visible-to <internals-visible-to>       Path of the report to produce on spurious uses of
+                                                            [InternalsVisibleTo]
+  -alc, --assembly-layer-cake <assembly-layer-cake>         Path of the assembly layer cake to produce
+  -gd, --graph-dump <graph-dump>                            Path of the graph dump file to produce
+  -cle, --continue-on-load-errors                           Proceed to the analysis and output phases even if some
+ ``` 
 
 * `--root-assemblies` lets you specify the set of root assemblies. This is a text file
   containing the names of assemblies, one per line.
 
-* `--dead-symbols-report` lets you specify the path to the file where the report on dead symbols
+* `--dead-symbols` lets you specify the path to the file where the report on dead symbols
   should be written. This report contains a list of all the symbols that are defined in the
   assemblies but are never referenced by any other symbol.
 
-* `--alive-symbols-report` lets you specify the path to the file where the report on alive symbols
+* `--alive-symbols` lets you specify the path to the file where the report on alive symbols
   should be written. This report contains a list of all the symbols that are defined in the
   assemblies and are referenced by other symbols.
 
-* `--needlessly-public-symbols-report` lets you specify the path to the file where the report on needlessly
+* `--public-symbols` lets you specify the path to the file where the report on needlessly
   public symbols should be written. This report contains a list of all the symbols that are
   defined as public but are never referenced by any other assembly and so could be made internal.
 
-* `--unreferenced-assemblies-report` lets you specify the path to the file where the report on unreferenced
+* `--unreferenced-assemblies` lets you specify the path to the file where the report on unreferenced
   assemblies should be written. This report contains a list of all the assemblies that were loaded as input
   but don't contain any symbols reachable from the roots.
  
+* `--internals-visible-to` lets you specify the path to the file where the report
+  on needless uses of [InternalsVisibleTo] should be written.
+
 * `--assembly-layer-cake` lets you specify the path to the file where the full layer cake of dependencies
   should be written. Each assembly in a layer only depends on assemblies in lower layers.
-
-* `--needless-internals-visible-to-report` lets you specify the path to the file where the report
-  on needless uses of [InternalsVisibleTo] should be written.
 
 * `--graph-dump` lets you specify the path to the file where the internal graph dump should be written.
 This is a text file containing the graph of all the symbols and their references. This is useful for
