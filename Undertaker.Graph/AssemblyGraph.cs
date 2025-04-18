@@ -414,6 +414,7 @@ public sealed class AssemblyGraph
             .AppendLine("```mermaid")
             .AppendLine("stateDiagram-v2");
 
+        var done = new HashSet<string>();
         foreach (var asm in _assemblies.Values.OrderBy(a => a.Name))
         {
             if (!asm.Loaded)
@@ -421,7 +422,7 @@ public sealed class AssemblyGraph
                 continue;
             }
 
-            var done = new HashSet<string>();
+            done.Clear();
             foreach (var sym in asm.Symbols.Values.OrderBy(sym => sym.Name))
             {
                 foreach (var rs in sym.ReferencedSymbols.Values.OrderBy(rs => rs.Name))
@@ -430,7 +431,7 @@ public sealed class AssemblyGraph
                     {
                         if (done.Add(rs.Assembly.Name))
                         {
-                            _ = sb.AppendLine(CultureInfo.InvariantCulture, $"    {asm.Name} --> {rs.Assembly.Name}");
+                            _ = sb.AppendLine(CultureInfo.InvariantCulture, $"    {asm.Name.Replace('-', '_')} --> {rs.Assembly.Name.Replace('-', '_')}");
                         }
                     }
                 }
