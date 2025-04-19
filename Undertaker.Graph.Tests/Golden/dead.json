@@ -46,7 +46,27 @@
           "Root": false
         },
         {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.get_Item(Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.remove_AliveEvent(EventHandler)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
           "Symbol": "TestLibrary.AliveClassButDeadMembers..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadComplexProperty",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadEvent",
           "Dependents": [],
           "Root": false
         },
@@ -61,7 +81,22 @@
           "Root": false
         },
         {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.Item",
+          "Dependents": [],
+          "Root": false
+        },
+        {
           "Symbol": "TestLibrary.AliveClassButDeadMembers._value",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.add_DeadEvent(EventHandler)",
           "Dependents": [],
           "Root": false
         },
@@ -76,12 +111,27 @@
           "Root": false
         },
         {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.get_Item(Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.remove_DeadEvent(EventHandler)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
           "Symbol": "TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(Int32)",
           "Dependents": [],
           "Root": false
         },
         {
           "Symbol": "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.set_Item(Int32, Int32)",
           "Dependents": [],
           "Root": false
         },

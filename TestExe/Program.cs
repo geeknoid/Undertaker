@@ -20,6 +20,8 @@ internal static class Program
         e.AliveSimpleProperty = 42;
         e.AliveComplexProperty = 42;
         e.AliveField = 42;
+        e.AliveEvent += (sender, args) => { };
+        e[0] = 42;
 
         try
         {

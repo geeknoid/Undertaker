@@ -40,6 +40,11 @@ internal static class AssemblyLoader
                 RecordSymbolsReferencedByProperty(property);
             }
 
+            foreach (var evt in type.Events)
+            {
+                RecordSymbolsReferencedByEvent(evt);
+            }
+
             foreach (var field in type.Fields)
             {
                 if (field.IsConst)
@@ -152,6 +157,11 @@ internal static class AssemblyLoader
             RecordSymbolsReferencedByAttributes(methodSym, method.GetAttributes());
             RecordSymbolsReferencedByAttributes(methodSym, method.GetReturnTypeAttributes());
 
+            if (method.AccessorOwner != null)
+            {
+                RecordReferenceToMember(methodSym, method.AccessorOwner);
+            }
+
             if (method.HasBody)
             {
                 var metadataModule = method.DeclaringType.GetDefinition()!.ParentModule! as MetadataModule;
@@ -250,20 +260,39 @@ internal static class AssemblyLoader
 
         void RecordSymbolsReferencedByProperty(IProperty property)
         {
+            var propertySym = DefineSymbol(property);
+            RecordReferenceToType(propertySym, property.DeclaringType);
+            RecordSymbolsReferencedByAttributes(propertySym, property.GetAttributes());
+
             if (property.Getter != null)
             {
-                var methodSym = DefineSymbol(property.Getter);
-                RecordReferenceToType(methodSym, property.DeclaringType);
-                RecordSymbolsReferencedByMethod(methodSym, property.Getter);
-                RecordSymbolsReferencedByAttributes(methodSym, property.GetAttributes());
+                var sym = DefineSymbol(property.Getter);
+                RecordSymbolsReferencedByMethod(sym, property.Getter);
             }
 
             if (property.Setter != null)
             {
-                var methodSym = DefineSymbol(property.Setter);
-                RecordReferenceToType(methodSym, property.DeclaringType);
-                RecordSymbolsReferencedByMethod(methodSym, property.Setter);
-                RecordSymbolsReferencedByAttributes(methodSym, property.GetAttributes());
+                var sym = DefineSymbol(property.Setter);
+                RecordSymbolsReferencedByMethod(sym, property.Setter);
+            }
+        }
+
+        void RecordSymbolsReferencedByEvent(IEvent evt)
+        {
+            var eventSym = DefineSymbol(evt);
+            RecordReferenceToType(eventSym, evt.DeclaringType);
+            RecordSymbolsReferencedByAttributes(eventSym, evt.GetAttributes());
+
+            if (evt.AddAccessor != null)
+            {
+                var sym = DefineSymbol(evt.AddAccessor);
+                RecordSymbolsReferencedByMethod(sym, evt.AddAccessor);
+            }
+
+            if (evt.RemoveAccessor != null)
+            {
+                var sym = DefineSymbol(evt.RemoveAccessor);
+                RecordSymbolsReferencedByMethod(sym, evt.RemoveAccessor);
             }
         }
 
@@ -332,7 +361,6 @@ internal static class AssemblyLoader
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.Constructor => SymbolKind.Method,
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.Destructor => SymbolKind.Method,
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.Accessor => SymbolKind.Method,
-            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Operator => SymbolKind.Method,
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.TypeDefinition => SymbolKind.Type,
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.Field => SymbolKind.Field,
             _ => SymbolKind.Misc,

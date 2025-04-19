@@ -30,8 +30,10 @@ ASSEMBLY TestExe.dll
       TestExe.Program.<>c..cctor()
       TestExe.Program.<>c..ctor()
       TestExe.Program.<>c.<Main>b__0_0()
+      TestExe.Program.<>c.<Main>b__0_1(Object, EventArgs)
       TestExe.Program.<>c.<>9
       TestExe.Program.<>c.<>9__0_0
+      TestExe.Program.<>c.<>9__0_1
   TestExe.Program.<>c [TYPE, ALIVE, NOT ROOT]
     DIRECTLY REFERENCES
       System.Object
@@ -43,8 +45,10 @@ ASSEMBLY TestExe.dll
       TestExe.Program.<>c..cctor()
       TestExe.Program.<>c..ctor()
       TestExe.Program.<>c.<Main>b__0_0()
+      TestExe.Program.<>c.<Main>b__0_1(Object, EventArgs)
       TestExe.Program.<>c.<>9
       TestExe.Program.<>c.<>9__0_0
+      TestExe.Program.<>c.<>9__0_1
   TestExe.Program.<>c..cctor() [METHOD, DEAD, NOT ROOT]
     DIRECTLY REFERENCES
       TestExe.Program.<>c
@@ -75,10 +79,26 @@ ASSEMBLY TestExe.dll
       TestLibrary.AliveDelegate
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
+  TestExe.Program.<>c.<>9__0_1 [FIELD, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestExe.Program.<>c
+      TestExe.Program
+      System.EventHandler
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
   TestExe.Program.<>c.<Main>b__0_0() [METHOD, ALIVE, NOT ROOT]
     DIRECTLY REFERENCES
       TestExe.Program.<>c
       TestExe.Program
+      System.Void
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+  TestExe.Program.<>c.<Main>b__0_1(Object, EventArgs) [METHOD, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestExe.Program.<>c
+      TestExe.Program
+      System.Object
+      System.EventArgs
       System.Void
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
@@ -106,6 +126,12 @@ ASSEMBLY TestExe.dll
       TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(Int32)
       TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(Int32)
       TestLibrary.AliveClassAndAliveMembers.AliveField
+      TestExe.Program.<>c.<>9__0_1
+      TestExe.Program.<>c.<Main>b__0_1(Object, EventArgs)
+      System.EventHandler..ctor(Object, nint)
+      System.EventHandler
+      TestLibrary.AliveClassAndAliveMembers.add_AliveEvent(EventHandler)
+      TestLibrary.AliveClassAndAliveMembers.set_Item(Int32, Int32)
       System.Object.ToString()
       System.Object
       System.Console.WriteLine(String)
@@ -151,14 +177,24 @@ ASSEMBLY TestLibrary.dll
   TestLibrary.AliveClassAndAliveMembers [TYPE, ALIVE, NOT ROOT]
     DIRECTLY REFERENCES
       System.Object
+      System.Reflection.DefaultMemberAttribute
+      System.String
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
       TestLibrary.AliveClassAndAliveMembers.AliveMethod()
       TestLibrary.AliveClassAndAliveMembers..ctor()
+      TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty
       TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()
       TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(Int32)
+      TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty
       TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()
       TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(Int32)
+      TestLibrary.AliveClassAndAliveMembers.Item
+      TestLibrary.AliveClassAndAliveMembers.get_Item(Int32)
+      TestLibrary.AliveClassAndAliveMembers.set_Item(Int32, Int32)
+      TestLibrary.AliveClassAndAliveMembers.AliveEvent
+      TestLibrary.AliveClassAndAliveMembers.add_AliveEvent(EventHandler)
+      TestLibrary.AliveClassAndAliveMembers.remove_AliveEvent(EventHandler)
       TestLibrary.AliveClassAndAliveMembers._value
       TestLibrary.AliveClassAndAliveMembers.<AliveSimpleProperty>k__BackingField
       TestLibrary.AliveClassAndAliveMembers.AliveField
@@ -189,6 +225,26 @@ ASSEMBLY TestLibrary.dll
     DIRECTLY REFERENCED BY
       TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()
       TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(Int32)
+  TestLibrary.AliveClassAndAliveMembers.add_AliveEvent(EventHandler) [METHOD, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+      System.EventHandler
+      System.Void
+      TestLibrary.AliveClassAndAliveMembers.AliveEvent
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+  TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty [MISC, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()
+      TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(Int32)
+  TestLibrary.AliveClassAndAliveMembers.AliveEvent [MISC, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveClassAndAliveMembers.add_AliveEvent(EventHandler)
+      TestLibrary.AliveClassAndAliveMembers.remove_AliveEvent(EventHandler)
   TestLibrary.AliveClassAndAliveMembers.AliveField [FIELD, ALIVE, NOT ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassAndAliveMembers
@@ -220,22 +276,48 @@ ASSEMBLY TestLibrary.dll
       System.Object
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
+  TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty [MISC, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()
+      TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(Int32)
   TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty() [METHOD, DEAD, NOT ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassAndAliveMembers
       System.Int32
+      TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty
       TestLibrary.AliveClassAndAliveMembers._value
   TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty() [METHOD, DEAD, NOT ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassAndAliveMembers
       System.Int32
       System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty
       TestLibrary.AliveClassAndAliveMembers.<AliveSimpleProperty>k__BackingField
+  TestLibrary.AliveClassAndAliveMembers.get_Item(Int32) [METHOD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+      System.Int32
+      TestLibrary.AliveClassAndAliveMembers.Item
+  TestLibrary.AliveClassAndAliveMembers.Item [MISC, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveClassAndAliveMembers.get_Item(Int32)
+      TestLibrary.AliveClassAndAliveMembers.set_Item(Int32, Int32)
+  TestLibrary.AliveClassAndAliveMembers.remove_AliveEvent(EventHandler) [METHOD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+      System.EventHandler
+      System.Void
+      TestLibrary.AliveClassAndAliveMembers.AliveEvent
   TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(Int32) [METHOD, ALIVE, NOT ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassAndAliveMembers
       System.Int32
       System.Void
+      TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty
       TestLibrary.AliveClassAndAliveMembers._value
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
@@ -245,20 +327,39 @@ ASSEMBLY TestLibrary.dll
       System.Int32
       System.Void
       System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty
       TestLibrary.AliveClassAndAliveMembers.<AliveSimpleProperty>k__BackingField
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+  TestLibrary.AliveClassAndAliveMembers.set_Item(Int32, Int32) [METHOD, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassAndAliveMembers
+      System.Int32
+      System.Void
+      TestLibrary.AliveClassAndAliveMembers.Item
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
   TestLibrary.AliveClassButDeadMembers [TYPE, ALIVE, NOT ROOT]
     DIRECTLY REFERENCES
       System.Object
+      System.Reflection.DefaultMemberAttribute
+      System.String
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
       TestLibrary.AliveClassButDeadMembers.DeadMethod()
       TestLibrary.AliveClassButDeadMembers..ctor()
+      TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty
       TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty()
       TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(Int32)
+      TestLibrary.AliveClassButDeadMembers.DeadComplexProperty
       TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()
       TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(Int32)
+      TestLibrary.AliveClassButDeadMembers.Item
+      TestLibrary.AliveClassButDeadMembers.get_Item(Int32)
+      TestLibrary.AliveClassButDeadMembers.set_Item(Int32, Int32)
+      TestLibrary.AliveClassButDeadMembers.DeadEvent
+      TestLibrary.AliveClassButDeadMembers.add_DeadEvent(EventHandler)
+      TestLibrary.AliveClassButDeadMembers.remove_DeadEvent(EventHandler)
       TestLibrary.AliveClassButDeadMembers._value
       TestLibrary.AliveClassButDeadMembers.<DeadSimpleProperty>k__BackingField
       TestLibrary.AliveClassButDeadMembers.DeadField
@@ -287,6 +388,24 @@ ASSEMBLY TestLibrary.dll
     DIRECTLY REFERENCED BY
       TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty()
       TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(Int32)
+  TestLibrary.AliveClassButDeadMembers.add_DeadEvent(EventHandler) [METHOD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+      System.EventHandler
+      System.Void
+      TestLibrary.AliveClassButDeadMembers.DeadEvent
+  TestLibrary.AliveClassButDeadMembers.DeadComplexProperty [MISC, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()
+      TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(Int32)
+  TestLibrary.AliveClassButDeadMembers.DeadEvent [MISC, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveClassButDeadMembers.add_DeadEvent(EventHandler)
+      TestLibrary.AliveClassButDeadMembers.remove_DeadEvent(EventHandler)
   TestLibrary.AliveClassButDeadMembers.DeadField [FIELD, DEAD, NOT ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassButDeadMembers
@@ -308,22 +427,48 @@ ASSEMBLY TestLibrary.dll
       System.Void
       System.Object..ctor()
       System.Object
+  TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty [MISC, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty()
+      TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(Int32)
   TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty() [METHOD, DEAD, NOT ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassButDeadMembers
       System.Int32
+      TestLibrary.AliveClassButDeadMembers.DeadComplexProperty
       TestLibrary.AliveClassButDeadMembers._value
   TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty() [METHOD, DEAD, NOT ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassButDeadMembers
       System.Int32
       System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty
       TestLibrary.AliveClassButDeadMembers.<DeadSimpleProperty>k__BackingField
+  TestLibrary.AliveClassButDeadMembers.get_Item(Int32) [METHOD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+      System.Int32
+      TestLibrary.AliveClassButDeadMembers.Item
+  TestLibrary.AliveClassButDeadMembers.Item [MISC, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveClassButDeadMembers.get_Item(Int32)
+      TestLibrary.AliveClassButDeadMembers.set_Item(Int32, Int32)
+  TestLibrary.AliveClassButDeadMembers.remove_DeadEvent(EventHandler) [METHOD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+      System.EventHandler
+      System.Void
+      TestLibrary.AliveClassButDeadMembers.DeadEvent
   TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(Int32) [METHOD, DEAD, NOT ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassButDeadMembers
       System.Int32
       System.Void
+      TestLibrary.AliveClassButDeadMembers.DeadComplexProperty
       TestLibrary.AliveClassButDeadMembers._value
   TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(Int32) [METHOD, DEAD, NOT ROOT]
     DIRECTLY REFERENCES
@@ -331,7 +476,14 @@ ASSEMBLY TestLibrary.dll
       System.Int32
       System.Void
       System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty
       TestLibrary.AliveClassButDeadMembers.<DeadSimpleProperty>k__BackingField
+  TestLibrary.AliveClassButDeadMembers.set_Item(Int32, Int32) [METHOD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveClassButDeadMembers
+      System.Int32
+      System.Void
+      TestLibrary.AliveClassButDeadMembers.Item
   TestLibrary.AliveDelegate [TYPE, ALIVE, NOT ROOT]
     DIRECTLY REFERENCES
       System.MulticastDelegate

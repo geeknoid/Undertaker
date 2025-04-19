@@ -95,13 +95,7 @@ The program doesn't identity unused const values or unused enum values (but unus
 
 ## Ideas
 
-* Add the ability to emit a dependency diagram in mermaid format for all the assemblies.
-
 * Flag assemblies that use reflection since they might be cheating and
 have dependencies on otherwise dead symbols.
 
 * Can the symbol info include file & line numbers?
-
-## TODO
-
-* Doesn't yet have support for C# events and indexers.

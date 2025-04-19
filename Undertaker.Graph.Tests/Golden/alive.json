@@ -9,7 +9,9 @@
             "TestExe.Program.\u003C\u003Ec",
             "TestExe.Program.\u003C\u003Ec.\u003C\u003E9",
             "TestExe.Program.\u003C\u003Ec.\u003C\u003E9__0_0",
+            "TestExe.Program.\u003C\u003Ec.\u003C\u003E9__0_1",
             "TestExe.Program.\u003C\u003Ec.\u003CMain\u003Eb__0_0()",
+            "TestExe.Program.\u003C\u003Ec.\u003CMain\u003Eb__0_1(Object, EventArgs)",
             "TestExe.Program.Main()"
           ],
           "Root": false
@@ -41,12 +43,18 @@
             "TestLibrary.AliveClassAndAliveMembers._value",
             "TestLibrary.AliveClassAndAliveMembers..ctor()",
             "TestLibrary.AliveClassAndAliveMembers.\u003CAliveSimpleProperty\u003Ek__BackingField",
+            "TestLibrary.AliveClassAndAliveMembers.add_AliveEvent(EventHandler)",
+            "TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty",
+            "TestLibrary.AliveClassAndAliveMembers.AliveEvent",
             "TestLibrary.AliveClassAndAliveMembers.AliveField",
             "TestLibrary.AliveClassAndAliveMembers.AliveMethod()",
             "TestLibrary.AliveClassAndAliveMembers.AliveNestedType",
             "TestLibrary.AliveClassAndAliveMembers.AliveNestedType..ctor()",
+            "TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty",
+            "TestLibrary.AliveClassAndAliveMembers.Item",
             "TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(Int32)",
-            "TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(Int32)"
+            "TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(Int32)",
+            "TestLibrary.AliveClassAndAliveMembers.set_Item(Int32, Int32)"
           ],
           "Root": false
         },
@@ -119,6 +127,20 @@
           "Root": false
         },
         {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty",
+          "Dependents": [
+            "TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(Int32)"
+          ],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveEvent",
+          "Dependents": [
+            "TestLibrary.AliveClassAndAliveMembers.add_AliveEvent(EventHandler)"
+          ],
+          "Root": false
+        },
+        {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveField",
           "Dependents": [
             "TestExe.Program.Main()"
@@ -148,9 +170,30 @@
           "Root": false
         },
         {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty",
+          "Dependents": [
+            "TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(Int32)"
+          ],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.Item",
+          "Dependents": [
+            "TestLibrary.AliveClassAndAliveMembers.set_Item(Int32, Int32)"
+          ],
+          "Root": false
+        },
+        {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers._value",
           "Dependents": [
             "TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(Int32)"
+          ],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.add_AliveEvent(EventHandler)",
+          "Dependents": [
+            "TestExe.Program.Main()"
           ],
           "Root": false
         },
@@ -163,6 +206,13 @@
         },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(Int32)",
+          "Dependents": [
+            "TestExe.Program.Main()"
+          ],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.set_Item(Int32, Int32)",
           "Dependents": [
             "TestExe.Program.Main()"
           ],

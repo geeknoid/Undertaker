@@ -39,6 +39,18 @@ public class AliveClassAndAliveMembers
         set { _value = value * 2; }
     }
 
+    public event EventHandler AliveEvent
+    {
+        add { }
+        remove { }
+    }
+
+    public int this[int index]
+    {
+        get { return 0; }
+        set { _ = value; }
+    }
+
     public int AliveField;
     public const int AliveConst = 42;
 }

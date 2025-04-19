@@ -42,6 +42,18 @@ public class AliveClassButDeadMembers
         set { _value = value * 2;  }
     }
 
+    public event EventHandler DeadEvent
+    {
+        add { }
+        remove { }
+    }
+
+    public int this[int index]
+    {
+        get { return 0; }
+        set { _ = value; }
+    }   
+
     public int DeadField;
     public const int DeadConst = 42;
 }
