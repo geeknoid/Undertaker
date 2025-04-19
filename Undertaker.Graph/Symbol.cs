@@ -1,19 +1,17 @@
-﻿using ICSharpCode.Decompiler.TypeSystem;
+﻿using ICSharpCode.Decompiler;
+using ICSharpCode.Decompiler.TypeSystem;
 
 namespace Undertaker.Graph;
 
-internal sealed class Symbol(Assembly assembly, string name)
+internal abstract class Symbol(Assembly assembly, string name, SymbolKind symbolKind)
 {
     // set on construction
     public Assembly Assembly { get; } = assembly;
     public string Name { get; } = name;
+    public SymbolKind Kind { get; } = symbolKind;
 
     // set by Define
-    public SymbolKind Kind { get; private set; } = SymbolKind.Placeholder;
-    public bool Hidden { get; private set; }
-    public Symbol? ParentType { get; private set; }
-    public IReadOnlyList<Symbol> Children => _children;
-    public TypeKind TypeKind { get; private set; }
+    public bool Hide { get; protected set; }
     public bool IsPublic { get; private set; }
 
     // set by RecordReferencedSymbol
@@ -21,24 +19,27 @@ internal sealed class Symbol(Assembly assembly, string name)
     public IReadOnlyDictionary<string, Symbol> ReferencedSymbols => _referencedSymbols;
 
     // filled-in over time as the overall graph is populated
-    public bool Root { get; internal set; }
+    public TypeSymbol? ParentType { get; set; }
+    public bool Root { get; set; }
 
     // set by Mark when visiting the graph
     public bool Marked { get; private set; }
 
     private readonly HashSet<Symbol> _referencers = [];
     private readonly Dictionary<string, Symbol> _referencedSymbols = [];
-    private readonly List<Symbol> _children = [];
 
-    public void Define(SymbolKind kind, TypeKind typeKind, bool hidden, bool isPublic, Symbol? parent)
+    public virtual void Define(IEntity entity)
     {
-        Kind = kind;
-        TypeKind = typeKind;
-        Hidden = hidden;
-        ParentType = parent;
-        IsPublic = isPublic;
+        Hide = entity.IsCompilerGenerated() || entity.Name.Contains('<');
+        IsPublic = entity.EffectiveAccessibility() == Accessibility.Public;
 
-        parent?._children.Add(this);
+        if (Assembly.Root)
+        {
+            if (entity.EffectiveAccessibility() is Accessibility.Public or Accessibility.Protected)
+            {
+                Root = true;
+            }
+        }
     }
 
     public void RecordReferencedSymbol(Symbol sym)

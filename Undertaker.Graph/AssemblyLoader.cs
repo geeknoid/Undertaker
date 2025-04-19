@@ -1,4 +1,5 @@
-﻿using System.Reflection.Metadata;
+﻿using System.Numerics;
+using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using ICSharpCode.Decompiler.CSharp;
@@ -8,6 +9,10 @@ using ICSharpCode.Decompiler.TypeSystem;
 
 namespace Undertaker.Graph;
 
+/*
+ TODO: Detect when a virtual method could be made abstract since all uses of the member involve derived types that all implement the member.
+ */
+
 internal static class AssemblyLoader
 {
     public static void Load(CSharpDecompiler decomp, Func<string, Assembly> getAssembly)
@@ -16,7 +21,7 @@ internal static class AssemblyLoader
 
         foreach (var type in decomp.TypeSystem.MainModule.TypeDefinitions)
         {
-            RecordSymbolsReferencedByType(asm.DefineSymbol(type), type);
+            RecordSymbolsReferencedByType(DefineSymbol(type), type);
 
             if (type.Kind == TypeKind.Enum)
             {
@@ -26,10 +31,8 @@ internal static class AssemblyLoader
 
             foreach (var method in type.Methods)
             {
-                var sym = asm.DefineSymbol(method);
+                var sym = DefineSymbol(method);
                 RecordSymbolsReferencedByMethod(sym, method);
-
-                sym.Root = method.Name == "Main" && method.IsStatic;
             }
 
             foreach (var property in type.Properties)
@@ -45,11 +48,26 @@ internal static class AssemblyLoader
                     continue;
                 }
 
-                RecordSymbolsReferencedByField(asm.DefineSymbol(field), field);
+                RecordSymbolsReferencedByField(DefineSymbol(field), field);
             }
         }
 
         asm.Loaded = true;
+
+        Symbol DefineSymbol(IEntity entity)
+        {
+            var sym = asm.GetSymbol(GetEntitySymbolName(entity), GetEntitySymbolKind(entity));
+            sym.Define(entity);
+
+            var parent = entity.DeclaringTypeDefinition;
+            if (parent?.ParentModule != null)
+            {
+                sym.ParentType = (TypeSymbol)getAssembly(parent.ParentModule.AssemblyName).GetSymbol(parent.FullName, SymbolKind.Type);
+                sym.ParentType.AddChild(sym);
+            }
+
+            return sym;
+        }
 
         void RecordSymbolsReferencedByType(Symbol typeSym, ITypeDefinition type)
         {
@@ -109,25 +127,6 @@ internal static class AssemblyLoader
         {
             RecordReferenceToType(methodSym, method.DeclaringType);
 
-            // include references to all base definition of any overridden method
-            if (method.IsOverride)
-            {
-                var name = GetEntitySymbolName(method);
-                foreach (var t in method.DeclaringType.GetNonInterfaceBaseTypes())
-                {
-                    foreach (var m in t.GetMethods())
-                    {
-                        if (m.Name == method.Name)
-                        {
-                            if (GetEntitySymbolName(m) == name)
-                            {
-                                RecordReferenceToMember(methodSym, m);
-                            }
-                        }
-                    }
-                }
-            }
-
             foreach (var ta in method.TypeArguments)
             {
                 RecordReferenceToType(methodSym, ta);
@@ -183,6 +182,18 @@ internal static class AssemblyLoader
                                 var m = metadataModule.ResolveMethod(handle, default);
                                 RecordReferenceToMember(methodSym, m);
                                 RecordReferenceToType(methodSym, m.DeclaringType);
+
+                                if (m.IsOverride || m.IsVirtual)
+                                {
+                                    // TODO: if the method is an override or virtual, we must take a reference to all implementations of the member in any derived types
+
+                                }
+
+                                if (m.DeclaringType.Kind == TypeKind.Interface)
+                                {
+                                    // TODO: if the method is on an interface, we must take a reference to all implementations of the member in any derived types
+                                }
+
                                 break;
                             }
 
@@ -241,7 +252,7 @@ internal static class AssemblyLoader
         {
             if (property.Getter != null)
             {
-                var methodSym = asm.DefineSymbol(property.Getter);
+                var methodSym = DefineSymbol(property.Getter);
                 RecordReferenceToType(methodSym, property.DeclaringType);
                 RecordSymbolsReferencedByMethod(methodSym, property.Getter);
                 RecordSymbolsReferencedByAttributes(methodSym, property.GetAttributes());
@@ -249,7 +260,7 @@ internal static class AssemblyLoader
 
             if (property.Setter != null)
             {
-                var methodSym = asm.DefineSymbol(property.Setter);
+                var methodSym = DefineSymbol(property.Setter);
                 RecordReferenceToType(methodSym, property.DeclaringType);
                 RecordSymbolsReferencedByMethod(methodSym, property.Setter);
                 RecordSymbolsReferencedByAttributes(methodSym, property.GetAttributes());
@@ -284,11 +295,9 @@ internal static class AssemblyLoader
         void RecordReferenceToMember(Symbol fromSym, IMember toMember)
         {
             var td = toMember.DeclaringTypeDefinition;
-            if (td != null && td.ParentModule != null)
+            if (td?.ParentModule != null)
             {
-                var definingAsm = getAssembly(td.ParentModule.AssemblyName);
-                var toSym = definingAsm.GetSymbol(GetEntitySymbolName(toMember));
-                fromSym.RecordReferencedSymbol(toSym);
+                fromSym.RecordReferencedSymbol(getAssembly(td.ParentModule.AssemblyName).GetSymbol(GetEntitySymbolName(toMember), GetEntitySymbolKind(toMember)));
             }
         }
 
@@ -298,10 +307,10 @@ internal static class AssemblyLoader
             while (t != null)
             {
                 var td = t.GetDefinition();
-                if (td != null && td.ParentModule != null)
+                if (td?.ParentModule != null)
                 {
                     var definingAsm = getAssembly(td.ParentModule.AssemblyName);
-                    var toSym = definingAsm.GetSymbol(t.FullName);
+                    var toSym = definingAsm.GetSymbol(t.FullName, SymbolKind.Type);
                     fromSym.RecordReferencedSymbol(toSym);
                 }
 
@@ -313,6 +322,21 @@ internal static class AssemblyLoader
                 t = t.DeclaringType;
             }
         }
+    }
+
+    public static SymbolKind GetEntitySymbolKind(IEntity entity)
+    {
+        return entity.SymbolKind switch
+        {
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Method => SymbolKind.Method,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Constructor => SymbolKind.Method,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Destructor => SymbolKind.Method,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Accessor => SymbolKind.Method,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Operator => SymbolKind.Method,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.TypeDefinition => SymbolKind.Type,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Field => SymbolKind.Field,
+            _ => SymbolKind.Misc,
+        };
     }
 
     public static string GetEntitySymbolName(IEntity entity)

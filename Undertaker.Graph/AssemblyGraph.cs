@@ -110,9 +110,9 @@ public sealed class AssemblyGraph
             var deadTypes = new List<GraphReportSymbol>();
             var deadMembers = new List<GraphReportSymbol>();
 
-            foreach (var sym in asm.Symbols.Values)
+            foreach (var sym in asm.Symbols.Values.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
             {
-                if (sym.Kind != SymbolKind.Type || sym.Hidden)
+                if (sym.Hide)
                 {
                     continue;
                 }
@@ -121,7 +121,7 @@ public sealed class AssemblyGraph
                 {
                     foreach (var member in sym.Children)
                     {
-                        if (member.Marked || member.Hidden || member.Kind == SymbolKind.Type)
+                        if (member.Marked || member.Hide || member.Kind == SymbolKind.Type)
                         {
                             continue;
                         }
@@ -164,9 +164,9 @@ public sealed class AssemblyGraph
             var aliveTypes = new List<GraphReportSymbol>();
             var aliveMembers = new List<GraphReportSymbol>();
 
-            foreach (var sym in asm.Symbols.Values)
+            foreach (var sym in asm.Symbols.Values.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
             {
-                if (sym.Kind != SymbolKind.Type || sym.Hidden)
+                if (sym.Hide)
                 {
                     continue;
                 }
@@ -178,7 +178,7 @@ public sealed class AssemblyGraph
 
                     foreach (var member in sym.Children)
                     {
-                        if (member.Marked && !member.Hidden)
+                        if (member.Marked && !member.Hide)
                         {
                             dependents = [.. member.Referencers.Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x)];
                             aliveMembers.Add(new(member.Name, dependents, member.Root));
@@ -215,7 +215,7 @@ public sealed class AssemblyGraph
 
             foreach (var sym in asm.Symbols.Values)
             {
-                if (sym.Hidden || sym.Root)
+                if (sym.Hide || sym.Root)
                 {
                     continue;
                 }

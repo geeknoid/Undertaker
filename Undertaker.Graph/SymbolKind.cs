@@ -2,10 +2,8 @@
 
 internal enum SymbolKind
 {
-    Placeholder,
     Type,
     Method,
-    Ctor,
-    Accessor,
     Field,
+    Misc,
 }

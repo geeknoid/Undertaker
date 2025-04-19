@@ -1,7 +1,4 @@
-﻿using ICSharpCode.Decompiler;
-using ICSharpCode.Decompiler.TypeSystem;
-
-namespace Undertaker.Graph;
+﻿namespace Undertaker.Graph;
 
 internal sealed class Assembly(string name, bool root)
 {
@@ -14,83 +11,23 @@ internal sealed class Assembly(string name, bool root)
     private readonly Dictionary<string, Symbol> _symbols = [];
     private readonly HashSet<Assembly> _internalsVisibleTo = [];
 
-    public Symbol GetSymbol(string name)
+    public Symbol GetSymbol(string name, SymbolKind symbolKind)
     {
         if (!_symbols.TryGetValue(name, out var sym))
         {
-            sym = new Symbol(this, name);
+            sym = symbolKind switch
+            {
+                SymbolKind.Method => new MethodSymbol(this, name),
+                SymbolKind.Type => new TypeSymbol(this, name),
+                SymbolKind.Field => new FieldSymbol(this, name),
+                _ => new MiscSymbol(this, name)
+            };
+
             _symbols.Add(name, sym);
         }
-
-        return sym;
-    }
-
-    public Symbol DefineSymbol(IEntity entity)
-    {
-        var kind = SymbolKind.Type;
-        var typeKind = TypeKind.Unknown;
-        var name = entity.FullName;
-        var hidden = entity.IsCompilerGenerated() || entity.Name.Contains('<');
-
-        if (entity is IMethod m)
+        else if (sym.Kind != symbolKind)
         {
-            if (m.AccessorOwner != null)
-            {
-                kind = SymbolKind.Accessor;
-                hidden = false;  // always expose accessors in a first class way
-            }
-            else if (m.IsConstructor)
-            {
-                kind = SymbolKind.Ctor;
-            }
-            else
-            {
-                kind = SymbolKind.Method;
-
-                if (m.DeclaringTypeDefinition.GetDelegateInvokeMethod() != null)
-                {
-                    if (m.Name is "BeginInvoke" or "EndInvoke")
-                    {
-                        hidden = true;
-                    }
-                }
-            }
-
-            name = AssemblyLoader.GetEntitySymbolName(m);
-        }
-        else if (entity is IProperty)
-        {
-            kind = SymbolKind.Accessor;
-        }
-        else if (entity is IField)
-        {
-            kind = SymbolKind.Field;
-        }
-        else if (entity is ITypeDefinition td)
-        {
-            typeKind = td.Kind;
-        }
-        else
-        {
-            throw new ArgumentException($"Unknown entity type {entity.GetType()}");
-        }
-
-        var sym = GetSymbol(name);
-        
-        Symbol? parent = null;
-        if (entity.DeclaringType != null)
-        {
-            parent = GetSymbol(entity.DeclaringType.FullName);
-        }
-
-        sym.Define(kind, typeKind, hidden, entity.EffectiveAccessibility() == Accessibility.Public, parent);
-
-        if (sym.Assembly.Root)
-        {
-            if (entity.EffectiveAccessibility() is Accessibility.Public or Accessibility.Protected)
-            {
-                sym.Root = true;
-            }
+            throw new InvalidDataException($"Expected symbol {name} in assembly {Name} to be of kind {symbolKind}, but it is of kind {sym.Kind}");
         }
 
         return sym;
