@@ -1,7 +1,5 @@
 ﻿using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
-using System.Numerics;
-using System.Text;
 using System.Text.Json;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;

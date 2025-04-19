@@ -35,11 +35,11 @@ public class AliveClassButDeadMembers
     }
 
     public int DeadSimpleProperty { get; set; }
-    
+
     public int DeadComplexProperty
     {
         get { return _value / 2; }
-        set { _value = value * 2;  }
+        set { _value = value * 2; }
     }
 
     public event EventHandler DeadEvent
@@ -52,7 +52,7 @@ public class AliveClassButDeadMembers
     {
         get { return 0; }
         set { _ = value; }
-    }   
+    }
 
     public int DeadField;
     public const int DeadConst = 42;

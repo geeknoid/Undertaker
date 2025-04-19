@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
@@ -54,7 +53,7 @@ public sealed class AssemblyGraph
     /// LOads a new asssembly into the graph.
     /// </summary>
     public void LoadAssembly(CSharpDecompiler decomp)
-    { 
+    {
         AssemblyLoader.Load(decomp, GetAssembly);
     }
 
@@ -235,7 +234,8 @@ public sealed class AssemblyGraph
                     if (sym.Kind == SymbolKind.Type)
                     {
                         affectedTypes.Add(new(sym.Name, [], sym.Root));
-                    } else
+                    }
+                    else
                     {
                         affectedMembers.Add(new(sym.Name, [], sym.Root));
                     }

@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using System.Reflection.Metadata;
+﻿using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using ICSharpCode.Decompiler.CSharp;
@@ -119,7 +118,7 @@ internal static class AssemblyLoader
                             if (comma > 0)
                             {
                                 name = name[..comma];
-                            }   
+                            }
 
                             asm.RecordInternalsVisibleTo(getAssembly(name));
                         }
@@ -245,7 +244,7 @@ internal static class AssemblyLoader
                 if (!localSignature.IsNil)
                 {
                     foreach (var type in decomp.TypeSystem.MainModule.DecodeLocalSignature(localSignature, default))
-                    { 
+                    {
                         RecordReferenceToType(methodSym, type);
                     }
                 }

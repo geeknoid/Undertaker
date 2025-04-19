@@ -1,5 +1,4 @@
-﻿using System.Security;
-using TestLibrary;
+﻿using TestLibrary;
 
 namespace TestExe;
 
@@ -31,7 +30,7 @@ internal static class Program
         {
             Console.WriteLine(ex.ToString());
         }
-        
+
         Console.WriteLine(AliveClassAndAliveMembers.AliveConst);
         Console.WriteLine(new AliveClassAndAliveMembers.AliveNestedType());
     }

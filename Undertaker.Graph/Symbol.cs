@@ -59,7 +59,7 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolKind symbol
         foreach (var refSym in ReferencedSymbols.Values)
         {
             refSym.Mark();
-        }   
+        }
     }
 
     public override string ToString() => Name;
