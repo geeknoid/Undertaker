@@ -24,7 +24,7 @@ public class Tests
         var diagram = graph.CreateDependencyDiagram();
         var graphDump = graph.ToString();
 
-#if true
+#if false
         // write the golden files
         File.WriteAllText("../../../Golden/dead.json", deadReport);
         File.WriteAllText("../../../Golden/alive.json", aliveReport);
