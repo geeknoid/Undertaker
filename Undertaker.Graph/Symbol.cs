@@ -15,8 +15,8 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolKind symbol
     public bool IsPublic { get; private set; }
 
     // set by RecordReferencedSymbol
-    public IReadOnlySet<Symbol> Referencers => _referencers;
-    public IReadOnlyDictionary<string, Symbol> ReferencedSymbols => _referencedSymbols;
+    public IReadOnlyCollection<Symbol> Referencers => _referencers;
+    public IReadOnlyCollection<Symbol> ReferencedSymbols => _referencedSymbols.Values;
 
     // filled-in over time as the overall graph is populated
     public TypeSymbol? ParentType { get; set; }
@@ -56,7 +56,7 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolKind symbol
         }
 
         Marked = true;
-        foreach (var refSym in ReferencedSymbols.Values)
+        foreach (var refSym in ReferencedSymbols)
         {
             refSym.Mark();
         }

@@ -239,7 +239,7 @@ ASSEMBLY TestLibrary.dll
     DIRECTLY REFERENCED BY
       TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()
       TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(Int32)
-  TestLibrary.AliveClassAndAliveMembers.AliveEvent [MISC, ALIVE, NOT ROOT]
+  TestLibrary.AliveClassAndAliveMembers.AliveEvent [FIELD, ALIVE, NOT ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassAndAliveMembers
     DIRECTLY REFERENCED BY
@@ -400,7 +400,7 @@ ASSEMBLY TestLibrary.dll
     DIRECTLY REFERENCED BY
       TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()
       TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(Int32)
-  TestLibrary.AliveClassButDeadMembers.DeadEvent [MISC, DEAD, NOT ROOT]
+  TestLibrary.AliveClassButDeadMembers.DeadEvent [FIELD, DEAD, NOT ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassButDeadMembers
     DIRECTLY REFERENCED BY

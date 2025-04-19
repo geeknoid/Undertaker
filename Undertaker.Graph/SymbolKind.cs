@@ -5,5 +5,6 @@ internal enum SymbolKind
     Type,
     Method,
     Field,
+    Event,
     Misc,
 }

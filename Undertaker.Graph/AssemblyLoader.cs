@@ -20,7 +20,7 @@ internal static class AssemblyLoader
 
         foreach (var type in decomp.TypeSystem.MainModule.TypeDefinitions)
         {
-            RecordSymbolsReferencedByType(DefineSymbol(type), type);
+            RecordSymbolsReferencedByType((TypeSymbol) DefineSymbol(type), type);
 
             if (type.Kind == TypeKind.Enum)
             {
@@ -73,7 +73,7 @@ internal static class AssemblyLoader
             return sym;
         }
 
-        void RecordSymbolsReferencedByType(Symbol typeSym, ITypeDefinition type)
+        void RecordSymbolsReferencedByType(TypeSymbol typeSym, ITypeDefinition type)
         {
             foreach (var bt in type.DirectBaseTypes)
             {
@@ -101,6 +101,20 @@ internal static class AssemblyLoader
             }
 
             RecordSymbolsReferencedByAttributes(typeSym, type.GetAttributes());
+
+            foreach (var bt in type.GetAllBaseTypeDefinitions())
+            {
+                var sym = (TypeSymbol) getAssembly(bt.ParentModule!.AssemblyName).GetSymbol(bt.FullName, SymbolKind.Type);
+
+                if (bt.Kind == TypeKind.Interface)
+                {
+                    typeSym.AddInterfaceImplemented(sym);
+                }
+                else
+                {
+                    typeSym.AddBaseType(sym);
+                }
+            }
 
             if (type.Name == "<Module>")
             {
@@ -195,12 +209,11 @@ internal static class AssemblyLoader
                                 if (m.IsOverride || m.IsVirtual)
                                 {
                                     // TODO: if the method is an override or virtual, we must take a reference to all implementations of the member in any derived types
-
                                 }
 
                                 if (m.DeclaringType.Kind == TypeKind.Interface)
                                 {
-                                    // TODO: if the method is on an interface, we must take a reference to all implementations of the member in any derived types
+                                    // TODO: if the method is on an interface, we must take a reference to all implementations of the interface method in any types
                                 }
 
                                 break;
@@ -362,6 +375,7 @@ internal static class AssemblyLoader
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.Accessor => SymbolKind.Method,
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.TypeDefinition => SymbolKind.Type,
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.Field => SymbolKind.Field,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Event => SymbolKind.Event,
             _ => SymbolKind.Misc,
         };
     }

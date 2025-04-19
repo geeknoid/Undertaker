@@ -70,14 +70,9 @@ public sealed class AssemblyGraph
 
     private void MarkUsedSymbols()
     {
-        foreach (var asm in _assemblies.Values)
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            if (!asm.Loaded)
-            {
-                continue;
-            }
-
-            foreach (var sym in asm.Symbols.Values)
+            foreach (var sym in asm.Symbols)
             {
                 if (!sym.Root)
                 {
@@ -98,33 +93,17 @@ public sealed class AssemblyGraph
         MarkUsedSymbols();
 
         var assemblies = new List<GraphReportAssembly>();
-        foreach (var asm in _assemblies.Values)
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            if (!asm.Loaded)
-            {
-                // unprocessed referenced assembly, skip it
-                continue;
-            }
-
             var deadTypes = new List<GraphReportSymbol>();
             var deadMembers = new List<GraphReportSymbol>();
 
-            foreach (var sym in asm.Symbols.Values.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
+            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide).Cast<TypeSymbol>())
             {
-                if (sym.Hide)
-                {
-                    continue;
-                }
-
                 if (sym.Marked)
                 {
-                    foreach (var member in sym.Children)
+                    foreach (var member in sym.Children.Where(member => !member.Marked && !member.Hide && member.Kind != SymbolKind.Type))
                     {
-                        if (member.Marked || member.Hide || member.Kind == SymbolKind.Type)
-                        {
-                            continue;
-                        }
-
                         deadMembers.Add(new(member.Name, [], member.Root));
                     }
                 }
@@ -152,36 +131,22 @@ public sealed class AssemblyGraph
         MarkUsedSymbols();
 
         var assemblies = new List<GraphReportAssembly>();
-        foreach (var asm in _assemblies.Values)
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            if (!asm.Loaded)
-            {
-                // unprocessed referenced assembly, skip it
-                continue;
-            }
-
             var aliveTypes = new List<GraphReportSymbol>();
             var aliveMembers = new List<GraphReportSymbol>();
 
-            foreach (var sym in asm.Symbols.Values.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
+            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide && sym.Marked).Cast<TypeSymbol>())
             {
-                if (sym.Hide)
-                {
-                    continue;
-                }
+                var dependents = sym.Referencers.Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x).ToList();
+                aliveTypes.Add(new(sym.Name, dependents, sym.Root));
 
-                if (sym.Marked)
+                foreach (var member in sym.Children)
                 {
-                    var dependents = sym.Referencers.Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x).ToList();
-                    aliveTypes.Add(new(sym.Name, dependents, sym.Root));
-
-                    foreach (var member in sym.Children)
+                    if (member.Marked && !member.Hide)
                     {
-                        if (member.Marked && !member.Hide)
-                        {
-                            dependents = [.. member.Referencers.Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x)];
-                            aliveMembers.Add(new(member.Name, dependents, member.Root));
-                        }
+                        dependents = [.. member.Referencers.Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x)];
+                        aliveMembers.Add(new(member.Name, dependents, member.Root));
                     }
                 }
             }
@@ -201,18 +166,12 @@ public sealed class AssemblyGraph
     public GraphReport CollectPublicSymbols()
     {
         var assemblies = new List<GraphReportAssembly>();
-        foreach (var asm in _assemblies.Values)
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            if (!asm.Loaded)
-            {
-                // unprocessed referenced assembly, skip it
-                continue;
-            }
-
             var affectedTypes = new List<GraphReportSymbol>();
             var affectedMembers = new List<GraphReportSymbol>();
 
-            foreach (var sym in asm.Symbols.Values)
+            foreach (var sym in asm.Symbols)
             {
                 if (sym.Hide || sym.Root)
                 {
@@ -259,12 +218,9 @@ public sealed class AssemblyGraph
         var result = new List<string>();
 
         var aliveReport = CollectAliveSymbols();
-        foreach (var asm in aliveReport.Assemblies)
-        {
-            if (asm.Types.Count == 0 && asm.Members.Count == 0)
-            {
-                result.Add(asm.Assembly);
-            }
+        foreach (var asm in aliveReport.Assemblies.Where(asm => asm.Types.Count == 0 && asm.Members.Count == 0))
+        { 
+            result.Add(asm.Assembly);
         }
 
         return result;
@@ -274,27 +230,16 @@ public sealed class AssemblyGraph
     {
         var result = new List<NeedlessInternalsVisibleToReport>();
 
-        foreach (var asm in _assemblies.Values)
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            if (!asm.Loaded)
-            {
-                // unprocessed referenced assembly, skip it
-                continue;
-            }
-
             var otherAssemblies = new List<string>();
 
-            foreach (var other in asm.InternalsVisibleTo)
+            foreach (var other in asm.InternalsVisibleTo.Where(other => other.Loaded))
             {
-                if (!other.Loaded)
-                {
-                    continue;
-                }
-
                 bool usesInternals = false;
-                foreach (var sym in other.Symbols.Values)
+                foreach (var sym in other.Symbols)
                 {
-                    foreach (var refSym in sym.ReferencedSymbols.Values)
+                    foreach (var refSym in sym.ReferencedSymbols)
                     {
                         if (refSym.Assembly == asm && !refSym.IsPublic)
                         {
@@ -340,14 +285,11 @@ public sealed class AssemblyGraph
         foreach (var asm in _assemblies.Values)
         {
             var referenced = new HashSet<string>();
-            foreach (var sym in asm.Symbols.Values)
+            foreach (var sym in asm.Symbols)
             {
-                foreach (var rs in sym.ReferencedSymbols.Values)
+                foreach (var rs in sym.ReferencedSymbols.Where(rs => rs.Assembly != asm))
                 {
-                    if (rs.Assembly != asm)
-                    {
-                        _ = referenced.Add(rs.Assembly.Name);
-                    }
+                    _ = referenced.Add(rs.Assembly.Name);
                 }
             }
 
@@ -358,12 +300,9 @@ public sealed class AssemblyGraph
         var dependencyCount = _assemblies.Values.ToDictionary(a => a.Name, a => 0);
         foreach (var asm in _assemblies.Values)
         {
-            foreach (var dependency in dependencies[asm.Name])
+            foreach (var dependency in dependencies[asm.Name].Where(dependency => _assemblies.ContainsKey(dependency)))
             {
-                if (_assemblies.ContainsKey(dependency))
-                {
-                    dependencyCount[dependency]++;
-                }
+                dependencyCount[dependency]++;
             }
         }
 
@@ -415,24 +354,16 @@ public sealed class AssemblyGraph
             .AppendLine("stateDiagram-v2");
 
         var done = new HashSet<string>();
-        foreach (var asm in _assemblies.Values.OrderBy(a => a.Name))
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded).OrderBy(a => a.Name))
         {
-            if (!asm.Loaded)
-            {
-                continue;
-            }
-
             done.Clear();
-            foreach (var sym in asm.Symbols.Values.OrderBy(sym => sym.Name))
+            foreach (var sym in asm.Symbols.OrderBy(sym => sym.Name))
             {
-                foreach (var rs in sym.ReferencedSymbols.Values.OrderBy(rs => rs.Name))
+                foreach (var rs in sym.ReferencedSymbols.Where(rs => rs.Assembly != asm && rs.Assembly.Loaded).OrderBy(rs => rs.Name))
                 {
-                    if (rs.Assembly != asm && rs.Assembly.Loaded)
+                    if (done.Add(rs.Assembly.Name))
                     {
-                        if (done.Add(rs.Assembly.Name))
-                        {
-                            _ = sb.AppendLine(CultureInfo.InvariantCulture, $"    {asm.Name.Replace('-', '_')} --> {rs.Assembly.Name.Replace('-', '_')}");
-                        }
+                        _ = sb.AppendLine(CultureInfo.InvariantCulture, $"    {asm.Name.Replace('-', '_')} --> {rs.Assembly.Name.Replace('-', '_')}");
                     }
                 }
             }
@@ -459,7 +390,7 @@ public sealed class AssemblyGraph
                 continue;
             }
 
-            foreach (var sym in asm.Symbols.Values.OrderBy(s => s.Name))
+            foreach (var sym in asm.Symbols.OrderBy(s => s.Name))
             {
                 _ = sb.Append("  ").Append(sym.Name).Append(" [").Append(sym.Kind.ToString().ToUpperInvariant());
                 _ = sym.Marked ? sb.Append(", ALIVE") : sb.Append(", DEAD");
@@ -468,7 +399,7 @@ public sealed class AssemblyGraph
                 if (sym.ReferencedSymbols.Count > 0)
                 {
                     _ = sb.AppendLine("    DIRECTLY REFERENCES");
-                    foreach (var s in sym.ReferencedSymbols.Values)
+                    foreach (var s in sym.ReferencedSymbols)
                     {
                         _ = sb.Append("      ").AppendLine(s.Name);
                     }
