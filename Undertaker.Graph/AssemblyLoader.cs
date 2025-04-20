@@ -17,6 +17,7 @@ internal static class AssemblyLoader
     public static void Load(CSharpDecompiler decomp, Func<string, Assembly> getAssembly)
     {
         var asm = getAssembly(decomp.TypeSystem.MainModule.AssemblyName);
+        var sb = new StringBuilder();
 
         foreach (var type in decomp.TypeSystem.MainModule.TypeDefinitions)
         {
@@ -363,6 +364,35 @@ internal static class AssemblyLoader
                 t = t.DeclaringType;
             }
         }
+
+        string GetEntitySymbolName(IEntity entity)
+        {
+            if (entity is IMethod method)
+            {
+                _ = sb.Clear()
+                    .Append(entity.FullName)
+                    .Append('(');
+
+                bool first = true;
+                foreach (var p in method.Parameters)
+                {
+                    if (!first)
+                    {
+                        _ = sb.Append(", ");
+                    }
+                    else
+                    {
+                        first = false;
+                    }
+
+                    _ = sb.Append(p.Type.Name);
+                }
+
+                return sb.Append(')').ToString();
+            }
+
+            return entity.FullName;
+        }
     }
 
     public static SymbolKind GetEntitySymbolKind(IEntity entity)
@@ -378,34 +408,5 @@ internal static class AssemblyLoader
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.Event => SymbolKind.Event,
             _ => SymbolKind.Misc,
         };
-    }
-
-    public static string GetEntitySymbolName(IEntity entity)
-    {
-        if (entity is IMethod method)
-        {
-            var sb = new StringBuilder()
-                .Append(entity.FullName)
-                .Append('(');
-
-            bool first = true;
-            foreach (var p in method.Parameters)
-            {
-                if (!first)
-                {
-                    _ = sb.Append(", ");
-                }
-                else
-                {
-                    first = false;
-                }
-
-                _ = sb.Append(p.Type.Name);
-            }
-
-            return sb.Append(')').ToString();
-        }
-
-        return entity.FullName;
     }
 }

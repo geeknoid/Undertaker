@@ -50,7 +50,7 @@ public sealed class AssemblyGraph
     }
 
     /// <summary>
-    /// LOads a new asssembly into the graph.
+    /// Loads a new asssembly into the graph.
     /// </summary>
     public void LoadAssembly(CSharpDecompiler decomp)
     {
@@ -226,6 +226,9 @@ public sealed class AssemblyGraph
         return result;
     }
 
+    /// <summary>
+    /// Returns a list of assemblies which have uses of [InternalsVisibleTo] that could be removed. 
+    /// </summary>
     public IReadOnlyList<NeedlessInternalsVisibleToReport> CollectInternalsVisibleTo()
     {
         var result = new List<NeedlessInternalsVisibleToReport>();
@@ -270,6 +273,7 @@ public sealed class AssemblyGraph
         result.Sort((x, y) => string.CompareOrdinal(x.Assembly, y.Assembly));
         return result;
     }
+
     /// <summary>
     /// Creates a layer cake of assembly dependencies.
     /// </summary>
@@ -343,14 +347,12 @@ public sealed class AssemblyGraph
         return layers;
     }
 
+    /// <summary>
+    /// Creates a dependency diagram in Mermaid format showing the relationships between assemblies.
+    /// </summary>
     public string CreateDependencyDiagram()
     {
         var sb = new StringBuilder()
-            .AppendLine("---")
-            .AppendLine("title: Assembly Dependency Diagram")
-            .AppendLine("---")
-            .AppendLine()
-            .AppendLine("```mermaid")
             .AppendLine("stateDiagram-v2");
 
         var done = new HashSet<string>();
@@ -369,9 +371,7 @@ public sealed class AssemblyGraph
             }
         }
 
-        return sb.
-            AppendLine("```").
-            ToString();
+        return sb.ToString();
     }
 
     public override string ToString()

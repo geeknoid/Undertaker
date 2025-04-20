@@ -30,7 +30,7 @@ public class Tests
         File.WriteAllText("../../../Golden/unreferenced.json", unreferencedReport);
         File.WriteAllText("../../../Golden/needless-ivt.json", needlessIVTReport);
         File.WriteAllText("../../../Golden/assembly-layer-cake.json", assemblyLayerCake);
-        File.WriteAllText("../../../Golden/diagram.md", diagram);
+        File.WriteAllText("../../../Golden/diagram.mmd", diagram);
         File.WriteAllText("../../../Golden/graph.txt", graphDump);
 #else
         var goldenDeadReport = File.ReadAllText("../../../Golden/dead.json");
@@ -39,7 +39,7 @@ public class Tests
         var goldenUnreferencedReport = File.ReadAllText("../../../Golden/unreferenced.json");
         var goldenNeedlessIVTReport = File.ReadAllText("../../../Golden/needless-ivt.json");
         var goldenAssemblyLayerCake = File.ReadAllText("../../../Golden/assembly-layer-cake.json");
-        var goldenDiagram = File.ReadAllText("../../../Golden/diagram.md");
+        var goldenDiagram = File.ReadAllText("../../../Golden/diagram.mmd");
         var goldenGraphDump = File.ReadAllText("../../../Golden/graph.txt");
 
         Assert.Equal(goldenDeadReport, deadReport);
