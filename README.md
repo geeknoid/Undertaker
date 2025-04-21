@@ -91,7 +91,14 @@ symbols in the assemblies, starting from any root.
 
 ## Limitations
 
-The program doesn't identity unused const values or unused enum values (but unused enum types are identified).
+Some things to know:
+
+* The program doesn't identity unused const values or unused enum values (but unused enum types are identified).
+
+* Some symbols may be reported as dead when they are actually used via reflection.
+
+* If you have code under analysis that implements an interface which is not under analysis,
+  then you can get false positives about the various interface implementation methods being dead.
 
 ## Ideas
 

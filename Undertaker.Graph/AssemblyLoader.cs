@@ -8,10 +8,6 @@ using ICSharpCode.Decompiler.TypeSystem;
 
 namespace Undertaker.Graph;
 
-/*
- TODO: Detect when a virtual method could be made abstract since all uses of the member involve derived types that all implement the member.
- */
-
 internal static class AssemblyLoader
 {
     public static void Load(CSharpDecompiler decomp, Func<string, Assembly> getAssembly)
@@ -176,6 +172,33 @@ internal static class AssemblyLoader
                 RecordReferenceToMember(methodSym, method.AccessorOwner);
             }
 
+            // an override depends on all base methods
+            if (method.IsOverride)
+            {
+                foreach (var bt in method.DeclaringType.GetNonInterfaceBaseTypes())
+                {
+                    foreach (var bm in bt.GetMethods().Where(bm => bm.Name == method.Name && bm.Parameters.Count == method.Parameters.Count))
+                    {
+                        if (methodSym.Name == GetEntitySymbolName(bm))
+                        {
+                            RecordReferenceToMember(methodSym, bm);
+                        }
+                    }
+                }
+            }
+
+            // a method depends on all interface methods it implements
+            foreach (var it in method.DeclaringType.GetAllBaseTypeDefinitions().Where(bt => bt.Kind == TypeKind.Interface))
+            {
+                foreach (var im in it.GetMethods().Where(bm => bm.Name == method.Name && bm.Parameters.Count == method.Parameters.Count))
+                {
+                    if (methodSym.Name == GetEntitySymbolName(im))
+                    {
+                        RecordReferenceToMember(methodSym, im);
+                    }
+                }
+            }
+
             if (method.HasBody)
             {
                 var metadataModule = method.DeclaringType.GetDefinition()!.ParentModule! as MetadataModule;
@@ -206,17 +229,6 @@ internal static class AssemblyLoader
                                 var m = metadataModule.ResolveMethod(handle, default);
                                 RecordReferenceToMember(methodSym, m);
                                 RecordReferenceToType(methodSym, m.DeclaringType);
-
-                                if (m.IsOverride || m.IsVirtual)
-                                {
-                                    // TODO: if the method is an override or virtual, we must take a reference to all implementations of the member in any derived types
-                                }
-
-                                if (m.DeclaringType.Kind == TypeKind.Interface)
-                                {
-                                    // TODO: if the method is on an interface, we must take a reference to all implementations of the interface method in any types
-                                }
-
                                 break;
                             }
 
@@ -385,7 +397,7 @@ internal static class AssemblyLoader
                         first = false;
                     }
 
-                    _ = sb.Append(p.Type.Name);
+                    _ = sb.Append(p.Type.FullName);
                 }
 
                 return sb.Append(')').ToString();

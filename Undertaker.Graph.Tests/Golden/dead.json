@@ -46,12 +46,12 @@
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.get_Item(Int32)",
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.get_Item(System.Int32)",
           "Dependents": [],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.remove_AliveEvent(EventHandler)",
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.remove_AliveEvent(System.EventHandler)",
           "Dependents": [],
           "Root": false
         },
@@ -96,7 +96,7 @@
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.add_DeadEvent(EventHandler)",
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.add_DeadEvent(System.EventHandler)",
           "Dependents": [],
           "Root": false
         },
@@ -111,27 +111,27 @@
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.get_Item(Int32)",
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.get_Item(System.Int32)",
           "Dependents": [],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.remove_DeadEvent(EventHandler)",
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.remove_DeadEvent(System.EventHandler)",
           "Dependents": [],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(Int32)",
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(System.Int32)",
           "Dependents": [],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(Int32)",
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(System.Int32)",
           "Dependents": [],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.set_Item(Int32, Int32)",
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.set_Item(System.Int32, System.Int32)",
           "Dependents": [],
           "Root": false
         },

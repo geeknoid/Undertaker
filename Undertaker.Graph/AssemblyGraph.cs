@@ -2,8 +2,16 @@
 using System.Text;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
+using ICSharpCode.Decompiler.TypeSystem;
 
 namespace Undertaker.Graph;
+
+// TODO
+//
+// * Internal symbols should be considered as roots when an assembly has InternalsVisibleTo to an assembly not under analysis.
+//
+// * We could detect when a virtual method can be made abstract since all derived types reimplement the method without ever calling
+//   the base implementation. 
 
 /// <summary>
 /// Dependency graph to identity dead symbols in a collection of assemblies.
@@ -17,6 +25,7 @@ public sealed class AssemblyGraph
 {
     private readonly Dictionary<string, Assembly> _assemblies = [];
     private readonly HashSet<string> _rootAssemblies = [];
+    private bool _finalized;
 
     /// <summary>
     /// Indicates a particular assembly should be considered a root assembly.
@@ -30,6 +39,11 @@ public sealed class AssemblyGraph
     /// </remarks>
     public void RecordRootAssembly(string assemblyName)
     {
+        if (_finalized)
+        {
+            throw new InvalidOperationException("Cannot add root assemblies after the graph has been finalized.");
+        }
+
         _ = _rootAssemblies.Add(assemblyName);
     }
 
@@ -39,6 +53,11 @@ public sealed class AssemblyGraph
     /// <param name="path">The file system path to the assembly to load.</param>
     public void LoadAssembly(string path)
     {
+        if (_finalized)
+        {
+            throw new InvalidOperationException("Cannot add root assemblies after the graph has been finalized.");
+        }
+
         var decomp = new CSharpDecompiler(path, new DecompilerSettings
         {
             AutoLoadAssemblyReferences = false,
@@ -54,6 +73,11 @@ public sealed class AssemblyGraph
     /// </summary>
     public void LoadAssembly(CSharpDecompiler decomp)
     {
+        if (_finalized)
+        {
+            throw new InvalidOperationException("Cannot add root assemblies after the graph has been finalized.");
+        }
+
         AssemblyLoader.Load(decomp, GetAssembly);
     }
 
@@ -84,13 +108,110 @@ public sealed class AssemblyGraph
         }
     }
 
+    private void HookupDerivedSymbols()
+    {
+        /// For all interface types, we need to create a reference from interface members to any implementations of these members.
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
+        {
+            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
+            {
+                foreach (var ifaceMember in sym.Children)
+                {
+                    foreach (var derived in sym.DerivedTypes)
+                    {
+                        foreach (var derivedMember in derived.Children)
+                        {
+                            if (ifaceMember.Name == derivedMember.Name)
+                            {
+                                ifaceMember.RecordReferencedSymbol(derivedMember);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // If a method is an override or is virtual, we must create a reference to all implementations of the member in any derived types
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
+        {
+            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
+            {
+                foreach (var member in sym.Children.Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsVirtualOrOverride))
+                {
+                    foreach (var derived in sym.DerivedTypes)
+                    {
+                        foreach (var derivedMember in derived.Children)
+                        {
+                            if (member.Name == derivedMember.Name)
+                            {
+                                member.RecordReferencedSymbol(derivedMember);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // For interface types in unanalyzed assemblies, we need to create a reference from the interface type to all implementations of its members
+        foreach (var asm in _assemblies.Values.Where(asm => !asm.Loaded))
+        {
+            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
+            {
+                foreach (var ifaceMember in sym.Children)
+                {
+                    foreach (var derived in sym.DerivedTypes)
+                    {
+                        foreach (var derivedMember in derived.Children)
+                        {
+                            if (ifaceMember.Name == derivedMember.Name)
+                            {
+                                sym.RecordReferencedSymbol(derivedMember);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // For classes in unanalyzed assemblies, we need to create a reference from the class type to all implementations of its abstract or virtual members 
+        foreach (var asm in _assemblies.Values.Where(asm => !asm.Loaded))
+        {
+            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Class))
+            {
+                foreach (var classMember in sym.Children.Where(member => member.Kind == SymbolKind.Method))
+                {
+                    foreach (var derived in sym.DerivedTypes)
+                    {
+                        foreach (var derivedMember in derived.Children.Where(member => member.Kind == SymbolKind.Method))
+                        {
+                            if (classMember.Name == derivedMember.Name)
+                            {
+                                sym.RecordReferencedSymbol(derivedMember);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void Done()
+    {
+        if (!_finalized)
+        {
+            HookupDerivedSymbols();
+            MarkUsedSymbols();
+            _finalized = true;
+        }
+    }
+
     /// <summary>
     /// Gets information about the dead symbols in the graph.
     /// </summary>
     /// <remarks>Dead symbols are ones which aren't reachable from the various roots known to the graph.</remarks>
     public GraphReport CollectDeadSymbols()
     {
-        MarkUsedSymbols();
+        Done();
 
         var assemblies = new List<GraphReportAssembly>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
@@ -128,7 +249,7 @@ public sealed class AssemblyGraph
     /// <remarks>Alive symbols are ones which are reachable from the various roots known to the graph.</remarks>
     public GraphReport CollectAliveSymbols()
     {
-        MarkUsedSymbols();
+        Done();
 
         var assemblies = new List<GraphReportAssembly>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
@@ -165,6 +286,8 @@ public sealed class AssemblyGraph
     /// </summary>
     public GraphReport CollectPublicSymbols()
     {
+        Done();
+
         var assemblies = new List<GraphReportAssembly>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
@@ -215,6 +338,8 @@ public sealed class AssemblyGraph
     /// </summary>
     public IReadOnlyList<string> CollectUnreferencedAssemblies()
     {
+        Done();
+
         var result = new List<string>();
 
         var aliveReport = CollectAliveSymbols();
@@ -231,6 +356,8 @@ public sealed class AssemblyGraph
     /// </summary>
     public IReadOnlyList<NeedlessInternalsVisibleToReport> CollectInternalsVisibleTo()
     {
+        Done();
+
         var result = new List<NeedlessInternalsVisibleToReport>();
 
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
@@ -284,6 +411,8 @@ public sealed class AssemblyGraph
     /// <returns>A list of layers, where each layer is a list of assembly names.</returns>
     public IReadOnlyList<IReadOnlyList<string>> CreateAssemblyLayerCake()
     {
+        Done();
+
         // Step 1: Build a dependency map for each assembly
         var dependencies = new Dictionary<string, HashSet<string>>();
         foreach (var asm in _assemblies.Values)
@@ -352,6 +481,8 @@ public sealed class AssemblyGraph
     /// </summary>
     public string CreateDependencyDiagram()
     {
+        Done();
+
         var sb = new StringBuilder()
             .AppendLine("stateDiagram-v2");
 
@@ -376,7 +507,7 @@ public sealed class AssemblyGraph
 
     public override string ToString()
     {
-        MarkUsedSymbols();
+        Done();
 
         var sb = new StringBuilder();
 
