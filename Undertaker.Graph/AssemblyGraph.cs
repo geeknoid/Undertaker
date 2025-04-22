@@ -7,13 +7,6 @@ using ICSharpCode.Decompiler.TypeSystem;
 
 namespace Undertaker.Graph;
 
-// TODO
-//
-// * Internal symbols should be considered as roots when an assembly has InternalsVisibleTo to an assembly not under analysis.
-//
-// * We could detect when a virtual method can be made abstract since all derived types reimplement the method without ever calling
-//   the base implementation. 
-
 /// <summary>
 /// Dependency graph to identity dead symbols in a collection of assemblies.
 /// </summary>

@@ -97,12 +97,14 @@ Some things to know:
 
 * Some symbols may be reported as dead when they are actually used via reflection.
 
-* If you have code under analysis that implements an interface which is not under analysis,
-  then you can get false positives about the various interface implementation methods being dead.
-
 ## Ideas
 
 * Flag assemblies that use reflection since they might be cheating and
 have dependencies on otherwise dead symbols.
 
 * Can the symbol info include file & line numbers?
+
+* Internal symbols should be considered as roots when an assembly has InternalsVisibleTo to an assembly not under analysis.
+
+* We could detect when a virtual method can be made abstract since all derived types reimplement the method without ever calling
+  the base implementation. 
