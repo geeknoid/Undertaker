@@ -28,7 +28,7 @@ internal static class Program
         public string? GraphDump { get; set; }
         public bool ContinueOnLoadErrors { get; set; }
         public bool Verbose { get; set; }
-        public bool DumpMemory { get; set; } = false;
+        public bool DumpMemory { get; set; }
     }
 
     public static Task<int> Main(string[] args)
@@ -235,8 +235,11 @@ internal static class Program
                 try
                 {
                     var report = graph.CollectDeadSymbols();
-                    var json = JsonSerializer.Serialize(report, _serializationOptions);
-                    File.WriteAllText(path, json);
+                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        JsonSerializer.Serialize(file, report, _serializationOptions);
+                    }
+
                     Out($"Output report on dead symbols to {path}");
                 }
                 catch (Exception ex)
