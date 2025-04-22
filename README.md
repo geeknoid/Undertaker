@@ -36,7 +36,8 @@ Options:
                                                             produce
   -gd, --graph-dump <graph-dump>                            Path of the graph dump file to produce
   -cle, --continue-on-load-errors                           Proceed to the analysis and output phases even if some
-  ``` 
+                                                            assemblies didn't load
+``` 
 
 * `--root-assemblies` lets you specify the set of root assemblies. This is a text file
   containing the names of assemblies, one per line.
