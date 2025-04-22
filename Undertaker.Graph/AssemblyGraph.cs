@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
@@ -195,7 +196,7 @@ public sealed class AssemblyGraph
         }
     }
 
-    private void Done()
+    public void Done()
     {
         if (!_finalized)
         {
@@ -216,8 +217,8 @@ public sealed class AssemblyGraph
         var assemblies = new List<GraphReportAssembly>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            var deadTypes = new List<GraphReportSymbol>();
-            var deadMembers = new List<GraphReportSymbol>();
+            List<GraphReportSymbol>? deadTypes = null;
+            List<GraphReportSymbol>? deadMembers = null;
 
             foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide).Cast<TypeSymbol>())
             {
@@ -225,18 +226,30 @@ public sealed class AssemblyGraph
                 {
                     foreach (var member in sym.Children.Where(member => !member.Marked && !member.Hide && member.Kind != SymbolKind.Type))
                     {
-                        deadMembers.Add(new(member.Name, [], member.Root));
+                        deadMembers ??= [];
+                        deadMembers.Add(new(member.Name, Array.Empty<string>(), member.Root));
                     }
                 }
                 else
                 {
-                    deadTypes.Add(new(sym.Name, [], sym.Root));
+                    deadTypes ??= [];
+                    deadTypes.Add(new(sym.Name, Array.Empty<string>(), sym.Root));
                 }
             }
 
-            deadTypes.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
-            deadMembers.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
-            assemblies.Add(new(asm.Name, deadTypes, deadMembers));
+            if (deadTypes != null || deadMembers != null)
+            {
+                deadTypes?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+                deadMembers?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+
+                IReadOnlyList<GraphReportSymbol>? dt = deadTypes;
+                dt ??= Array.Empty<GraphReportSymbol>();
+
+                IReadOnlyList<GraphReportSymbol>? dm = deadMembers;
+                dm ??= Array.Empty<GraphReportSymbol>();
+
+                assemblies.Add(new(asm.Name, dt, dm));
+            }
         }
 
         assemblies.Sort((x, y) => string.CompareOrdinal(x.Assembly, y.Assembly));
@@ -254,12 +267,14 @@ public sealed class AssemblyGraph
         var assemblies = new List<GraphReportAssembly>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            var aliveTypes = new List<GraphReportSymbol>();
-            var aliveMembers = new List<GraphReportSymbol>();
+            List<GraphReportSymbol>? aliveTypes = null;
+            List<GraphReportSymbol>? aliveMembers = null;
 
             foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide && sym.Marked).Cast<TypeSymbol>())
             {
                 var dependents = sym.Referencers.Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x).ToList();
+
+                aliveTypes ??= [];
                 aliveTypes.Add(new(sym.Name, dependents, sym.Root));
 
                 foreach (var member in sym.Children)
@@ -267,14 +282,26 @@ public sealed class AssemblyGraph
                     if (member.Marked && !member.Hide)
                     {
                         dependents = [.. member.Referencers.Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x)];
+
+                        aliveMembers ??= [];
                         aliveMembers.Add(new(member.Name, dependents, member.Root));
                     }
                 }
             }
 
-            aliveTypes.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
-            aliveMembers.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
-            assemblies.Add(new(asm.Name, aliveTypes, aliveMembers));
+            if (aliveTypes != null || aliveMembers != null)
+            {
+                aliveTypes?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+                aliveMembers?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+
+                IReadOnlyList<GraphReportSymbol>? at = aliveTypes;
+                at ??= Array.Empty<GraphReportSymbol>();
+
+                IReadOnlyList<GraphReportSymbol>? am = aliveMembers;
+                am ??= Array.Empty<GraphReportSymbol>();
+
+                assemblies.Add(new(asm.Name, at, am));
+            }
         }
 
         assemblies.Sort((x, y) => string.CompareOrdinal(x.Assembly, y.Assembly));
@@ -291,16 +318,11 @@ public sealed class AssemblyGraph
         var assemblies = new List<GraphReportAssembly>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            var affectedTypes = new List<GraphReportSymbol>();
-            var affectedMembers = new List<GraphReportSymbol>();
+            List<GraphReportSymbol>? affectedTypes = null;
+            List<GraphReportSymbol>? affectedMembers = null;
 
-            foreach (var sym in asm.Symbols)
+            foreach (var sym in asm.Symbols.Where(sym => !sym.Hide && !sym.Root))
             {
-                if (sym.Hide || sym.Root)
-                {
-                    continue;
-                }
-
                 bool usedOutside = false;
                 foreach (var r in sym.Referencers)
                 {
@@ -315,18 +337,30 @@ public sealed class AssemblyGraph
                 {
                     if (sym.Kind == SymbolKind.Type)
                     {
+                        affectedTypes ??= [];
                         affectedTypes.Add(new(sym.Name, [], sym.Root));
                     }
                     else
                     {
+                        affectedMembers ??= [];
                         affectedMembers.Add(new(sym.Name, [], sym.Root));
                     }
                 }
             }
 
-            affectedTypes.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
-            affectedMembers.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
-            assemblies.Add(new(asm.Name, affectedTypes, affectedMembers));
+            if (affectedTypes != null || affectedTypes != null)
+            {
+                affectedTypes?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+                affectedMembers?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+
+                IReadOnlyList<GraphReportSymbol>? at = affectedTypes;
+                at ??= Array.Empty<GraphReportSymbol>();
+
+                IReadOnlyList<GraphReportSymbol>? am = affectedMembers;
+                am ??= Array.Empty<GraphReportSymbol>();
+
+                assemblies.Add(new(asm.Name, at, am));
+            }
         }
 
         assemblies.Sort((x, y) => string.CompareOrdinal(x.Assembly, y.Assembly));

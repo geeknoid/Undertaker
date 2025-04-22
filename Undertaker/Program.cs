@@ -3,6 +3,7 @@ using System.CommandLine.NamingConventionBinder;
 using System.Text.Json;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
+using ICSharpCode.Decompiler.CSharp.Syntax.PatternMatching;
 using ICSharpCode.Decompiler.Metadata;
 using Undertaker.Graph;
 
@@ -27,6 +28,7 @@ internal static class Program
         public string? GraphDump { get; set; }
         public bool ContinueOnLoadErrors { get; set; }
         public bool Verbose { get; set; }
+        public bool DumpMemory { get; set; } = false;
     }
 
     public static Task<int> Main(string[] args)
@@ -91,6 +93,8 @@ internal static class Program
 
         if (args.RootAssemblies != null)
         {
+            Out($"Loading root assembly file {args.RootAssemblies.FullName}");
+
             try
             {
                 var lines = File.ReadAllLines(args.RootAssemblies.FullName);
@@ -166,6 +170,9 @@ internal static class Program
         }
 
         Out($"Done loading assemblies: loaded {successCount}, skipped {skipCount}, failed {errorCount}");
+
+        Out("Analyzing...");
+        graph.Done();
 
         if (args.DeadSymbols == null
             && args.AliveSymbols == null
@@ -250,8 +257,11 @@ internal static class Program
                 try
                 {
                     var report = graph.CollectAliveSymbols();
-                    var json = JsonSerializer.Serialize(report, _serializationOptions);
-                    File.WriteAllText(path, json);
+                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        JsonSerializer.Serialize(file, report, _serializationOptions);
+                    }
+
                     Out($"Output report on alive symbols to {path}");
                 }
                 catch (Exception ex)
@@ -272,8 +282,11 @@ internal static class Program
                 try
                 {
                     var report = graph.CollectPublicSymbols();
-                    var json = JsonSerializer.Serialize(report, _serializationOptions);
-                    File.WriteAllText(path, json);
+                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        JsonSerializer.Serialize(file, report, _serializationOptions);
+                    }
+
                     Out($"Output report on needlessly public symbols to {path}");
                 }
                 catch (Exception ex)
@@ -294,8 +307,11 @@ internal static class Program
                 try
                 {
                     var report = graph.CollectUnreferencedAssemblies();
-                    var json = JsonSerializer.Serialize(report, _serializationOptions);
-                    File.WriteAllText(path, json);
+                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        JsonSerializer.Serialize(file, report, _serializationOptions);
+                    }
+
                     Out($"Output unreferenced assemblies report to {path}");
                 }
                 catch (Exception ex)
@@ -316,8 +332,11 @@ internal static class Program
                 try
                 {
                     var report = graph.CollectInternalsVisibleTo();
-                    var json = JsonSerializer.Serialize(report, _serializationOptions);
-                    File.WriteAllText(path, json);
+                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        JsonSerializer.Serialize(file, report, _serializationOptions);
+                    }
+
                     Out($"Output needless [InternalsVisibleTo] report to {path}");
                 }
                 catch (Exception ex)
@@ -338,8 +357,11 @@ internal static class Program
                 try
                 {
                     var cake = graph.CreateAssemblyLayerCake();
-                    var json = JsonSerializer.Serialize(cake, _serializationOptions);
-                    File.WriteAllText(path, json);
+                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        JsonSerializer.Serialize(file, cake, _serializationOptions);
+                    }
+
                     Out($"Output assembly layer cake to {path}");
                 }
                 catch (Exception ex)
@@ -397,7 +419,16 @@ internal static class Program
         {
             if (args.Verbose)
             {
-                Console.WriteLine(message);
+                if (args.DumpMemory)
+                {
+                    var proc = System.Diagnostics.Process.GetCurrentProcess();
+                    var mem = proc.PrivateMemorySize64 / 1024 / 1024;
+                    Console.WriteLine($"{message} ({mem}MB)");
+                }
+                else
+                {
+                    Console.WriteLine(message);
+                }
             }
         }
 

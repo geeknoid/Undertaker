@@ -1,11 +1,6 @@
 {
   "Assemblies": [
     {
-      "Assembly": "TestExe",
-      "Types": [],
-      "Members": []
-    },
-    {
       "Assembly": "TestLibrary",
       "Types": [
         {
