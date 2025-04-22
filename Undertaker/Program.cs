@@ -3,7 +3,6 @@ using System.CommandLine.NamingConventionBinder;
 using System.Text.Json;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
-using ICSharpCode.Decompiler.CSharp.Syntax.PatternMatching;
 using ICSharpCode.Decompiler.Metadata;
 using Undertaker.Graph;
 

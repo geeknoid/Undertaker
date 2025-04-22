@@ -136,6 +136,8 @@ internal static class AssemblyLoader
                     }
                 }
             }
+
+            typeSym.Trim();
         }
 
         void RecordSymbolsReferencedByMethod(Symbol methodSym, IMethod method)

@@ -42,7 +42,5 @@ internal sealed class Assembly(string name, bool root)
         _ = _internalsVisibleTo.Add(other);
     }
 
-    public override int GetHashCode() => Name.GetHashCode();
-    public override bool Equals(object? obj) => obj is Assembly asm && Name.Equals(asm.Name, StringComparison.Ordinal);
     public override string ToString() => Name;
 }
