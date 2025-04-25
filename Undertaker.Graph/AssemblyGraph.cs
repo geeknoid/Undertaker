@@ -1,9 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
-using ICSharpCode.Decompiler;
-using ICSharpCode.Decompiler.CSharp;
 using ICSharpCode.Decompiler.TypeSystem;
+using Microsoft.CodeAnalysis;
 
 namespace Undertaker.Graph;
 
@@ -42,37 +40,16 @@ public sealed class AssemblyGraph
     }
 
     /// <summary>
-    /// LOads a new asssembly into the graph.
+    /// Merge a new asssembly into the graph.
     /// </summary>
-    /// <param name="path">The file system path to the assembly to load.</param>
-    public void LoadAssembly(string path)
+    public void MergeAssembly(LoadedAssembly la)
     {
         if (_finalized)
         {
-            throw new InvalidOperationException("Cannot add root assemblies after the graph has been finalized.");
+            throw new InvalidOperationException("Cannot merge new assemblies after the graph has been finalized.");
         }
 
-        var decomp = new CSharpDecompiler(path, new DecompilerSettings
-        {
-            AutoLoadAssemblyReferences = false,
-            LoadInMemory = true,
-            ThrowOnAssemblyResolveErrors = false,
-        });
-
-        LoadAssembly(decomp);
-    }
-
-    /// <summary>
-    /// Loads a new asssembly into the graph.
-    /// </summary>
-    public void LoadAssembly(CSharpDecompiler decomp)
-    {
-        if (_finalized)
-        {
-            throw new InvalidOperationException("Cannot add root assemblies after the graph has been finalized.");
-        }
-
-        AssemblyLoader.Load(decomp, GetAssembly);
+        AssemblyProcessor.Merge(la, GetAssembly);
     }
 
     private Assembly GetAssembly(string assemblyName)

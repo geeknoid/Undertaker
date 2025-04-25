@@ -9,8 +9,15 @@ public class Tests
     {
         var graph = new AssemblyGraph();
 
-        graph.LoadAssembly("../../../../TestExe/bin/debug/net9.0/TestExe.dll");
-        graph.LoadAssembly("../../../../TestExe/bin/debug/net9.0/TestLibrary.dll");
+        using (var exe = new LoadedAssembly("../../../../TestExe/bin/debug/net9.0/TestExe.dll"))
+        {
+            graph.MergeAssembly(exe);
+        }
+
+        using (var lib = new LoadedAssembly("../../../../TestExe/bin/debug/net9.0/TestLibrary.dll"))
+        {
+            graph.MergeAssembly(lib);
+        }
 
         var serializerOptions = new JsonSerializerOptions { WriteIndented = true };
         var deadReport = JsonSerializer.Serialize(graph.CollectDeadSymbols(), serializerOptions);

@@ -8,10 +8,11 @@ using ICSharpCode.Decompiler.TypeSystem;
 
 namespace Undertaker.Graph;
 
-internal static class AssemblyLoader
+internal static class AssemblyProcessor
 {
-    public static void Load(CSharpDecompiler decomp, Func<string, Assembly> getAssembly)
+    public static void Merge(LoadedAssembly la, Func<string, Assembly> getAssembly)
     {
+        var decomp = la.Decompiler;
         var asm = getAssembly(decomp.TypeSystem.MainModule.AssemblyName);
         var sb = new StringBuilder();
 

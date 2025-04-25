@@ -1,9 +1,7 @@
-﻿using System.CommandLine;
+﻿using System.Collections.Concurrent;
+using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Text.Json;
-using ICSharpCode.Decompiler;
-using ICSharpCode.Decompiler.CSharp;
-using ICSharpCode.Decompiler.Metadata;
 using Undertaker.Graph;
 
 namespace Undertaker;
@@ -121,24 +119,18 @@ internal static class Program
         int skipCount = 0;
 
         var files = new Queue<FileInfo>(args.Assemblies!.GetFiles("*.dll", SearchOption.AllDirectories));
-        var tasks = new HashSet<Task<CSharpDecompiler>>(MaxConcurrentAssemblyLoads);
-        var map = new Dictionary<Task<CSharpDecompiler>, FileInfo>(MaxConcurrentAssemblyLoads);
+        var tasks = new HashSet<Task<LoadedAssembly>>(MaxConcurrentAssemblyLoads);
+        var map = new Dictionary<Task<LoadedAssembly>, FileInfo>(MaxConcurrentAssemblyLoads);
 
         while (files.Count > 0)
         {
-            while (tasks.Count < tasks.Capacity && files.Count > 0)
+            while (tasks.Count < MaxConcurrentAssemblyLoads && files.Count > 0)
             {
                 var file = files.Dequeue();
                 var task = Task.Run(() =>
                 {
                     Out($"Loading assembly {file.FullName}");
-
-                    return new CSharpDecompiler(file.FullName, new DecompilerSettings
-                    {
-                        AutoLoadAssemblyReferences = false,
-                        LoadInMemory = false,
-                        ThrowOnAssemblyResolveErrors = false,
-                    });
+                    return new LoadedAssembly(file.FullName);
                 });
 
                 _ = tasks.Add(task);
@@ -198,23 +190,21 @@ internal static class Program
 
         return 0;
 
-        async Task CompleteTask(Task<CSharpDecompiler> task)
+        async Task CompleteTask(Task<LoadedAssembly> task)
         {
             var file = map[task];
             _ = map.Remove(task);
 
             try
             {
-                var decomp = await task;
-                graph.LoadAssembly(decomp);
+                using (var la = await task)
+                {
+                    graph.MergeAssembly(la);
+                }
+
                 successCount++;
             }
             catch (BadImageFormatException)
-            {
-                Warn($"{file.FullName} is not a .NET assembly, ignoring");
-                skipCount++;
-            }
-            catch (MetadataFileNotSupportedException)
             {
                 Warn($"{file.FullName} is not a .NET assembly, ignoring");
                 skipCount++;
