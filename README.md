@@ -131,6 +131,9 @@ Undertaker does a pretty good job at finding most of the dead code in a code bas
 
 * *Enum Members and Const Values**. Undertaker cannot detect unused enum members or const values.
 
+Undertaker tries really hard not to produce any false positives (i.e. claiming code is dead when it really isn't). But ultimately, the too
+may get fooled by uses of reflection.
+
 ## Ideas
 
 * Flag assemblies that use reflection since they might be cheating and
