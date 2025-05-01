@@ -40,6 +40,7 @@ Options:
   -gd, --graph-dump <graph-dump>                            Path of the graph dump file to produce
   -cle, --continue-on-load-errors                           Proceed to the analysis and output phases even if some
                                                             assemblies didn't load
+  -v, --verbose                                             Output progress reports
 ```
 
 * `<assembly-folder>` is the path to a folder containing all the assemblies to work with. The tool will
@@ -81,6 +82,9 @@ Options:
 	
 * `--continue-on-load-errors` lets you specify that the program should continue to run even if some assemblies
   fail to load.
+
+* `--verbose` lets you specify that the program should output progress reports as it runs. This is useful for
+  understanding what the tool is doing and how long it will take to complete.
 
 If you don't specify any of the explicit output options, the tool will default to generating output files in the
 current working directory with the following names:
@@ -138,3 +142,6 @@ have dependencies on otherwise dead symbols.
 
 * We could detect when a virtual method can be made abstract since all derived types reimplement the method without ever calling
   the base implementation. 
+
+* The tool should understand the difference between production and test assemblies. This would enable it to report code that is
+  kept alive strictly by virtue of a test.
