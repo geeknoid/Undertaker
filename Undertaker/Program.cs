@@ -8,12 +8,12 @@ namespace Undertaker;
 
 internal static class Program
 {
-    private const int MaxConcurrentAssemblyLoads = 16;
+    private const int MaxConcurrentAssemblyLoads = 1;
     private static readonly JsonSerializerOptions _serializationOptions = new() { WriteIndented = true };
 
     private sealed class UndertakerArgs
     {
-        public DirectoryInfo? Assemblies { get; set; }
+        public DirectoryInfo? AssemblyFolder { get; set; }
         public FileInfo? RootAssemblies { get; set; }
         public string? DeadSymbols { get; set; }
         public string? AliveSymbols { get; set; }
@@ -32,7 +32,7 @@ internal static class Program
     {
         var rootCommand = new RootCommand("Helps with dead code detection over a large code base")
         {
-            new Argument<DirectoryInfo>("assemblies", "Path to folder containing all the assemblies to work with.").ExistingOnly(),
+            new Argument<DirectoryInfo>("assembly-folder", "Path to a folder containing all the assemblies to work with.").ExistingOnly(),
 
             new Option<FileInfo>(
                 ["-ra", "--root-assemblies"],
@@ -102,6 +102,10 @@ internal static class Program
                     {
                         l = l.Substring(0, l.Length - 4);
                     }
+                    else if (l.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                    {
+                        l = l.Substring(0, l.Length - 4);
+                    }
 
                     graph.RecordRootAssembly(l);
                 }
@@ -118,7 +122,17 @@ internal static class Program
         int errorCount = 0;
         int skipCount = 0;
 
-        var files = new Queue<FileInfo>(args.Assemblies!.GetFiles("*.dll", SearchOption.AllDirectories));
+        var files = new Queue<FileInfo>();
+        foreach (var file in args.AssemblyFolder!.GetFiles("*.dll", SearchOption.AllDirectories))
+        {
+            files.Enqueue(file);
+        }
+
+        foreach (var file in args.AssemblyFolder!.GetFiles("*.exe", SearchOption.AllDirectories))
+        {
+            files.Enqueue(file);
+        }
+
         var tasks = new HashSet<Task<LoadedAssembly>>(MaxConcurrentAssemblyLoads);
         var map = new Dictionary<Task<LoadedAssembly>, FileInfo>(MaxConcurrentAssemblyLoads);
 

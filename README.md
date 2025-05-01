@@ -4,21 +4,24 @@ This tool is designed to help discover dead code within a set of compiled .NET a
 
 ## How It Works
 
-You point this tool at a directory full of .NET assemblies. It loads these assemblies and
+You point this tool at a folder full of .NET assemblies. It loads these assemblies and
 builds an in-memory graph that represents all the symbols in those assemblies and which 
 other symbols they reference. Based on this graph, you can then output a report showing
 the set of defined symbols which are never referenced (dead symbols), along with a report
 showing the defined symbols that are referenced (alive symbols) and which other symbol
-references them.
+references them. Various other reports are also available, including a report on assemblies that
+are never referenced, a report on public symbols that could be made internal, and a report
+on spurious uses of [InternalsVisibleTo]. You can also output a full layer cake of dependencies
+and a Mermaid-based assembly dependency diagram.
 
 ## Options
 
 ```text
 Usage:
-  Undertaker <assemblies> [options]
+  Undertaker <assembly-folder> [options]
 
 Arguments:
-  <assemblies>  Path to folder containing all the assemblies to work with.
+  <assembly-folder>  Path to a folder containing all the assemblies to work with.
 
 Options:
   -ra, --root-assemblies <root-assemblies>                  Path to a text file listing assemblies to be treated as
@@ -37,7 +40,11 @@ Options:
   -gd, --graph-dump <graph-dump>                            Path of the graph dump file to produce
   -cle, --continue-on-load-errors                           Proceed to the analysis and output phases even if some
                                                             assemblies didn't load
-``` 
+```
+
+* `<assembly-folder>` is the path to a folder containing all the assemblies to work with. The tool will
+  analyze any files with the `*.dll` and `*.exe` extensions, skipping any files that are not .NET assemblies.
+  The tool recursively visits all subfolders, looking for files to analyze.
 
 * `--root-assemblies` lets you specify the set of root assemblies. This is a text file
   containing the names of assemblies, one per line.
@@ -69,11 +76,11 @@ Options:
   visual format, making it easier to understand the relationships between them.
 
 * `--graph-dump` lets you specify the path to the file where the internal graph dump should be written.
-This is a text file containing the graph of all the symbols and their references. This is useful for
-debugging and understanding the internal workings of the tool.
+  This is a text file containing the graph of all the symbols and their references. This is useful for
+  debugging and understanding the internal workings of the tool.
 	
 * `--continue-on-load-errors` lets you specify that the program should continue to run even if some assemblies
-fail to load.
+  fail to load.
 
 ## Roots
 
@@ -84,19 +91,28 @@ begins. There are two kinds of roots:
 * Any static method called `Main` in any assembly is considered a root.
 
 * You can provide a list of assemblies as root assemblies. Any public symbol exposed by
-these assemblies are considered roots. Any assemblies in the set which are considered
-part of a public API should normally be flagged as root assemblies.
+  these assemblies are considered roots. Any assemblies in the set which are considered
+  part of a public API should normally be flagged as root assemblies.
 
 Symbols are considered alive if they are referenced in some way by walking the set of
 symbols in the assemblies, starting from any root.
 
 ## Limitations
 
-Some things to know:
+Undertaker does a pretty good job at finding most of the dead code in a code base, but there are some things it can't help with:
 
-* The program doesn't identity unused const values or unused enum values (but unused enum types are identified).
+* **Configuration-Driven Dead Code**. If you have code that only runs when a particular configuration or environment is active, and
+  the specific configuration or environment is never actually used, the tool won't tell you about the dead code. This happens in
+  a large code base following experiments which have been concluded but the unused code path didn't get removed at the end of the
+  experiment.
+ 
+* **#ifdef code**. Code that is compiled out via #ifdef will never be flagged as dead even though it might never be used.
+ 
+* **Unused Public APIs in Root Assemblies**. All public symbols of root assemblies are considered alive even if they are
+  never used.
 
-* Some symbols may be reported as dead when they are actually used via reflection.
+* **Unused Public REST/gRPC APIs**. If your assemblies expose a dead web API, the tool won't be able to tell you about it. This is
+  because the tool doesn't analyze the HTTP requests and responses, so it can't tell if a particular API is actually used or not. 
 
 ## Ideas
 
