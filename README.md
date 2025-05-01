@@ -82,6 +82,17 @@ Options:
 * `--continue-on-load-errors` lets you specify that the program should continue to run even if some assemblies
   fail to load.
 
+If you don't specify any of the explicit output options, the tool will default to generating output files in the
+current working directory with the following names:
+
+* `dead-symbols.json`
+* `alive-symbols.json`
+* `public-symbols.json`
+* `unreferenced-assemblies.json`
+* `internals-visible-to.json`
+* `assembly-layer-cake.json`
+* `dependency-diagram.mmd`
+
 ## Roots
 
 The analysis to discover dead code depends on knowing the roots, the symbols that are
@@ -113,6 +124,8 @@ Undertaker does a pretty good job at finding most of the dead code in a code bas
 
 * **Unused Public REST/gRPC APIs**. If your assemblies expose a dead web API, the tool won't be able to tell you about it. This is
   because the tool doesn't analyze the HTTP requests and responses, so it can't tell if a particular API is actually used or not. 
+
+* *Enum Members and Const Values**. Undertaker cannot detect unused enum members or const values.
 
 ## Ideas
 

@@ -88,6 +88,26 @@ internal static class Program
     {
         var graph = new AssemblyGraph();
 
+        if (args.DeadSymbols == null
+            && args.AliveSymbols == null
+            && args.PublicSymbols == null
+            && args.UnreferencedAssemblies == null
+            && args.InternalsVisibleTo == null
+            && args.AssemblyLayerCake == null
+            && args.DependencyDiagram == null
+            && args.GraphDump == null)
+        {
+            Out("No explicit output requested, generating default outputs");
+
+            args.DeadSymbols = "./dead-symbols.json";
+            args.AliveSymbols = "./alive-symbols.json";
+            args.PublicSymbols = "./public-symbols.json";
+            args.UnreferencedAssemblies = "./unreferenced-assemblies.json";
+            args.InternalsVisibleTo = "./internals-visible-to.json";
+            args.AssemblyLayerCake = "./assembly-layer-cake.json";
+            args.DependencyDiagram = "./dependency-diagram.mmd";
+        }
+
         if (args.RootAssemblies != null)
         {
             Out($"Loading root assembly file {args.RootAssemblies.FullName}");
@@ -179,18 +199,7 @@ internal static class Program
         Out("Analyzing...");
         graph.Done();
 
-        if (args.DeadSymbols == null
-            && args.AliveSymbols == null
-            && args.PublicSymbols == null
-            && args.UnreferencedAssemblies == null
-            && args.InternalsVisibleTo == null
-            && args.AssemblyLayerCake == null
-            && args.DependencyDiagram == null
-            && args.GraphDump == null)
-        {
-            Out("No output requested");
-        }
-        else if (!OutputDeadSymbols() ||
+        if (!OutputDeadSymbols() ||
             !OutputAliveSymbols() ||
             !OutputPublicSymbols() ||
             !OutputUnreferencedAssemblies() ||
