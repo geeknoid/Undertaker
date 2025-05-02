@@ -5,6 +5,7 @@ namespace Undertaker.Graph;
 internal sealed class MethodSymbol(Assembly assembly, string name) : Symbol(assembly, name, SymbolKind.Method)
 {
     public bool IsVirtualOrOverride { get; private set; }
+    public bool IsTestMethod { get; private set; }
 
     public override void Define(IEntity entity)
     {
@@ -36,5 +37,11 @@ internal sealed class MethodSymbol(Assembly assembly, string name) : Symbol(asse
         }
 
         IsVirtualOrOverride = m.IsVirtual || m.IsOverride;
+    }
+
+    public void MarkAsTestMethod()
+    {
+        IsTestMethod = true;
+        Root = true;
     }
 }

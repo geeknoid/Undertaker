@@ -26,8 +26,12 @@ Arguments:
 Options:
   -ra, --root-assemblies <root-assemblies>                  Path to a text file listing assemblies to be treated as
                                                             roots, one assembly name per line
+  -tma, --test-method-attributes <test-method-attributes>   Path to a text file listing all the attributes that can
+                                                            mark a method as a test, one per line
   -ds, --dead-symbols <dead-symbols>                        Path of the report to produce on dead symbols
   -as, --alive-symbols <alive-symbols>                      Path of the report to produce on alive symbols
+  -abts, --alive-by-test-symbols <alive-by-test-symbols>    Path of the report to produce symbols kept alive only by
+                                                            test methods
   -ps, --public-symbols <public-symbols>                    Path of the report to produce on public symbols which could
                                                             be made internal
   -ua, --unreferenced-assemblies <unreferenced-assemblies>  Path of the report to produce on completely unreferenced
@@ -50,6 +54,10 @@ Options:
 * `--root-assemblies` lets you specify the set of root assemblies. This is a text file
   containing the names of assemblies, one per line.
 
+* `--test-method-attributes` lets you specify the set of attributes that mark a method as a test. This is a text file
+  containing the fully qualified names of the attributes, one per line. If this is not supplied, a default set of
+  well-known names is used.
+
 * `--dead-symbols` lets you specify the path to the file where the report on dead symbols
   should be written. This report contains a list of all the symbols that are defined in the
   assemblies but are never referenced by any other symbol.
@@ -57,6 +65,9 @@ Options:
 * `--alive-symbols` lets you specify the path to the file where the report on alive symbols
   should be written. This report contains a list of all the symbols that are defined in the
   assemblies and are referenced by other symbols.
+
+* `--alive-by-test-symbols` lets you specify the path to the file where the report on symbols alive due
+  to being used from test methods should be written.
 
 * `--public-symbols` lets you specify the path to the file where the report on needlessly
   public symbols should be written. This report contains a list of all the symbols that are

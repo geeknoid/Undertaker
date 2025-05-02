@@ -8,6 +8,7 @@ public class Tests
     public void All()
     {
         var graph = new AssemblyGraph();
+        graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute");
 
         using (var exe = new LoadedAssembly("../../../../TestExe/bin/debug/net9.0/TestExe.dll"))
         {
@@ -22,6 +23,7 @@ public class Tests
         var serializerOptions = new JsonSerializerOptions { WriteIndented = true };
         var deadReport = JsonSerializer.Serialize(graph.CollectDeadSymbols(), serializerOptions);
         var aliveReport = JsonSerializer.Serialize(graph.CollectAliveSymbols(), serializerOptions);
+        var aliveByTestReport = JsonSerializer.Serialize(graph.CollectAliveByTestSymbols(), serializerOptions);
         var needlesslyPublicReport = JsonSerializer.Serialize(graph.CollectPublicSymbols(), serializerOptions);
         var unreferencedReport = JsonSerializer.Serialize(graph.CollectUnreferencedAssemblies(), serializerOptions);
         var needlessIVTReport = JsonSerializer.Serialize(graph.CollectInternalsVisibleTo(), serializerOptions);
@@ -33,6 +35,7 @@ public class Tests
         // write the golden files
         File.WriteAllText("../../../Golden/dead.json", deadReport);
         File.WriteAllText("../../../Golden/alive.json", aliveReport);
+        File.WriteAllText("../../../Golden/alive-by-test.json", aliveByTestReport);
         File.WriteAllText("../../../Golden/needlessly-public.json", needlesslyPublicReport);
         File.WriteAllText("../../../Golden/unreferenced.json", unreferencedReport);
         File.WriteAllText("../../../Golden/needless-ivt.json", needlessIVTReport);
@@ -42,6 +45,7 @@ public class Tests
 #else
         var goldenDeadReport = File.ReadAllText("../../../Golden/dead.json");
         var goldenAliveReport = File.ReadAllText("../../../Golden/alive.json");
+        var goldenAliveByTestReport = File.ReadAllText("../../../Golden/alive-by-test.json");
         var goldenNeedlesslyPublicReport = File.ReadAllText("../../../Golden/needlessly-public.json");
         var goldenUnreferencedReport = File.ReadAllText("../../../Golden/unreferenced.json");
         var goldenNeedlessIVTReport = File.ReadAllText("../../../Golden/needless-ivt.json");
@@ -51,6 +55,7 @@ public class Tests
 
         Assert.Equal(goldenDeadReport, deadReport);
         Assert.Equal(goldenAliveReport, aliveReport);
+        Assert.Equal(goldenAliveByTestReport, aliveByTestReport);
         Assert.Equal(goldenNeedlesslyPublicReport, needlesslyPublicReport);
         Assert.Equal(goldenUnreferencedReport, unreferencedReport);
         Assert.Equal(goldenNeedlessIVTReport, needlessIVTReport);

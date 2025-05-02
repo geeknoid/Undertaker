@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Reflection;
 using System.Text;
 using ICSharpCode.Decompiler.TypeSystem;
 using Microsoft.CodeAnalysis;
@@ -17,6 +18,7 @@ public sealed class AssemblyGraph
 {
     private readonly Dictionary<string, Assembly> _assemblies = [];
     private readonly HashSet<string> _rootAssemblies = [];
+    private readonly HashSet<string> _testMethodAttributes = [];
     private bool _finalized;
 
     /// <summary>
@@ -39,6 +41,16 @@ public sealed class AssemblyGraph
         _ = _rootAssemblies.Add(assemblyName);
     }
 
+    public void RecordTestMethodAttribute(string attributeName)
+    {
+        if (_finalized)
+        {
+            throw new InvalidOperationException("Cannot add test method attributes after the graph has been finalized.");
+        }
+
+        _ = _testMethodAttributes.Add(attributeName);
+    }
+
     /// <summary>
     /// Merge a new asssembly into the graph.
     /// </summary>
@@ -49,7 +61,7 @@ public sealed class AssemblyGraph
             throw new InvalidOperationException("Cannot merge new assemblies after the graph has been finalized.");
         }
 
-        AssemblyProcessor.Merge(la, GetAssembly);
+        AssemblyProcessor.Merge(la, GetAssembly, IsTestMethodAttribute);
     }
 
     private Assembly GetAssembly(string assemblyName)
@@ -62,6 +74,8 @@ public sealed class AssemblyGraph
 
         return asm;
     }
+
+    private bool IsTestMethodAttribute(string attributeName) => _testMethodAttributes.Contains(attributeName);
 
     private void MarkUsedSymbols()
     {
@@ -252,6 +266,65 @@ public sealed class AssemblyGraph
                     if (member.Marked && !member.Hide)
                     {
                         dependents = [.. member.Referencers.Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x)];
+
+                        aliveMembers ??= [];
+                        aliveMembers.Add(new(member.Name, dependents, member.Root));
+                    }
+                }
+            }
+
+            if (aliveTypes != null || aliveMembers != null)
+            {
+                aliveTypes?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+                aliveMembers?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+
+                IReadOnlyList<GraphReportSymbol>? at = aliveTypes;
+                at ??= Array.Empty<GraphReportSymbol>();
+
+                IReadOnlyList<GraphReportSymbol>? am = aliveMembers;
+                am ??= Array.Empty<GraphReportSymbol>();
+
+                assemblies.Add(new(asm.Name, at, am));
+            }
+        }
+
+        assemblies.Sort((x, y) => string.CompareOrdinal(x.Assembly, y.Assembly));
+        return new(assemblies);
+    }
+
+    /// <summary>
+    /// Gets information about the alive symbols in the graph that are kept alive strictly by test methods.
+    /// </summary>
+    public GraphReport CollectAliveByTestSymbols()
+    {
+        Done();
+
+        var assemblies = new List<GraphReportAssembly>();
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
+        {
+            List<GraphReportSymbol>? aliveTypes = null;
+            List<GraphReportSymbol>? aliveMembers = null;
+
+            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide && sym.Marked).Cast<TypeSymbol>())
+            {
+                var dependents = sym.Referencers.Where(x => x.Marked && x.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(x => x.IsTestMethod).Select(x => x.Name).OrderBy(x => x).ToList();
+                if (dependents.Count == 0)
+                {
+                    continue;
+                }
+
+                aliveTypes ??= [];
+                aliveTypes.Add(new(sym.Name, dependents, sym.Root));
+
+                foreach (var member in sym.Children)
+                {
+                    if (member.Marked && !member.Hide)
+                    {
+                        dependents = [.. member.Referencers.Where(x => x.Marked && x.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(x => x.IsTestMethod).Select(x => x.Name).OrderBy(x => x)];
+                        if (dependents.Count == 0)
+                        {
+                            continue;
+                        }
 
                         aliveMembers ??= [];
                         aliveMembers.Add(new(member.Name, dependents, member.Root));

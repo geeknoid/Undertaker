@@ -1,0 +1,39 @@
+{
+  "Assemblies": [
+    {
+      "Assembly": "TestLibrary",
+      "Types": [
+        {
+          "Symbol": "TestLibrary.AliveByTestClas",
+          "Dependents": [
+            "TestLibrary.AliveByTestClas.MyTestMethod()"
+          ],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest",
+          "Dependents": [
+            "TestLibrary.AliveByTestClas.MyTestMethod()"
+          ],
+          "Root": false
+        }
+      ],
+      "Members": [
+        {
+          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest",
+          "Dependents": [
+            "TestLibrary.AliveByTestClas.MyTestMethod()"
+          ],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor()",
+          "Dependents": [
+            "TestLibrary.AliveByTestClas.MyTestMethod()"
+          ],
+          "Root": false
+        }
+      ]
+    }
+  ]
+}

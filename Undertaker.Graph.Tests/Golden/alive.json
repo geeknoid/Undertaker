@@ -29,6 +29,23 @@
       "Assembly": "TestLibrary",
       "Types": [
         {
+          "Symbol": "TestLibrary.AliveByTestClas",
+          "Dependents": [
+            "TestLibrary.AliveByTestClas.MyTestMethod()",
+            "TestLibrary.AliveByTestClas.OnlyUsedInATest",
+            "TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor()"
+          ],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest",
+          "Dependents": [
+            "TestLibrary.AliveByTestClas.MyTestMethod()",
+            "TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor()"
+          ],
+          "Root": false
+        },
+        {
           "Symbol": "TestLibrary.AliveClass",
           "Dependents": [
             "TestExe.Program.Main()",
@@ -112,6 +129,26 @@
         }
       ],
       "Members": [
+        {
+          "Symbol": "TestLibrary.AliveByTestClas.MyTestMethod()",
+          "Dependents": [],
+          "Root": true
+        },
+        {
+          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest",
+          "Dependents": [
+            "TestLibrary.AliveByTestClas.MyTestMethod()",
+            "TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor()"
+          ],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor()",
+          "Dependents": [
+            "TestLibrary.AliveByTestClas.MyTestMethod()"
+          ],
+          "Root": false
+        },
         {
           "Symbol": "TestLibrary.AliveClass..ctor()",
           "Dependents": [

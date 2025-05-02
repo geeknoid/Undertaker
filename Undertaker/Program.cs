@@ -15,8 +15,10 @@ internal static class Program
     {
         public DirectoryInfo? AssemblyFolder { get; set; }
         public FileInfo? RootAssemblies { get; set; }
+        public FileInfo? TestMethodAttributes { get; set; }
         public string? DeadSymbols { get; set; }
         public string? AliveSymbols { get; set; }
+        public string? AliveByTestSymbols { get; set; }
         public string? PublicSymbols { get; set; }
         public string? UnreferencedAssemblies { get; set; }
         public string? AssemblyLayerCake { get; set; }
@@ -38,6 +40,10 @@ internal static class Program
                 ["-ra", "--root-assemblies"],
                 "Path to a text file listing assemblies to be treated as roots, one assembly name per line"),
 
+            new Option<FileInfo>(
+                ["-tma", "--test-method-attributes"],
+                "Path to a text file listing all the attributes that can mark a method as a test, one per line"),
+
             new Option<string>(
                 ["-ds", "--dead-symbols"],
                 "Path of the report to produce on dead symbols"),
@@ -45,6 +51,10 @@ internal static class Program
             new Option<string>(
                 ["-as", "--alive-symbols"],
                 "Path of the report to produce on alive symbols"),
+
+            new Option<string>(
+                ["-abts", "--alive-by-test-symbols"],
+                "Path of the report to produce symbols kept alive only by test methods"),
 
             new Option<string>(
                 ["-ps", "--public-symbols"],
@@ -90,6 +100,7 @@ internal static class Program
 
         if (args.DeadSymbols == null
             && args.AliveSymbols == null
+            && args.AliveByTestSymbols == null
             && args.PublicSymbols == null
             && args.UnreferencedAssemblies == null
             && args.InternalsVisibleTo == null
@@ -101,6 +112,7 @@ internal static class Program
 
             args.DeadSymbols = "./dead-symbols.json";
             args.AliveSymbols = "./alive-symbols.json";
+            args.AliveByTestSymbols = "./alive-by-test-symbols.json";
             args.PublicSymbols = "./public-symbols.json";
             args.UnreferencedAssemblies = "./unreferenced-assemblies.json";
             args.InternalsVisibleTo = "./internals-visible-to.json";
@@ -118,6 +130,11 @@ internal static class Program
                 foreach (var line in lines)
                 {
                     var l = line.Trim();
+                    if (l == String.Empty)
+                    {
+                        continue;
+                    }
+
                     if (l.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                     {
                         l = l.Substring(0, l.Length - 4);
@@ -137,8 +154,43 @@ internal static class Program
             }
         }
 
-        // load the assemblies
-        int successCount = 0;
+        if (args.TestMethodAttributes != null)
+        {
+            Out($"Loading test method attribute file {args.TestMethodAttributes.FullName}");
+
+            try
+            {
+                var lines = File.ReadAllLines(args.TestMethodAttributes.FullName);
+                foreach (var line in lines)
+                {
+                    var l = line.Trim();
+                    if (l == String.Empty)
+                    {
+                        continue;
+                    }
+
+                    graph.RecordTestMethodAttribute(l);
+                }
+            }
+            catch (Exception ex)
+            {
+                Error($"Unable to read test method attribute file {args.TestMethodAttributes.FullName}: {ex.Message}");
+                return 1;
+            }
+        }
+        else
+        {
+            Out("Using default test method attributes");
+
+            graph.RecordTestMethodAttribute("Xunit.FactAttribute");
+            graph.RecordTestMethodAttribute("Xunit.TheoryAttribute");
+            graph.RecordTestMethodAttribute("NUnit.Framework.TestAttribute");
+            graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute");
+            graph.RecordTestMethodAttribute("MSTest.TestFramework.TestMethodAttribute");
+        }
+
+            // load the assemblies
+            int successCount = 0;
         int errorCount = 0;
         int skipCount = 0;
 
@@ -201,6 +253,7 @@ internal static class Program
 
         if (!OutputDeadSymbols() ||
             !OutputAliveSymbols() ||
+            !OutputAliveByTestSymbols() ||
             !OutputPublicSymbols() ||
             !OutputUnreferencedAssemblies() ||
             !OutputInternalsVisibleTo() ||
@@ -282,6 +335,31 @@ internal static class Program
                 catch (Exception ex)
                 {
                     Error($"Unable to write report on alive symbols to {path}: {ex.Message}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        bool OutputAliveByTestSymbols()
+        {
+            if (args.AliveByTestSymbols != null)
+            {
+                var path = Path.GetFullPath(args.AliveByTestSymbols);
+                try
+                {
+                    var report = graph.CollectAliveByTestSymbols();
+                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        JsonSerializer.Serialize(file, report, _serializationOptions);
+                    }
+
+                    Out($"Output report on symbols alive by test to {path}");
+                }
+                catch (Exception ex)
+                {
+                    Error($"Unable to write report on symbols alive by test to {path}: {ex.Message}");
                     return false;
                 }
             }

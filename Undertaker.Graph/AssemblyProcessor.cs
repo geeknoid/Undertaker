@@ -1,7 +1,6 @@
 ﻿using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
-using ICSharpCode.Decompiler.CSharp;
 using ICSharpCode.Decompiler.Disassembler;
 using ICSharpCode.Decompiler.Metadata;
 using ICSharpCode.Decompiler.TypeSystem;
@@ -10,7 +9,7 @@ namespace Undertaker.Graph;
 
 internal static class AssemblyProcessor
 {
-    public static void Merge(LoadedAssembly la, Func<string, Assembly> getAssembly)
+    public static void Merge(LoadedAssembly la, Func<string, Assembly> getAssembly, Func<string, bool> isTestMethodAttribute)
     {
         var decomp = la.Decompiler;
         var asm = getAssembly(decomp.TypeSystem.MainModule.AssemblyName);
@@ -28,7 +27,22 @@ internal static class AssemblyProcessor
 
             foreach (var method in type.Methods)
             {
-                var sym = DefineSymbol(method);
+                var sym = (MethodSymbol) DefineSymbol(method);
+
+                if (sym.Name.Contains("MyTestMethod"))
+                {
+                    System.Diagnostics.Debugger.Break();
+                }
+
+                foreach (var a in method.GetAttributes())
+                {
+                    if (isTestMethodAttribute(a.AttributeType.FullName))
+                    {
+                        sym.MarkAsTestMethod();
+                        break;
+                    }
+                }
+
                 RecordSymbolsReferencedByMethod(sym, method);
             }
 

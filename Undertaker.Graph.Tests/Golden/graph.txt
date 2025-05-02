@@ -1,3 +1,5 @@
+ASSEMBLY Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+  UNPROCESSED ASSEMBLY
 ASSEMBLY System.Console.dll
   UNPROCESSED ASSEMBLY
 ASSEMBLY System.Private.CoreLib.dll
@@ -160,6 +162,46 @@ ASSEMBLY TestLibrary.dll
       System.Reflection.AssemblyProductAttribute
       System.Reflection.AssemblyTitleAttribute
       System.Reflection.AssemblyVersionAttribute
+  TestLibrary.AliveByTestClas [TYPE, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Object
+      Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveByTestClas.MyTestMethod()
+      TestLibrary.AliveByTestClas..ctor()
+      TestLibrary.AliveByTestClas.OnlyUsedInATest
+      TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor()
+  TestLibrary.AliveByTestClas..ctor() [METHOD, DEAD, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveByTestClas
+      System.Void
+      System.Object..ctor()
+      System.Object
+  TestLibrary.AliveByTestClas.MyTestMethod() [METHOD, ALIVE, ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveByTestClas
+      System.Void
+      Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+      TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor()
+      TestLibrary.AliveByTestClas.OnlyUsedInATest
+      System.Console.WriteLine(System.Object)
+      System.Console
+  TestLibrary.AliveByTestClas.OnlyUsedInATest [TYPE, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      System.Object
+      TestLibrary.AliveByTestClas
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveByTestClas.MyTestMethod()
+      TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor()
+  TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor() [METHOD, ALIVE, NOT ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveByTestClas.OnlyUsedInATest
+      TestLibrary.AliveByTestClas
+      System.Void
+      System.Object..ctor()
+      System.Object
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveByTestClas.MyTestMethod()
   TestLibrary.AliveClass [TYPE, ALIVE, NOT ROOT]
     DIRECTLY REFERENCES
       System.Object

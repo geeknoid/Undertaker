@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MSTest.TestFramework" Version="3.9.0-preview.25167.10" />
+  </ItemGroup>
+
 </Project>

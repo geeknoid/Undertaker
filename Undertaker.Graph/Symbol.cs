@@ -20,7 +20,7 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolKind symbol
 
     // filled-in over time as the overall graph is populated
     public TypeSymbol? ParentType { get; set; }
-    public bool Root { get; set; }
+    public bool Root { get; protected set; }
 
     // set by Mark when visiting the graph
     public bool Marked { get; private set; }

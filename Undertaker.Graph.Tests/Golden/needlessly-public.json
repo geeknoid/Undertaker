@@ -26,6 +26,16 @@
       "Assembly": "TestLibrary",
       "Types": [
         {
+          "Symbol": "TestLibrary.AliveByTestClas",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest",
+          "Dependents": [],
+          "Root": false
+        },
+        {
           "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadNestedType",
           "Dependents": [],
           "Root": false
@@ -57,6 +67,16 @@
         }
       ],
       "Members": [
+        {
+          "Symbol": "TestLibrary.AliveByTestClas..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty",
           "Dependents": [],
