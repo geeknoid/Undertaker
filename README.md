@@ -116,7 +116,9 @@ begins. There are two kinds of roots:
 
 * Any static method called `Main` in any assembly is considered a root.
 
-* You can provide a list of assemblies as root assemblies. Any public symbol exposed by
+* Test methods for a variety of test frameworks.
+
+* * You can provide a list of assemblies as root assemblies. Any public symbol exposed by
   these assemblies are considered roots. Any assemblies in the set which are considered
   part of a public API should normally be flagged as root assemblies.
 
@@ -127,7 +129,7 @@ symbols in the assemblies, starting from any root.
 
 Undertaker does a pretty good job at finding most of the dead code in a code base, but there are some things it can't help with:
 
-* **Configuration-Driven Dead Code**. If you have code that only runs when a particular configuration or environment is active, and
+* * **Configuration-Driven Dead Code**. If you have code that only runs when a particular configuration or environment is active, and
   the specific configuration or environment is never actually used, the tool won't tell you about the dead code. This happens in
   a large code base following experiments which have been concluded but the unused code path didn't get removed at the end of the
   experiment.
@@ -140,10 +142,16 @@ Undertaker does a pretty good job at finding most of the dead code in a code bas
 * **Unused Public REST/gRPC APIs**. If your assemblies expose a dead web API, the tool won't be able to tell you about it. This is
   because the tool doesn't analyze the HTTP requests and responses, so it can't tell if a particular API is actually used or not. 
 
-* *Enum Members and Const Values**. Undertaker cannot detect unused enum members or const values.
+* **Enum Members and Const Values**. Undertaker cannot detect unused enum members or const values.
 
-Undertaker tries really hard not to produce any false positives (i.e. claiming code is dead when it really isn't). But ultimately, the too
-may get fooled by uses of reflection.
+Undertaker tries really hard not to produce any false positives (i.e. claiming code is dead when it really isn't). But ultimately, the tool
+may get fooled by uses of reflection:
+
+* Dynamically-loaded assemblies
+* Individual members only accessed via reflection
+
+Not identifying all roots, and the above two uses of reflection can lead to false
+positives.
 
 ## Ideas
 
