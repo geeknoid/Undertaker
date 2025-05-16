@@ -432,6 +432,7 @@ internal static class AssemblyProcessor
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.Constructor => SymbolKind.Method,
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.Destructor => SymbolKind.Method,
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.Accessor => SymbolKind.Method,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Operator => SymbolKind.Method,
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.TypeDefinition => SymbolKind.Type,
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.Field => SymbolKind.Field,
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.Event => SymbolKind.Event,
