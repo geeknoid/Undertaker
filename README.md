@@ -118,7 +118,7 @@ begins. There are three kinds of roots:
 
 * Test methods for a variety of test frameworks.
 
-* You can provide a list of assemblies as root assemblies. Any public symbol exposed by
+* You can provide a list of assemblies as _root assemblies_. Any public symbol exposed by
   these assemblies are considered roots. Any assemblies in the set which are considered
   part of a public API should normally be flagged as root assemblies.
 
@@ -133,9 +133,9 @@ Undertaker does a pretty good job at finding most of the dead code in a code bas
   the specific configuration or environment is never actually used, the tool won't tell you about the dead code. This happens in
   a large code base following experiments which have been concluded but the unused code path didn't get removed at the end of the
   experiment.
- 
-* **#ifdef code**. Code that is compiled out via #ifdef will never be flagged as dead even though it might never be used.
- 
+
+* **Conditional Compilation**. Code that is compiled out via `#if` will never be flagged as dead even though it might never be used.
+
 * **Unused Public APIs in Root Assemblies**. All public symbols of root assemblies are considered alive even if they are
   never used.
 
@@ -150,7 +150,7 @@ may get fooled by uses of reflection:
 * Dynamically-loaded assemblies
 * Individual members only accessed via reflection
 
-Not identifying all roots, and the above two uses of reflection can lead to false
+Not identifying all root assemblies, and the above two uses of reflection can lead to false
 positives.
 
 ## Ideas
@@ -163,7 +163,4 @@ have dependencies on otherwise dead symbols.
 * Internal symbols should be considered as roots when an assembly has InternalsVisibleTo to an assembly not under analysis.
 
 * We could detect when a virtual method can be made abstract since all derived types reimplement the method without ever calling
-  the base implementation. 
-
-* The tool should understand the difference between production and test assemblies. This would enable it to report code that is
-  kept alive strictly by virtue of a test.
+  the base implementation.
