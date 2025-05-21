@@ -112,13 +112,13 @@ current working directory with the following names:
 
 The analysis to discover dead code depends on knowing the roots, the symbols that are
 known to be necessary. It is from those necessary symbols that the dead symbol analysis
-begins. There are two kinds of roots:
+begins. There are three kinds of roots:
 
 * Any static method called `Main` in any assembly is considered a root.
 
 * Test methods for a variety of test frameworks.
 
-* * You can provide a list of assemblies as root assemblies. Any public symbol exposed by
+* You can provide a list of assemblies as root assemblies. Any public symbol exposed by
   these assemblies are considered roots. Any assemblies in the set which are considered
   part of a public API should normally be flagged as root assemblies.
 
