@@ -129,7 +129,7 @@ symbols in the assemblies, starting from any root.
 
 Undertaker does a pretty good job at finding most of the dead code in a code base, but there are some things it can't help with:
 
-* * **Configuration-Driven Dead Code**. If you have code that only runs when a particular configuration or environment is active, and
+* **Configuration-Driven Dead Code**. If you have code that only runs when a particular configuration or environment is active, and
   the specific configuration or environment is never actually used, the tool won't tell you about the dead code. This happens in
   a large code base following experiments which have been concluded but the unused code path didn't get removed at the end of the
   experiment.
