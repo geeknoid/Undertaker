@@ -8,7 +8,7 @@ namespace Undertaker;
 
 internal static class Program
 {
-    private const int MaxConcurrentAssemblyLoads = 1;
+    private const int MaxConcurrentAssemblyLoads = 32;
     private static readonly JsonSerializerOptions _serializationOptions = new() { WriteIndented = true };
 
     private sealed class UndertakerArgs
@@ -38,7 +38,7 @@ internal static class Program
 
             new Option<FileInfo>(
                 ["-ra", "--root-assemblies"],
-                "Path to a text file listing assemblies to be treated as roots, one assembly name per line"),
+                "Path to a text file listing assemblies to be treated as roots, one assembly name per line (with or without a .dll extension)"),
 
             new Option<FileInfo>(
                 ["-tma", "--test-method-attributes"],

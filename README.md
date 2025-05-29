@@ -25,7 +25,8 @@ Arguments:
 
 Options:
   -ra, --root-assemblies <root-assemblies>                  Path to a text file listing assemblies to be treated as
-                                                            roots, one assembly name per line
+                                                            roots, one assembly name per line, with or without the
+                                                            .dll extension.
   -tma, --test-method-attributes <test-method-attributes>   Path to a text file listing all the attributes that can
                                                             mark a method as a test, one per line
   -ds, --dead-symbols <dead-symbols>                        Path of the report to produce on dead symbols
