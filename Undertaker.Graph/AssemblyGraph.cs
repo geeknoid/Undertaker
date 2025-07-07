@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Reflection;
 using System.Text;
+using ICSharpCode.Decompiler.CSharp.TypeSystem;
 using ICSharpCode.Decompiler.TypeSystem;
 using Microsoft.CodeAnalysis;
 
@@ -93,6 +94,43 @@ public sealed class AssemblyGraph
         }
     }
 
+    private void HandleUnhomedReferences()
+    {
+        // Create a new assembly called the UNHOMED assembly, which will hold all unhomed references.
+        var unhomedAssembly = new Assembly("UNHOMED", root: true);
+        _assemblies["UNHOMED"] = unhomedAssembly;
+        
+        // iterate through all the unhomed references in the graph
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
+        {
+            foreach (var sym in asm.Symbols)
+            {
+                // For each unhomed reference, we try to find a matching symbol in the loaded assemblies.
+                foreach (var member in sym.UnhomedReferencedMethods)
+                {
+                    bool found = false;
+                    foreach (var otherAsm in _assemblies.Values.Where(otherAsm => otherAsm.Loaded && otherAsm != unhomedAssembly))
+                    {
+                        var method = otherAsm.FindSymbol(member, SymbolKind.Method) as MethodSymbol;
+                        if (method is not null)
+                        {
+                            sym.RecordReferencedSymbol(method);
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    // If we can't find a match, add it to the UNHOMED assembly as if that assembly had declared the symbol.
+                    if (!found)
+                    {
+                        var unhomedSym = unhomedAssembly.GetSymbol(member, SymbolKind.Method);
+                        sym.RecordReferencedSymbol(unhomedSym);
+                    }
+                }
+            }
+        }
+    }
+
     private void HookupDerivedSymbols()
     {
         /// For all interface types, we need to create a reference from interface members to any implementations of these members.
@@ -121,17 +159,36 @@ public sealed class AssemblyGraph
         {
             foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
             {
-                foreach (var member in sym.Children.Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsVirtualOrOverride))
+                foreach (var member in sym.Children.Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsVirtualOrOverrideOrAbstract))
                 {
                     foreach (var derived in sym.DerivedTypes)
                     {
                         foreach (var derivedMember in derived.Children)
                         {
+                            // TODO: this doesn't currently deal with overloads, so if there are multiple overloads, we will create a reference to all of them. This will
+                            // therefore potentially result in some unreferenced symbols being marked as referenced.
                             if (member.Name == derivedMember.Name)
                             {
                                 member.RecordReferencedSymbol(derivedMember);
                             }
                         }
+                    }
+                }
+            }
+        }
+
+        // for any methods declared in the UNHOMED assembly, we need to add a reference from the unhomed assembly symbol to each
+        // override method in the graph having the same signature.
+        var unhomedAssembly = _assemblies["UNHOMED"];
+        foreach (var unhomedSym in unhomedAssembly.Symbols.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
+        {
+            foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && asm != unhomedAssembly))
+            {
+                foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(sym => sym.IsOverride))
+                {
+                    if (sym.SameSignature(unhomedSym))
+                    {
+                        unhomedSym.RecordReferencedSymbol(sym);
                     }
                 }
             }
@@ -184,6 +241,7 @@ public sealed class AssemblyGraph
     {
         if (!_finalized)
         {
+            HandleUnhomedReferences();
             HookupDerivedSymbols();
             MarkUsedSymbols();
             _finalized = true;
@@ -610,6 +668,15 @@ public sealed class AssemblyGraph
                     foreach (var s in sym.ReferencedSymbols)
                     {
                         _ = sb.Append("      ").AppendLine(s.Name);
+                    }
+                }
+
+                if (sym.UnhomedReferencedMethods.Count > 0)
+                {
+                    _ = sb.AppendLine("    UNHOMED REFERENCES");
+                    foreach (var m in sym.UnhomedReferencedMethods)
+                    {
+                        _ = sb.Append("      ").AppendLine(m);
                     }
                 }
 

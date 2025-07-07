@@ -1,4 +1,7 @@
-﻿namespace Undertaker.Graph;
+﻿using System.Runtime.CompilerServices;
+using ICSharpCode.Decompiler.TypeSystem;
+
+namespace Undertaker.Graph;
 
 internal sealed class Assembly(string name, bool root)
 {
@@ -32,6 +35,17 @@ internal sealed class Assembly(string name, bool root)
             };
 
             _symbols.Add(key, sym);
+        }
+
+        return sym;
+    }
+
+    public Symbol? FindSymbol(string name, SymbolKind symbolKind)
+    {
+        var key = new Key { Name = name, Kind = symbolKind };
+        if (!_symbols.TryGetValue(key, out var sym))
+        {
+            return null;
         }
 
         return sym;

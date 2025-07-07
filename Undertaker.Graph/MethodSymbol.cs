@@ -1,10 +1,12 @@
-﻿using ICSharpCode.Decompiler.TypeSystem;
+﻿using System.Xml.Linq;
+using ICSharpCode.Decompiler.TypeSystem;
 
 namespace Undertaker.Graph;
 
 internal sealed class MethodSymbol(Assembly assembly, string name) : Symbol(assembly, name, SymbolKind.Method)
 {
-    public bool IsVirtualOrOverride { get; private set; }
+    public bool IsVirtualOrOverrideOrAbstract { get; private set; }
+    public bool IsOverride { get; private set; }
     public bool IsTestMethod { get; private set; }
 
     public override void Define(IEntity entity)
@@ -36,12 +38,41 @@ internal sealed class MethodSymbol(Assembly assembly, string name) : Symbol(asse
             }
         }
 
-        IsVirtualOrOverride = m.IsVirtual || m.IsOverride;
+        IsVirtualOrOverrideOrAbstract = m.IsVirtual || m.IsOverride || m.IsAbstract;
+        IsOverride = m.IsOverride;
     }
 
     public void MarkAsTestMethod()
     {
         IsTestMethod = true;
         Root = true;
+    }
+
+    public bool SameSignature(MethodSymbol other)
+    {
+        int thisIndex = FindSignatureStartIndex();
+        int otherIndex = other.FindSignatureStartIndex();
+
+        return String.Compare(Name, thisIndex, other.Name, otherIndex, Name.Length - thisIndex, StringComparison.Ordinal) == 0;
+    }
+
+    private int FindSignatureStartIndex()
+    {
+        // find the first ( in the name string
+        // from there, backup to find the previous . or the begining of the string
+        // and then return the substring from that point to the end of the string
+        var index = Name.IndexOf('(');
+        if (index < 0)
+        {
+            return 0; // no parameters, just return the name
+        }
+
+        var lastDotIndex = Name.LastIndexOf('.', index);
+        if (lastDotIndex < 0)
+        {
+            return 0;
+        }
+
+        return lastDotIndex + 1;
     }
 }

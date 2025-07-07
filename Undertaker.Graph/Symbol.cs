@@ -17,6 +17,7 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolKind symbol
     // set by RecordReferencedSymbol
     public IReadOnlyCollection<Symbol> Referencers => _referencers;
     public IReadOnlyCollection<Symbol> ReferencedSymbols => _referencedSymbols;
+    public IReadOnlyCollection<string> UnhomedReferencedMethods => _unhomedReferencedMethods;
 
     // filled-in over time as the overall graph is populated
     public TypeSymbol? ParentType { get; set; }
@@ -27,6 +28,7 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolKind symbol
 
     private readonly HashSet<Symbol> _referencers = [];
     private readonly HashSet<Symbol> _referencedSymbols = [];
+    private readonly HashSet<string> _unhomedReferencedMethods = [];
 
     public virtual void Define(IEntity entity)
     {
@@ -46,6 +48,11 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolKind symbol
     {
         _ = _referencedSymbols.Add(sym);
         _ = sym._referencers.Add(this);
+    }
+
+    public void RecordUnhomedMethodReference(string methodSig)
+    {
+        _ = _unhomedReferencedMethods.Add(methodSig);
     }
 
     public void Mark()

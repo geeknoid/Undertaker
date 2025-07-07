@@ -29,11 +29,6 @@ internal static class AssemblyProcessor
             {
                 var sym = (MethodSymbol) DefineSymbol(method);
 
-                if (sym.Name.Contains("MyTestMethod"))
-                {
-                    System.Diagnostics.Debugger.Break();
-                }
-
                 foreach (var a in method.GetAttributes())
                 {
                     if (isTestMethodAttribute(a.AttributeType.FullName))
@@ -244,6 +239,7 @@ internal static class AssemblyProcessor
                                 var token = blobReader.ReadInt32();
                                 var handle = (EntityHandle)MetadataTokens.Handle(token);
                                 var m = metadataModule.ResolveMethod(handle, default);
+
                                 RecordReferenceToMember(methodSym, m);
                                 RecordReferenceToType(methodSym, m.DeclaringType);
                                 break;
@@ -369,6 +365,10 @@ internal static class AssemblyProcessor
             if (td?.ParentModule != null)
             {
                 fromSym.RecordReferencedSymbol(getAssembly(td.ParentModule.AssemblyName).GetSymbol(GetEntitySymbolName(toMember), GetEntitySymbolKind(toMember)));
+            }
+            else
+            {
+                fromSym.RecordUnhomedMethodReference(GetEntitySymbolName(toMember));
             }
         }
 
