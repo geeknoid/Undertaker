@@ -48,14 +48,6 @@ internal sealed class MethodSymbol(Assembly assembly, string name) : Symbol(asse
         Root = true;
     }
 
-    public bool SameSignature(MethodSymbol other)
-    {
-        int thisIndex = FindSignatureStartIndex();
-        int otherIndex = other.FindSignatureStartIndex();
-
-        return String.Compare(Name, thisIndex, other.Name, otherIndex, Name.Length - thisIndex, StringComparison.Ordinal) == 0;
-    }
-
     private int FindSignatureStartIndex()
     {
         // find the first ( in the name string
@@ -74,5 +66,10 @@ internal sealed class MethodSymbol(Assembly assembly, string name) : Symbol(asse
         }
 
         return lastDotIndex + 1;
+    }
+
+    public string GetSignature()
+    {
+        return Name.Substring(FindSignatureStartIndex());
     }
 }

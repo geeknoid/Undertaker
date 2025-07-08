@@ -186,24 +186,34 @@ public sealed class AssemblyGraph
         // override method in the graph having the same signature.
         var unhomedAssembly = _assemblies["UNHOMED"];
         log($"Linking {unhomedAssembly.Symbols.Count} unhomed methods to overrides in any assembly");
-        int count = 0;
+
+
+        var signatureMap = new Dictionary<string, List<MethodSymbol>>();
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && asm != unhomedAssembly))
+        {
+            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(sym => sym.IsOverride))
+            {
+                var signature = sym.GetSignature();
+                if (!signatureMap.TryGetValue(signature, out var methods))
+                {
+                    methods = [];
+                    signatureMap[signature] = methods;
+                }
+
+                methods.Add(sym);
+            }
+        }
+
+
         foreach (var unhomedSym in unhomedAssembly.Symbols.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
         {
-            foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && asm != unhomedAssembly))
+            var sig = unhomedSym.GetSignature();
+            if (signatureMap.TryGetValue(sig, out var matchingMethods))
             {
-                foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(sym => sym.IsOverride))
+                foreach (var matchingMethod in matchingMethods)
                 {
-                    if (sym.SameSignature(unhomedSym))
-                    {
-                        unhomedSym.RecordReferencedSymbol(sym);
-                    }
+                    unhomedSym.RecordReferencedSymbol(matchingMethod);
                 }
-            }
-
-            count++;
-            if (count % 100 == 0)
-            {
-                log($"  {count} done");
             }
         }
 
