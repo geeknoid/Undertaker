@@ -249,7 +249,7 @@ internal static class Program
         Out($"Done loading assemblies: loaded {successCount}, skipped {skipCount}, failed {errorCount}");
 
         Out("Analyzing...");
-        graph.Done();
+        graph.Done(x => Out($"  {x}"));
 
         if (!OutputDeadSymbols() ||
             !OutputAliveSymbols() ||

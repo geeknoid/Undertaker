@@ -78,8 +78,9 @@ public sealed class AssemblyGraph
 
     private bool IsTestMethodAttribute(string attributeName) => _testMethodAttributes.Contains(attributeName);
 
-    private void MarkUsedSymbols()
+    private void MarkUsedSymbols(Action<string> log)
     {
+        log("Marking used symbols...");
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
             foreach (var sym in asm.Symbols)
@@ -94,12 +95,14 @@ public sealed class AssemblyGraph
         }
     }
 
-    private void HandleUnhomedReferences()
+    private void HandleUnhomedReferences(Action<string> log)
     {
         // Create a new assembly called the UNHOMED assembly, which will hold all unhomed references.
         var unhomedAssembly = new Assembly("UNHOMED", root: true);
         _assemblies["UNHOMED"] = unhomedAssembly;
         
+        log("Handling unhomed references...");
+
         // iterate through all the unhomed references in the graph
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
@@ -131,9 +134,10 @@ public sealed class AssemblyGraph
         }
     }
 
-    private void HookupDerivedSymbols()
+    private void HookupDerivedSymbols(Action<string> log)
     {
         /// For all interface types, we need to create a reference from interface members to any implementations of these members.
+        log("Linking interface members to matching implementations");
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
             foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
@@ -155,6 +159,7 @@ public sealed class AssemblyGraph
         }
 
         // If a method is an override or is virtual, we must create a reference to all implementations of the member in any derived types
+        log("Linking virtual and override methods to derived implementations");
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
             foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
@@ -180,6 +185,8 @@ public sealed class AssemblyGraph
         // for any methods declared in the UNHOMED assembly, we need to add a reference from the unhomed assembly symbol to each
         // override method in the graph having the same signature.
         var unhomedAssembly = _assemblies["UNHOMED"];
+        log($"Linking {unhomedAssembly.Symbols.Count} unhomed methods to overrides in any assembly");
+        int count = 0;
         foreach (var unhomedSym in unhomedAssembly.Symbols.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
         {
             foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && asm != unhomedAssembly))
@@ -192,9 +199,16 @@ public sealed class AssemblyGraph
                     }
                 }
             }
+
+            count++;
+            if (count % 100 == 0)
+            {
+                log($"  {count} done");
+            }
         }
 
         // For interface types in unanalyzed assemblies, we need to create a reference from the interface type to all implementations of its members
+        log("Linking interface members in unanalyzed assemblies to derived implementations");
         foreach (var asm in _assemblies.Values.Where(asm => !asm.Loaded))
         {
             foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
@@ -216,6 +230,7 @@ public sealed class AssemblyGraph
         }
 
         // For classes in unanalyzed assemblies, we need to create a reference from the class type to all implementations of its abstract or virtual members 
+        log("Linking virtual and override methods in unanalyzed assemblies to derived implementations");
         foreach (var asm in _assemblies.Values.Where(asm => !asm.Loaded))
         {
             foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Class))
@@ -237,15 +252,20 @@ public sealed class AssemblyGraph
         }
     }
 
-    public void Done()
+    public void Done(Action<string> log)
     {
         if (!_finalized)
         {
-            HandleUnhomedReferences();
-            HookupDerivedSymbols();
-            MarkUsedSymbols();
+            HandleUnhomedReferences(log);
+            HookupDerivedSymbols(log);
+            MarkUsedSymbols(log);
             _finalized = true;
         }
+    }
+
+    private void Done()
+    {
+        Done(x => { /* no-op */ });
     }
 
     /// <summary>
