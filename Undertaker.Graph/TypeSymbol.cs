@@ -10,7 +10,7 @@ internal sealed class TypeSymbol(Assembly assembly, string name) : Symbol(assemb
     public IReadOnlyCollection<TypeSymbol> BaseTypes => _baseTypes;
     public IReadOnlyCollection<TypeSymbol> DerivedTypes => _derivedTypes;
 
-    private readonly List<Symbol> _children = [];
+    private readonly HashSet<Symbol> _children = [];
     private readonly List<TypeSymbol> _interfacesImplemented = [];
     private readonly List<TypeSymbol> _baseTypes = [];
     private readonly List<TypeSymbol> _derivedTypes = [];
@@ -29,7 +29,7 @@ internal sealed class TypeSymbol(Assembly assembly, string name) : Symbol(assemb
 
     public void AddChild(Symbol child)
     {
-        _children.Add(child);
+        _ = _children.Add(child);
         child.ParentType = this;
     }
 

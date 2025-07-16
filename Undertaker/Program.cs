@@ -105,8 +105,7 @@ internal static class Program
             && args.UnreferencedAssemblies == null
             && args.InternalsVisibleTo == null
             && args.AssemblyLayerCake == null
-            && args.DependencyDiagram == null
-            && args.GraphDump == null)
+            && args.DependencyDiagram == null)
         {
             Out("No explicit output requested, generating default outputs");
 
@@ -495,7 +494,11 @@ internal static class Program
                 var path = Path.GetFullPath(args.GraphDump);
                 try
                 {
-                    File.WriteAllText(path, graph.ToString());
+                    using (var file = File.CreateText(path))
+                    {
+                        graph.Dump(file);
+                    }
+
                     Out($"Output graph dump to {path}");
                 }
                 catch (Exception ex)

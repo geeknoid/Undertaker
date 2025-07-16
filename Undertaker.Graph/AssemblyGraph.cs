@@ -187,7 +187,6 @@ public sealed class AssemblyGraph
         var unhomedAssembly = _assemblies["UNHOMED"];
         log($"Linking {unhomedAssembly.Symbols.Count} unhomed methods to overrides in any assembly");
 
-
         var signatureMap = new Dictionary<string, List<MethodSymbol>>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && asm != unhomedAssembly))
         {
@@ -203,7 +202,6 @@ public sealed class AssemblyGraph
                 methods.Add(sym);
             }
         }
-
 
         foreach (var unhomedSym in unhomedAssembly.Symbols.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
         {
@@ -670,57 +668,62 @@ public sealed class AssemblyGraph
         return sb.ToString();
     }
 
-    public override string ToString()
+    public void Dump(StreamWriter output)
     {
         Done();
 
-        var sb = new StringBuilder();
-
         foreach (var asm in _assemblies.Values.OrderBy(a => a.Name))
         {
-            _ = sb.Append("ASSEMBLY ").Append(asm.Name).AppendLine(".dll");
+            output.Write("ASSEMBLY ");
+            output.Write(asm.Name);
+            output.WriteLine(".dll");
 
             if (!asm.Loaded)
             {
-                _ = sb.AppendLine("  UNPROCESSED ASSEMBLY");
+                output.WriteLine("  UNPROCESSED ASSEMBLY");
                 continue;
             }
 
             foreach (var sym in asm.Symbols.OrderBy(s => s.Name))
             {
-                _ = sb.Append("  ").Append(sym.Name).Append(" [").Append(sym.Kind.ToString().ToUpperInvariant());
-                _ = sym.Marked ? sb.Append(", ALIVE") : sb.Append(", DEAD");
-                _ = sym.Root ? sb.AppendLine(", ROOT]") : sb.AppendLine(", NOT ROOT]");
+                output.Write("  ");
+                output.Write(sym.Name);
+                output.Write(" [");
+                output.Write(sym.Kind.ToString().ToUpperInvariant());
+
+                output.Write(sym.Marked ? ", ALIVE" : ", DEAD");
+                output.WriteLine(sym.Root ? ", ROOT]" : ", NOT ROOT]");
 
                 if (sym.ReferencedSymbols.Count > 0)
                 {
-                    _ = sb.AppendLine("    DIRECTLY REFERENCES");
+                    output.WriteLine("    DIRECTLY REFERENCES");
                     foreach (var s in sym.ReferencedSymbols)
                     {
-                        _ = sb.Append("      ").AppendLine(s.Name);
+                        output.Write("      ");
+                        output.WriteLine(s.Name);
                     }
                 }
 
                 if (sym.UnhomedReferencedMethods.Count > 0)
                 {
-                    _ = sb.AppendLine("    UNHOMED REFERENCES");
+                    output.WriteLine("    UNHOMED REFERENCES");
                     foreach (var m in sym.UnhomedReferencedMethods)
                     {
-                        _ = sb.Append("      ").AppendLine(m);
+                        output.Write("      ");
+                        output.WriteLine(m);
                     }
                 }
 
                 if (sym.Referencers.Count > 0)
                 {
-                    _ = sb.AppendLine("    DIRECTLY REFERENCED BY");
+                    output.WriteLine("    DIRECTLY REFERENCED BY");
                     foreach (var s in sym.Referencers)
                     {
-                        _ = sb.Append("      ").AppendLine(s.Name);
+                        output.Write("      ");
+                        output.WriteLine(s.Name);
                     }
                 }
             }
         }
-
-        return sb.ToString();
     }
 }

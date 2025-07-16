@@ -72,4 +72,9 @@ internal sealed class MethodSymbol(Assembly assembly, string name) : Symbol(asse
     {
         return Name.Substring(FindSignatureStartIndex());
     }
+
+    public override string ToString()
+    {
+        return $"{Name}, IsVirtualOrOverrideOrAbstract = {IsVirtualOrOverrideOrAbstract}, IsOverride={IsOverride}, IsTestMethod={IsTestMethod}";
+    }
 }

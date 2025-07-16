@@ -28,7 +28,6 @@ internal static class AssemblyProcessor
             foreach (var method in type.Methods)
             {
                 var sym = (MethodSymbol) DefineSymbol(method);
-
                 foreach (var a in method.GetAttributes())
                 {
                     if (isTestMethodAttribute(a.AttributeType.FullName))
@@ -71,7 +70,7 @@ internal static class AssemblyProcessor
             sym.Define(entity);
 
             var parent = entity.DeclaringTypeDefinition;
-            if (parent?.ParentModule != null)
+            if (parent?.ParentModule != null && sym.ParentType == null)
             {
                 sym.ParentType = (TypeSymbol)getAssembly(parent.ParentModule.AssemblyName).GetSymbol(parent.FullName, SymbolKind.Type);
                 sym.ParentType.AddChild(sym);
