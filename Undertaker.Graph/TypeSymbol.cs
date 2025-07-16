@@ -5,12 +5,12 @@ namespace Undertaker.Graph;
 internal sealed class TypeSymbol(Assembly assembly, string name) : Symbol(assembly, name, SymbolKind.Type)
 {
     public TypeKind TypeKind { get; private set; }
-    public IReadOnlyCollection<Symbol> Children => _children;
+    public IReadOnlyCollection<Symbol> Members => _members;
     public IReadOnlyCollection<TypeSymbol> InterfacesImplemented => _interfacesImplemented;
     public IReadOnlyCollection<TypeSymbol> BaseTypes => _baseTypes;
     public IReadOnlyCollection<TypeSymbol> DerivedTypes => _derivedTypes;
 
-    private readonly HashSet<Symbol> _children = [];
+    private readonly HashSet<Symbol> _members = [];
     private readonly List<TypeSymbol> _interfacesImplemented = [];
     private readonly List<TypeSymbol> _baseTypes = [];
     private readonly List<TypeSymbol> _derivedTypes = [];
@@ -27,10 +27,10 @@ internal sealed class TypeSymbol(Assembly assembly, string name) : Symbol(assemb
         TypeKind = typeDef.Kind;
     }
 
-    public void AddChild(Symbol child)
+    public void AddMember(Symbol member)
     {
-        _ = _children.Add(child);
-        child.ParentType = this;
+        _ = _members.Add(member);
+        member.DeclaringType = this;
     }
 
     public void AddInterfaceImplemented(TypeSymbol interfaceType)
@@ -47,7 +47,7 @@ internal sealed class TypeSymbol(Assembly assembly, string name) : Symbol(assemb
 
     public void Trim()
     {
-        _children.TrimExcess();
+        _members.TrimExcess();
         _interfacesImplemented.TrimExcess();
         _baseTypes.TrimExcess();
         _derivedTypes.TrimExcess();

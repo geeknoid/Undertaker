@@ -17,7 +17,8 @@ internal static class AssemblyProcessor
 
         foreach (var type in decomp.TypeSystem.MainModule.TypeDefinitions)
         {
-            RecordSymbolsReferencedByType((TypeSymbol) DefineSymbol(type), type);
+            var typeSym = (TypeSymbol)DefineSymbol(type);
+            RecordSymbolsReferencedByType(typeSym, type);
 
             if (type.Kind == TypeKind.Enum)
             {
@@ -70,10 +71,10 @@ internal static class AssemblyProcessor
             sym.Define(entity);
 
             var parent = entity.DeclaringTypeDefinition;
-            if (parent?.ParentModule != null && sym.ParentType == null)
+            if (parent?.ParentModule != null && sym.DeclaringType == null)
             {
-                sym.ParentType = (TypeSymbol)getAssembly(parent.ParentModule.AssemblyName).GetSymbol(parent.FullName, SymbolKind.Type);
-                sym.ParentType.AddChild(sym);
+                sym.DeclaringType = (TypeSymbol)getAssembly(parent.ParentModule.AssemblyName).GetSymbol(parent.FullName, SymbolKind.Type);
+                sym.DeclaringType.AddMember(sym);
             }
 
             return sym;

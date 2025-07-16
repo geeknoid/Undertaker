@@ -142,11 +142,11 @@ public sealed class AssemblyGraph
         {
             foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
             {
-                foreach (var ifaceMember in sym.Children)
+                foreach (var ifaceMember in sym.Members)
                 {
                     foreach (var derived in sym.DerivedTypes)
                     {
-                        foreach (var derivedMember in derived.Children)
+                        foreach (var derivedMember in derived.Members)
                         {
                             if (ifaceMember.Name == derivedMember.Name)
                             {
@@ -164,11 +164,11 @@ public sealed class AssemblyGraph
         {
             foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
             {
-                foreach (var member in sym.Children.Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsVirtualOrOverrideOrAbstract))
+                foreach (var member in sym.Members.Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsVirtualOrOverrideOrAbstract))
                 {
                     foreach (var derived in sym.DerivedTypes)
                     {
-                        foreach (var derivedMember in derived.Children)
+                        foreach (var derivedMember in derived.Members)
                         {
                             // TODO: this doesn't currently deal with overloads, so if there are multiple overloads, we will create a reference to all of them. This will
                             // therefore potentially result in some unreferenced symbols being marked as referenced.
@@ -221,11 +221,11 @@ public sealed class AssemblyGraph
         {
             foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
             {
-                foreach (var ifaceMember in sym.Children)
+                foreach (var ifaceMember in sym.Members)
                 {
                     foreach (var derived in sym.DerivedTypes)
                     {
-                        foreach (var derivedMember in derived.Children)
+                        foreach (var derivedMember in derived.Members)
                         {
                             if (ifaceMember.Name == derivedMember.Name)
                             {
@@ -243,11 +243,11 @@ public sealed class AssemblyGraph
         {
             foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Class))
             {
-                foreach (var classMember in sym.Children.Where(member => member.Kind == SymbolKind.Method))
+                foreach (var classMember in sym.Members.Where(member => member.Kind == SymbolKind.Method))
                 {
                     foreach (var derived in sym.DerivedTypes)
                     {
-                        foreach (var derivedMember in derived.Children.Where(member => member.Kind == SymbolKind.Method))
+                        foreach (var derivedMember in derived.Members.Where(member => member.Kind == SymbolKind.Method))
                         {
                             if (classMember.Name == derivedMember.Name)
                             {
@@ -294,7 +294,7 @@ public sealed class AssemblyGraph
             {
                 if (sym.Marked)
                 {
-                    foreach (var member in sym.Children.Where(member => !member.Marked && !member.Hide && member.Kind != SymbolKind.Type))
+                    foreach (var member in sym.Members.Where(member => !member.Marked && !member.Hide && member.Kind != SymbolKind.Type))
                     {
                         deadMembers ??= [];
                         deadMembers.Add(new(member.Name, Array.Empty<string>(), member.Root));
@@ -347,7 +347,7 @@ public sealed class AssemblyGraph
                 aliveTypes ??= [];
                 aliveTypes.Add(new(sym.Name, dependents, sym.Root));
 
-                foreach (var member in sym.Children)
+                foreach (var member in sym.Members)
                 {
                     if (member.Marked && !member.Hide)
                     {
@@ -402,7 +402,7 @@ public sealed class AssemblyGraph
                 aliveTypes ??= [];
                 aliveTypes.Add(new(sym.Name, dependents, sym.Root));
 
-                foreach (var member in sym.Children)
+                foreach (var member in sym.Members)
                 {
                     if (member.Marked && !member.Hide)
                     {

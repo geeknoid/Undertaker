@@ -17,10 +17,12 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolKind symbol
     // set by RecordReferencedSymbol
     public IReadOnlyCollection<Symbol> Referencers => _referencers;
     public IReadOnlyCollection<Symbol> ReferencedSymbols => _referencedSymbols;
+
+    // set by RecordUnhomedMethodReferenced
     public IReadOnlyCollection<string> UnhomedReferencedMethods => _unhomedReferencedMethods;
 
     // filled-in over time as the overall graph is populated
-    public TypeSymbol? ParentType { get; set; }
+    public TypeSymbol? DeclaringType { get; set; }
     public bool Root { get; protected set; }
 
     // set by Mark when visiting the graph
