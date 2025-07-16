@@ -26,7 +26,7 @@ public class Tests
         var aliveByTestReport = JsonSerializer.Serialize(graph.CollectAliveByTestSymbols(), serializerOptions);
         var needlesslyPublicReport = JsonSerializer.Serialize(graph.CollectPublicSymbols(), serializerOptions);
         var unreferencedReport = JsonSerializer.Serialize(graph.CollectUnreferencedAssemblies(), serializerOptions);
-        var needlessIVTReport = JsonSerializer.Serialize(graph.CollectInternalsVisibleTo(), serializerOptions);
+        var needlessIVTReport = JsonSerializer.Serialize(graph.CollectNeedlessInternalsVisibleTo(), serializerOptions);
         var assemblyLayerCake = JsonSerializer.Serialize(graph.CreateAssemblyLayerCake(), serializerOptions);
         var diagram = graph.CreateDependencyDiagram();
         var graphDump = graph.ToString();

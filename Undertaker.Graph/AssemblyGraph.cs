@@ -517,7 +517,7 @@ public sealed class AssemblyGraph
     /// <summary>
     /// Returns a list of assemblies which have uses of [InternalsVisibleTo] that could be removed. 
     /// </summary>
-    public IReadOnlyList<NeedlessInternalsVisibleToReport> CollectInternalsVisibleTo()
+    public IReadOnlyList<NeedlessInternalsVisibleToReport> CollectNeedlessInternalsVisibleTo()
     {
         Done();
 

@@ -22,7 +22,7 @@ internal static class Program
         public string? PublicSymbols { get; set; }
         public string? UnreferencedAssemblies { get; set; }
         public string? AssemblyLayerCake { get; set; }
-        public string? InternalsVisibleTo { get; set; }
+        public string? NeedlessInternalsVisibleTo { get; set; }
         public string? DependencyDiagram { get; set; }
         public string? GraphDump { get; set; }
         public bool ContinueOnLoadErrors { get; set; }
@@ -65,8 +65,8 @@ internal static class Program
                 "Path of the report to produce on completely unreferenced assemblies"),
 
             new Option<string>(
-                ["-ivt", "--internals-visible-to"],
-                "Path of the report to produce on spurious uses of [InternalsVisibleTo]"),
+                ["-nivt", "--needless-internals-visible-to"],
+                "Path of the report to produce on needless uses of [InternalsVisibleTo]"),
 
             new Option<string>(
                 ["-alc", "--assembly-layer-cake"],
@@ -103,7 +103,7 @@ internal static class Program
             && args.AliveByTestSymbols == null
             && args.PublicSymbols == null
             && args.UnreferencedAssemblies == null
-            && args.InternalsVisibleTo == null
+            && args.NeedlessInternalsVisibleTo == null
             && args.AssemblyLayerCake == null
             && args.DependencyDiagram == null)
         {
@@ -114,7 +114,7 @@ internal static class Program
             args.AliveByTestSymbols = "./alive-by-test-symbols.json";
             args.PublicSymbols = "./public-symbols.json";
             args.UnreferencedAssemblies = "./unreferenced-assemblies.json";
-            args.InternalsVisibleTo = "./internals-visible-to.json";
+            args.NeedlessInternalsVisibleTo = "./needless-internals-visible-to.json";
             args.AssemblyLayerCake = "./assembly-layer-cake.json";
             args.DependencyDiagram = "./dependency-diagram.mmd";
         }
@@ -255,7 +255,7 @@ internal static class Program
             !OutputAliveByTestSymbols() ||
             !OutputPublicSymbols() ||
             !OutputUnreferencedAssemblies() ||
-            !OutputInternalsVisibleTo() ||
+            !OutputNeedlessInternalsVisibleTo() ||
             !OutputAssemblyLayerCake() ||
             !OutputDependencyDiagram() ||
             !OutputGraphDump())
@@ -416,14 +416,14 @@ internal static class Program
             return true;
         }
 
-        bool OutputInternalsVisibleTo()
+        bool OutputNeedlessInternalsVisibleTo()
         {
-            if (args.InternalsVisibleTo != null)
+            if (args.NeedlessInternalsVisibleTo != null)
             {
-                var path = Path.GetFullPath(args.InternalsVisibleTo);
+                var path = Path.GetFullPath(args.NeedlessInternalsVisibleTo);
                 try
                 {
-                    var report = graph.CollectInternalsVisibleTo();
+                    var report = graph.CollectNeedlessInternalsVisibleTo();
                     using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
                         JsonSerializer.Serialize(file, report, _serializationOptions);

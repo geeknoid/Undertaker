@@ -11,7 +11,7 @@ the set of defined symbols which are never referenced (dead symbols), along with
 showing the defined symbols that are referenced (alive symbols) and which other symbol
 references them. Various other reports are also available, including a report on assemblies that
 are never referenced, a report on public symbols that could be made internal, and a report
-on spurious uses of [InternalsVisibleTo]. You can also output a full layer cake of dependencies
+on needless uses of [InternalsVisibleTo]. You can also output a full layer cake of dependencies
 and a Mermaid-based assembly dependency diagram.
 
 ## Options
@@ -24,28 +24,23 @@ Arguments:
   <assembly-folder>  Path to a folder containing all the assemblies to work with.
 
 Options:
-  -ra, --root-assemblies <root-assemblies>                  Path to a text file listing assemblies to be treated as
-                                                            roots, one assembly name per line, with or without the
-                                                            .dll extension.
-  -tma, --test-method-attributes <test-method-attributes>   Path to a text file listing all the attributes that can
-                                                            mark a method as a test, one per line
-  -ds, --dead-symbols <dead-symbols>                        Path of the report to produce on dead symbols
-  -as, --alive-symbols <alive-symbols>                      Path of the report to produce on alive symbols
-  -abts, --alive-by-test-symbols <alive-by-test-symbols>    Path of the report to produce symbols kept alive only by
-                                                            test methods
-  -ps, --public-symbols <public-symbols>                    Path of the report to produce on public symbols which could
-                                                            be made internal
-  -ua, --unreferenced-assemblies <unreferenced-assemblies>  Path of the report to produce on completely unreferenced
-                                                            assemblies
-  -ivt, --internals-visible-to <internals-visible-to>       Path of the report to produce on spurious uses of
-                                                            [InternalsVisibleTo]
-  -alc, --assembly-layer-cake <assembly-layer-cake>         Path of the assembly layer cake to produce
-  -dd, --dependency-diagram <dependency-diagram>            Path of the Mermaid-based assembly dependency diagram to
-                                                            produce
-  -gd, --graph-dump <graph-dump>                            Path of the graph dump file to produce
-  -cle, --continue-on-load-errors                           Proceed to the analysis and output phases even if some
-                                                            assemblies didn't load
-  -v, --verbose                                             Output progress reports
+  -ra, --root-assemblies <root-assemblies>                                Path to a text file listing assemblies to be treated as roots, one assembly
+                                                                          name per line (with or without a .dll extension)
+  -tma, --test-method-attributes <test-method-attributes>                 Path to a text file listing all the attributes that can mark a method as a
+                                                                          test, one per line
+  -ds, --dead-symbols <dead-symbols>                                      Path of the report to produce on dead symbols
+  -as, --alive-symbols <alive-symbols>                                    Path of the report to produce on alive symbols
+  -abts, --alive-by-test-symbols <alive-by-test-symbols>                  Path of the report to produce symbols kept alive only by test methods
+  -ps, --public-symbols <public-symbols>                                  Path of the report to produce on public symbols which could be made internal
+  -ua, --unreferenced-assemblies <unreferenced-assemblies>                Path of the report to produce on completely unreferenced assemblies
+  -sivt, --needless-internals-visible-to <needless-internals-visible-to>  Path of the report to produce on needless uses of [InternalsVisibleTo]
+  -alc, --assembly-layer-cake <assembly-layer-cake>                       Path of the assembly layer cake to produce
+  -dd, --dependency-diagram <dependency-diagram>                          Path of the Mermaid-based assembly dependency diagram to produce
+  -gd, --graph-dump <graph-dump>                                          Path of the graph dump file to produce
+  -cle, --continue-on-load-errors                                         Proceed to the analysis and output phases even if some assemblies didn't load
+  -v, --verbose                                                           Output progress reports
+  --version                                                               Show version information
+  -?, -h, --help                                                          Show help and usage information
 ```
 
 * `<assembly-folder>` is the path to a folder containing all the assemblies to work with. The tool will
@@ -78,7 +73,7 @@ Options:
   assemblies should be written. This report contains a list of all the assemblies that were loaded as input
   but don't contain any symbols reachable from the roots.
  
-* `--internals-visible-to` lets you specify the path to the file where the report
+* `--needless-internals-visible-to` lets you specify the path to the file where the report
   on needless uses of [InternalsVisibleTo] should be written.
 
 * `--assembly-layer-cake` lets you specify the path to the file where the full layer cake of dependencies
@@ -105,7 +100,7 @@ current working directory with the following names:
 * `alive-symbols.json`
 * `public-symbols.json`
 * `unreferenced-assemblies.json`
-* `internals-visible-to.json`
+* `needless-internals-visible-to.json`
 * `assembly-layer-cake.json`
 * `dependency-diagram.mmd`
 
