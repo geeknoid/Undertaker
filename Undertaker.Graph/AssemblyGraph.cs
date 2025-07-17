@@ -166,13 +166,13 @@ public sealed class AssemblyGraph
             {
                 foreach (var member in sym.Members.Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsVirtualOrOverrideOrAbstract))
                 {
+                    var memberSig = member.GetSignature();
+
                     foreach (var derived in sym.DerivedTypes)
                     {
-                        foreach (var derivedMember in derived.Members)
+                        foreach (var derivedMember in derived.Members.Where(x => x.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsOverride))
                         {
-                            // TODO: this doesn't currently deal with overloads, so if there are multiple overloads, we will create a reference to all of them. This will
-                            // therefore potentially result in some unreferenced symbols being marked as referenced.
-                            if (member.Name == derivedMember.Name)
+                            if (memberSig == derivedMember.GetSignature())
                             {
                                 member.RecordReferencedSymbol(derivedMember);
                             }
