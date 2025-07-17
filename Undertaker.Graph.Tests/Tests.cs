@@ -24,12 +24,15 @@ public class Tests
         var deadReport = JsonSerializer.Serialize(graph.CollectDeadSymbols(), serializerOptions);
         var aliveReport = JsonSerializer.Serialize(graph.CollectAliveSymbols(), serializerOptions);
         var aliveByTestReport = JsonSerializer.Serialize(graph.CollectAliveByTestSymbols(), serializerOptions);
-        var needlesslyPublicReport = JsonSerializer.Serialize(graph.CollectPublicSymbols(), serializerOptions);
+        var needlesslyPublicReport = JsonSerializer.Serialize(graph.CollectNeedlesslyPublicSymbols(), serializerOptions);
         var unreferencedReport = JsonSerializer.Serialize(graph.CollectUnreferencedAssemblies(), serializerOptions);
         var needlessIVTReport = JsonSerializer.Serialize(graph.CollectNeedlessInternalsVisibleTo(), serializerOptions);
         var assemblyLayerCake = JsonSerializer.Serialize(graph.CreateAssemblyLayerCake(), serializerOptions);
         var diagram = graph.CreateDependencyDiagram();
-        var graphDump = graph.ToString();
+
+        var sw = new StringWriter();
+        graph.Dump(sw);
+        var graphDump = sw.ToString();
 
 #if false
         // write the golden files

@@ -11,7 +11,7 @@
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest",
+          "Symbol": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
           "Dependents": [
             "TestLibrary.AliveByTestClas.MyTestMethod()"
           ],
@@ -20,14 +20,14 @@
       ],
       "Members": [
         {
-          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest",
+          "Symbol": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
           "Dependents": [
             "TestLibrary.AliveByTestClas.MyTestMethod()"
           ],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor()",
+          "Symbol": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
           "Dependents": [
             "TestLibrary.AliveByTestClas.MyTestMethod()"
           ],

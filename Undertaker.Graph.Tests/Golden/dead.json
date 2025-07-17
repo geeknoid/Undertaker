@@ -4,7 +4,7 @@
       "Assembly": "TestLibrary",
       "Types": [
         {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadNestedType",
+          "Symbol": "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType",
           "Dependents": [],
           "Root": false
         },

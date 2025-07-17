@@ -11,12 +11,12 @@
       ],
       "Members": [
         {
-          "Symbol": "TestExe.Program.\u003C\u003Ec..cctor()",
+          "Symbol": "TestExe.Program\u002B\u003C\u003Ec..cctor()",
           "Dependents": [],
           "Root": false
         },
         {
-          "Symbol": "TestExe.Program.\u003C\u003Ec..ctor()",
+          "Symbol": "TestExe.Program\u002B\u003C\u003Ec..ctor()",
           "Dependents": [],
           "Root": false
         }
@@ -31,12 +31,12 @@
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest",
+          "Symbol": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
           "Dependents": [],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadNestedType",
+          "Symbol": "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType",
           "Dependents": [],
           "Root": false
         },
@@ -68,12 +68,12 @@
       ],
       "Members": [
         {
-          "Symbol": "TestLibrary.AliveByTestClas..ctor()",
+          "Symbol": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
           "Dependents": [],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor()",
+          "Symbol": "TestLibrary.AliveByTestClas..ctor()",
           "Dependents": [],
           "Root": false
         },
@@ -123,6 +123,11 @@
           "Root": false
         },
         {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
           "Symbol": "TestLibrary.AliveClassButDeadMembers..ctor()",
           "Dependents": [],
           "Root": false
@@ -144,11 +149,6 @@
         },
         {
           "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadNestedType..ctor()",
           "Dependents": [],
           "Root": false
         },

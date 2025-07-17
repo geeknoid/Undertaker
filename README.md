@@ -31,7 +31,7 @@ Options:
   -ds, --dead-symbols <dead-symbols>                                      Path of the report to produce on dead symbols
   -as, --alive-symbols <alive-symbols>                                    Path of the report to produce on alive symbols
   -abts, --alive-by-test-symbols <alive-by-test-symbols>                  Path of the report to produce symbols kept alive only by test methods
-  -ps, --public-symbols <public-symbols>                                  Path of the report to produce on public symbols which could be made internal
+  -nps, --needlessly-public-symbols <needlessly-public-symbols>           Path of the report to produce on public symbols which could be made internal
   -ua, --unreferenced-assemblies <unreferenced-assemblies>                Path of the report to produce on completely unreferenced assemblies
   -sivt, --needless-internals-visible-to <needless-internals-visible-to>  Path of the report to produce on needless uses of [InternalsVisibleTo]
   -alc, --assembly-layer-cake <assembly-layer-cake>                       Path of the assembly layer cake to produce
@@ -65,7 +65,7 @@ Options:
 * `--alive-by-test-symbols` lets you specify the path to the file where the report on symbols alive due
   to being used from test methods should be written.
 
-* `--public-symbols` lets you specify the path to the file where the report on needlessly
+* `--needlessly-public-symbols` lets you specify the path to the file where the report on needlessly
   public symbols should be written. This report contains a list of all the symbols that are
   defined as public but are never referenced by any other assembly and so could be made internal.
 
@@ -98,7 +98,7 @@ current working directory with the following names:
 
 * `dead-symbols.json`
 * `alive-symbols.json`
-* `public-symbols.json`
+* `needlessly-public-symbols.json`
 * `unreferenced-assemblies.json`
 * `needless-internals-visible-to.json`
 * `assembly-layer-cake.json`

@@ -6,13 +6,13 @@
         {
           "Symbol": "TestExe.Program",
           "Dependents": [
-            "TestExe.Program.\u003C\u003Ec",
-            "TestExe.Program.\u003C\u003Ec.\u003C\u003E9",
-            "TestExe.Program.\u003C\u003Ec.\u003C\u003E9__0_0",
-            "TestExe.Program.\u003C\u003Ec.\u003C\u003E9__0_1",
-            "TestExe.Program.\u003C\u003Ec.\u003CMain\u003Eb__0_0()",
-            "TestExe.Program.\u003C\u003Ec.\u003CMain\u003Eb__0_1(System.Object, System.EventArgs)",
-            "TestExe.Program.Main()"
+            "TestExe.Program.Main()",
+            "TestExe.Program\u002B\u003C\u003Ec",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003C\u003E9",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003C\u003E9__0_0",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003C\u003E9__0_1",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003CMain\u003Eb__0_0()",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003CMain\u003Eb__0_1(System.Object, System.EventArgs)"
           ],
           "Root": false
         }
@@ -32,16 +32,16 @@
           "Symbol": "TestLibrary.AliveByTestClas",
           "Dependents": [
             "TestLibrary.AliveByTestClas.MyTestMethod()",
-            "TestLibrary.AliveByTestClas.OnlyUsedInATest",
-            "TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor()"
+            "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
+            "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()"
           ],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest",
+          "Symbol": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
           "Dependents": [
             "TestLibrary.AliveByTestClas.MyTestMethod()",
-            "TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor()"
+            "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()"
           ],
           "Root": false
         },
@@ -65,21 +65,21 @@
             "TestLibrary.AliveClassAndAliveMembers.AliveEvent",
             "TestLibrary.AliveClassAndAliveMembers.AliveField",
             "TestLibrary.AliveClassAndAliveMembers.AliveMethod()",
-            "TestLibrary.AliveClassAndAliveMembers.AliveNestedType",
-            "TestLibrary.AliveClassAndAliveMembers.AliveNestedType..ctor()",
             "TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty",
             "TestLibrary.AliveClassAndAliveMembers.Item",
             "TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(System.Int32)",
             "TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(System.Int32)",
-            "TestLibrary.AliveClassAndAliveMembers.set_Item(System.Int32, System.Int32)"
+            "TestLibrary.AliveClassAndAliveMembers.set_Item(System.Int32, System.Int32)",
+            "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType",
+            "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType..ctor()"
           ],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveNestedType",
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType",
           "Dependents": [
             "TestExe.Program.Main()",
-            "TestLibrary.AliveClassAndAliveMembers.AliveNestedType..ctor()"
+            "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType..ctor()"
           ],
           "Root": false
         },
@@ -93,8 +93,8 @@
         {
           "Symbol": "TestLibrary.AliveDelegate",
           "Dependents": [
-            "TestExe.Program.\u003C\u003Ec.\u003C\u003E9__0_0",
             "TestExe.Program.Main()",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003C\u003E9__0_0",
             "TestLibrary.AliveDelegate..ctor(System.Object, nint)"
           ],
           "Root": false
@@ -130,27 +130,42 @@
       ],
       "Members": [
         {
-          "Symbol": "TestLibrary.AliveByTestClas.MyTestMethod()",
-          "Dependents": [],
-          "Root": true
-        },
-        {
-          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest",
+          "Symbol": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
           "Dependents": [
             "TestLibrary.AliveByTestClas.MyTestMethod()",
-            "TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor()"
+            "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()"
           ],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveByTestClas.OnlyUsedInATest..ctor()",
+          "Symbol": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
           "Dependents": [
             "TestLibrary.AliveByTestClas.MyTestMethod()"
           ],
           "Root": false
         },
         {
+          "Symbol": "TestLibrary.AliveByTestClas.MyTestMethod()",
+          "Dependents": [],
+          "Root": true
+        },
+        {
           "Symbol": "TestLibrary.AliveClass..ctor()",
+          "Dependents": [
+            "TestExe.Program.Main()"
+          ],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType",
+          "Dependents": [
+            "TestExe.Program.Main()",
+            "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType..ctor()"
+          ],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType..ctor()",
           "Dependents": [
             "TestExe.Program.Main()"
           ],
@@ -186,21 +201,6 @@
         },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveMethod()",
-          "Dependents": [
-            "TestExe.Program.Main()"
-          ],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveNestedType",
-          "Dependents": [
-            "TestExe.Program.Main()",
-            "TestLibrary.AliveClassAndAliveMembers.AliveNestedType..ctor()"
-          ],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveNestedType..ctor()",
           "Dependents": [
             "TestExe.Program.Main()"
           ],

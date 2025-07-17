@@ -19,7 +19,7 @@ internal static class Program
         public string? DeadSymbols { get; set; }
         public string? AliveSymbols { get; set; }
         public string? AliveByTestSymbols { get; set; }
-        public string? PublicSymbols { get; set; }
+        public string? NeedlesslyPublicSymbols { get; set; }
         public string? UnreferencedAssemblies { get; set; }
         public string? AssemblyLayerCake { get; set; }
         public string? NeedlessInternalsVisibleTo { get; set; }
@@ -57,7 +57,7 @@ internal static class Program
                 "Path of the report to produce symbols kept alive only by test methods"),
 
             new Option<string>(
-                ["-ps", "--public-symbols"],
+                ["-nps", "--needlessly-public-symbols"],
                 "Path of the report to produce on public symbols which could be made internal"),
 
             new Option<string>(
@@ -101,7 +101,7 @@ internal static class Program
         if (args.DeadSymbols == null
             && args.AliveSymbols == null
             && args.AliveByTestSymbols == null
-            && args.PublicSymbols == null
+            && args.NeedlesslyPublicSymbols == null
             && args.UnreferencedAssemblies == null
             && args.NeedlessInternalsVisibleTo == null
             && args.AssemblyLayerCake == null
@@ -112,7 +112,7 @@ internal static class Program
             args.DeadSymbols = "./dead-symbols.json";
             args.AliveSymbols = "./alive-symbols.json";
             args.AliveByTestSymbols = "./alive-by-test-symbols.json";
-            args.PublicSymbols = "./public-symbols.json";
+            args.NeedlesslyPublicSymbols = "./needlessly-public-symbols.json";
             args.UnreferencedAssemblies = "./unreferenced-assemblies.json";
             args.NeedlessInternalsVisibleTo = "./needless-internals-visible-to.json";
             args.AssemblyLayerCake = "./assembly-layer-cake.json";
@@ -253,7 +253,7 @@ internal static class Program
         if (!OutputDeadSymbols() ||
             !OutputAliveSymbols() ||
             !OutputAliveByTestSymbols() ||
-            !OutputPublicSymbols() ||
+            !OutputNeedlesslyPublicSymbols() ||
             !OutputUnreferencedAssemblies() ||
             !OutputNeedlessInternalsVisibleTo() ||
             !OutputAssemblyLayerCake() ||
@@ -366,14 +366,14 @@ internal static class Program
             return true;
         }
 
-        bool OutputPublicSymbols()
+        bool OutputNeedlesslyPublicSymbols()
         {
-            if (args.PublicSymbols != null)
+            if (args.NeedlesslyPublicSymbols != null)
             {
-                var path = Path.GetFullPath(args.PublicSymbols);
+                var path = Path.GetFullPath(args.NeedlesslyPublicSymbols);
                 try
                 {
-                    var report = graph.CollectPublicSymbols();
+                    var report = graph.CollectNeedlesslyPublicSymbols();
                     using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
                         JsonSerializer.Serialize(file, report, _serializationOptions);

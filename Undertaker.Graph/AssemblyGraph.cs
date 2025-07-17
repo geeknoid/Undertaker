@@ -438,9 +438,9 @@ public sealed class AssemblyGraph
     }
 
     /// <summary>
-    /// Gets the set of types and symbols which could be made internal.
+    /// Gets the set of symbols which could be made internal.
     /// </summary>
-    public GraphReport CollectPublicSymbols()
+    public GraphReport CollectNeedlesslyPublicSymbols()
     {
         Done();
 
@@ -668,7 +668,7 @@ public sealed class AssemblyGraph
         return sb.ToString();
     }
 
-    public void Dump(StreamWriter output)
+    public void Dump(TextWriter output)
     {
         Done();
 
