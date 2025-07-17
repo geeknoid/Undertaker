@@ -11,9 +11,9 @@ internal sealed class TypeSymbol(Assembly assembly, string name) : Symbol(assemb
     public IReadOnlyCollection<TypeSymbol> DerivedTypes => _derivedTypes;
 
     private readonly HashSet<Symbol> _members = [];
-    private readonly List<TypeSymbol> _interfacesImplemented = [];
-    private readonly List<TypeSymbol> _baseTypes = [];
-    private readonly List<TypeSymbol> _derivedTypes = [];
+    private readonly HashSet<TypeSymbol> _interfacesImplemented = [];
+    private readonly HashSet<TypeSymbol> _baseTypes = [];
+    private readonly HashSet<TypeSymbol> _derivedTypes = [];
 
     public override void Define(IEntity entity)
     {
@@ -35,14 +35,14 @@ internal sealed class TypeSymbol(Assembly assembly, string name) : Symbol(assemb
 
     public void AddInterfaceImplemented(TypeSymbol interfaceType)
     {
-        _interfacesImplemented.Add(interfaceType);
-        interfaceType._derivedTypes.Add(this);
+        _ = _interfacesImplemented.Add(interfaceType);
+        _ = interfaceType._derivedTypes.Add(this);
     }
 
     public void AddBaseType(TypeSymbol baseType)
     {
-        _baseTypes.Add(baseType);
-        baseType._derivedTypes.Add(this);
+        _ = _baseTypes.Add(baseType);
+        _ = baseType._derivedTypes.Add(this);
     }
 
     public void Trim()

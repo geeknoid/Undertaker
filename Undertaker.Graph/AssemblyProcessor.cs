@@ -18,6 +18,7 @@ internal static class AssemblyProcessor
         foreach (var type in decomp.TypeSystem.MainModule.TypeDefinitions)
         {
             var typeSym = (TypeSymbol)DefineSymbol(type);
+
             RecordSymbolsReferencedByType(typeSym, type);
 
             if (type.Kind == TypeKind.Enum)
@@ -31,7 +32,7 @@ internal static class AssemblyProcessor
                 var sym = (MethodSymbol) DefineSymbol(method);
                 foreach (var a in method.GetAttributes())
                 {
-                    if (isTestMethodAttribute(a.AttributeType.FullName))
+                    if (isTestMethodAttribute(a.AttributeType.ReflectionName))
                     {
                         sym.MarkAsTestMethod();
                         break;
@@ -73,7 +74,7 @@ internal static class AssemblyProcessor
             var parent = entity.DeclaringTypeDefinition;
             if (parent?.ParentModule != null && sym.DeclaringType == null)
             {
-                sym.DeclaringType = (TypeSymbol)getAssembly(parent.ParentModule.AssemblyName).GetSymbol(parent.FullName, SymbolKind.Type);
+                sym.DeclaringType = (TypeSymbol)getAssembly(parent.ParentModule.AssemblyName).GetSymbol(parent.ReflectionName, SymbolKind.Type);
                 sym.DeclaringType.AddMember(sym);
             }
 
@@ -111,7 +112,12 @@ internal static class AssemblyProcessor
 
             foreach (var bt in type.GetAllBaseTypeDefinitions())
             {
-                var sym = (TypeSymbol) getAssembly(bt.ParentModule!.AssemblyName).GetSymbol(bt.FullName, SymbolKind.Type);
+                if (bt == type)
+                {
+                    continue; // skip self-reference
+                }
+
+                var sym = (TypeSymbol) getAssembly(bt.ParentModule!.AssemblyName).GetSymbol(bt.ReflectionName, SymbolKind.Type);
 
                 if (bt.Kind == TypeKind.Interface)
                 {
@@ -130,7 +136,7 @@ internal static class AssemblyProcessor
 
                 foreach (var attr in decomp.TypeSystem.MainModule.GetAssemblyAttributes())
                 {
-                    if (attr.AttributeType.FullName == "System.Runtime.CompilerServices.InternalsVisibleToAttribute")
+                    if (attr.AttributeType.ReflectionName == "System.Runtime.CompilerServices.InternalsVisibleToAttribute")
                     {
                         var assemblyName = attr.FixedArguments[0].Value;
                         if (assemblyName is string name)
@@ -381,7 +387,7 @@ internal static class AssemblyProcessor
                 if (td?.ParentModule != null)
                 {
                     var definingAsm = getAssembly(td.ParentModule.AssemblyName);
-                    var toSym = definingAsm.GetSymbol(t.FullName, SymbolKind.Type);
+                    var toSym = definingAsm.GetSymbol(t.ReflectionName, SymbolKind.Type);
                     fromSym.RecordReferencedSymbol(toSym);
                 }
 
@@ -399,7 +405,7 @@ internal static class AssemblyProcessor
             if (entity is IMethod method)
             {
                 _ = sb.Clear()
-                    .Append(entity.FullName)
+                    .Append(entity.ReflectionName)
                     .Append('(');
 
                 bool first = true;
@@ -414,13 +420,13 @@ internal static class AssemblyProcessor
                         first = false;
                     }
 
-                    _ = sb.Append(p.Type.FullName);
+                    _ = sb.Append(p.Type.ReflectionName);
                 }
 
                 return sb.Append(')').ToString();
             }
 
-            return entity.FullName;
+            return entity.ReflectionName;
         }
     }
 
