@@ -4,16 +4,6 @@
       "Assembly": "TestLibrary",
       "Types": [
         {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.DeadClass",
-          "Dependents": [],
-          "Root": false
-        },
-        {
           "Symbol": "TestLibrary.DeadDelegate",
           "Dependents": [],
           "Root": false
@@ -22,16 +12,46 @@
           "Symbol": "TestLibrary.DeadEnum",
           "Dependents": [],
           "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.DeadStruct",
-          "Dependents": [],
-          "Root": false
         }
       ],
       "Members": [
         {
-          "Symbol": "TestLibrary.AliveByTestClas..ctor()",
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveConst",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveEvent",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveField",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveMethod()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.Item",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers._value",
           "Dependents": [],
           "Root": false
         },
@@ -56,12 +76,22 @@
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers..ctor()",
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadComplexProperty",
           "Dependents": [],
           "Root": false
         },
         {
           "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadComplexProperty",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadConst",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadEvent",
           "Dependents": [],
           "Root": false
         },
@@ -76,6 +106,16 @@
           "Root": false
         },
         {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadField",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
           "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
           "Dependents": [],
           "Root": false
@@ -86,7 +126,22 @@
           "Root": false
         },
         {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty",
+          "Dependents": [],
+          "Root": false
+        },
+        {
           "Symbol": "TestLibrary.AliveClassButDeadMembers.Item",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.Item",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers._value",
           "Dependents": [],
           "Root": false
         },
@@ -136,22 +191,37 @@
           "Root": false
         },
         {
+          "Symbol": "TestLibrary.AliveDelegate..ctor(System.Object, nint)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
           "Symbol": "TestLibrary.AliveDelegate.Invoke()",
           "Dependents": [],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveStruct..ctor()",
+          "Symbol": "TestLibrary.AliveDelegate.Invoke()",
           "Dependents": [],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.GenericTypeArgument..ctor()",
+          "Symbol": "TestLibrary.AliveEnum.Blue",
           "Dependents": [],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.MyException..ctor()",
+          "Symbol": "TestLibrary.AliveEnum.Green",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveEnum.Red",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveEnum.value__",
           "Dependents": [],
           "Root": false
         }

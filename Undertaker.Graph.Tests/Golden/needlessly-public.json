@@ -11,12 +11,3927 @@
       ],
       "Members": [
         {
+          "Symbol": "System.Boolean..cctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.CompareTo(System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.CompareTo(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.Equals(System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.Equals(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.FalseString",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.GetHashCode()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.GetTypeCode()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.IsFalseStringIgnoreCase(System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.IsTrueStringIgnoreCase(System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.Parse(System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.Parse(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.System.IConvertible.ToBoolean(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.System.IConvertible.ToByte(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.System.IConvertible.ToChar(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.System.IConvertible.ToDateTime(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.System.IConvertible.ToDecimal(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.System.IConvertible.ToDouble(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.System.IConvertible.ToInt16(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.System.IConvertible.ToInt32(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.System.IConvertible.ToInt64(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.System.IConvertible.ToSByte(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.System.IConvertible.ToSingle(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.System.IConvertible.ToType(System.Type, System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.System.IConvertible.ToUInt16(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.System.IConvertible.ToUInt32(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.System.IConvertible.ToUInt64(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.ToString()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.ToString(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.TrimWhiteSpaceAndNull(System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.TrueString",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.TryFormat(System.Span\u00601[[System.Char]], System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.TryParse(System.ReadOnlySpan\u00601[[System.Char]], System.Boolean\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.TryParse(System.String, System.Boolean\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Boolean.m_value",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console..cctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.BackgroundColor",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Beep()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Beep(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.BufferHeight",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.BufferWidth",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.CancelKeyPress",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.CapsLock",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Clear()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.CreateOutputWriter(System.IO.Stream)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.CursorLeft",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.CursorSize",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.CursorTop",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.CursorVisible",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Error",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.ForegroundColor",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.GetCursorPosition()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.HandlePosixSignal(System.Runtime.InteropServices.PosixSignalContext)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.In",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.InputEncoding",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.IsErrorRedirected",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.IsInputRedirected",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.IsOutputRedirected",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.KeyAvailable",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.LargestWindowHeight",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.LargestWindowWidth",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.MoveBufferArea(System.Int32, System.Int32, System.Int32, System.Int32, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.MoveBufferArea(System.Int32, System.Int32, System.Int32, System.Int32, System.Int32, System.Int32, System.Char, System.ConsoleColor, System.ConsoleColor)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.NumberLock",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.OpenStandardError()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.OpenStandardError(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.OpenStandardInput()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.OpenStandardInput(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.OpenStandardOutput()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.OpenStandardOutput(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Out",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.OutputEncoding",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Read()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.ReadKey()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.ReadKey(System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.ReadLine()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.ResetColor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.SetBufferSize(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.SetCursorPosition(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.SetError(System.IO.TextWriter)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.SetIn(System.IO.TextReader)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.SetOut(System.IO.TextWriter)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.SetWindowPosition(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.SetWindowSize(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Title",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.TreatControlCAsInput",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WindowHeight",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WindowLeft",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WindowTop",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WindowWidth",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.Char[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.Char[], System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.Decimal)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.Double)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.Int64)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.Single)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.String, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.String, System.Object, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.String, System.Object, System.Object, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.String, System.Object[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.String, System.ReadOnlySpan\u00601[[System.Object]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.UInt32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.Write(System.UInt64)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.Char[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.Char[], System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.Decimal)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.Double)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.Int64)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.Single)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.String, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.String, System.Object, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.String, System.Object, System.Object, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.String, System.Object[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.String, System.ReadOnlySpan\u00601[[System.Object]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.UInt32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.WriteLine(System.UInt64)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console._isStdErrRedirected",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console._isStdInRedirected",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console._isStdOutRedirected",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.s_cancelCallbacks",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.s_error",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.s_in",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.s_inputEncoding",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.s_isErrorTextWriterRedirected",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.s_isOutTextWriterRedirected",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.s_out",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.s_outputEncoding",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.s_sigIntRegistration",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.s_sigQuitRegistration",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Console.s_syncObject",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggableAttribute\u002BDebuggingModes..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggableAttribute\u002BDebuggingModes.Default",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggableAttribute\u002BDebuggingModes.DisableOptimizations",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggableAttribute\u002BDebuggingModes.EnableEditAndContinue",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggableAttribute\u002BDebuggingModes.IgnoreSymbolStoreSequencePoints",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggableAttribute\u002BDebuggingModes.None",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggableAttribute\u002BDebuggingModes.value__",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggableAttribute..ctor(System.Boolean, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggableAttribute..ctor(System.Diagnostics.DebuggableAttribute\u002BDebuggingModes)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggableAttribute.DebuggingFlags",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggableAttribute.IsJITOptimizerDisabled",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggableAttribute.IsJITTrackingEnabled",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.EventArgs..cctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.EventArgs..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.EventArgs.Empty",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.EventHandler..ctor(System.Object, nint)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.EventHandler.Invoke(System.Object, System.EventArgs)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Abs(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.BigMul(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Clamp(System.Int32, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.CompareTo(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.CompareTo(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.CopySign(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.CreateChecked(\u0060\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.CreateSaturating(\u0060\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.CreateTruncating(\u0060\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.DivRem(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Equals(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Equals(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.GetHashCode()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.GetTypeCode()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.IsEvenInteger(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.IsNegative(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.IsOddInteger(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.IsPositive(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.IsPow2(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.LeadingZeroCount(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Log2(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Max(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.MaxMagnitude(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.MaxValue",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Min(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.MinMagnitude(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.MinValue",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Parse(System.ReadOnlySpan\u00601[[System.Byte]], System.Globalization.NumberStyles, System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Parse(System.ReadOnlySpan\u00601[[System.Byte]], System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Parse(System.ReadOnlySpan\u00601[[System.Char]], System.Globalization.NumberStyles, System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Parse(System.ReadOnlySpan\u00601[[System.Char]], System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Parse(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Parse(System.String, System.Globalization.NumberStyles)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Parse(System.String, System.Globalization.NumberStyles, System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Parse(System.String, System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.PopCount(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.RotateLeft(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.RotateRight(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.Sign(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.System.IConvertible.ToBoolean(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.System.IConvertible.ToByte(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.System.IConvertible.ToChar(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.System.IConvertible.ToDateTime(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.System.IConvertible.ToDecimal(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.System.IConvertible.ToDouble(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.System.IConvertible.ToInt16(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.System.IConvertible.ToInt32(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.System.IConvertible.ToInt64(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.System.IConvertible.ToSByte(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.System.IConvertible.ToSingle(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.System.IConvertible.ToType(System.Type, System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.System.IConvertible.ToUInt16(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.System.IConvertible.ToUInt32(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.System.IConvertible.ToUInt64(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.ToString()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.ToString(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.ToString(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.ToString(System.String, System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.TrailingZeroCount(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.TryConvertFromChecked(\u0060\u00600, System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.TryConvertFromSaturating(\u0060\u00600, System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.TryConvertFromTruncating(\u0060\u00600, System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.TryFormat(System.Span\u00601[[System.Byte]], System.Int32\u0026, System.ReadOnlySpan\u00601[[System.Char]], System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.TryFormat(System.Span\u00601[[System.Char]], System.Int32\u0026, System.ReadOnlySpan\u00601[[System.Char]], System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.TryParse(System.ReadOnlySpan\u00601[[System.Byte]], System.Globalization.NumberStyles, System.IFormatProvider, System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.TryParse(System.ReadOnlySpan\u00601[[System.Byte]], System.IFormatProvider, System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.TryParse(System.ReadOnlySpan\u00601[[System.Byte]], System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.TryParse(System.ReadOnlySpan\u00601[[System.Char]], System.Globalization.NumberStyles, System.IFormatProvider, System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.TryParse(System.ReadOnlySpan\u00601[[System.Char]], System.IFormatProvider, System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.TryParse(System.ReadOnlySpan\u00601[[System.Char]], System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.TryParse(System.String, System.Globalization.NumberStyles, System.IFormatProvider, System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.TryParse(System.String, System.IFormatProvider, System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.TryParse(System.String, System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Int32.m_value",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Object..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Object.Equals(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Object.Equals(System.Object, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Object.Finalize()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Object.GetHashCode()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Object.GetType()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Object.MemberwiseClone()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Object.ReferenceEquals(System.Object, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Object.ToString()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.AssemblyCompanyAttribute..ctor(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.AssemblyCompanyAttribute.Company",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.AssemblyConfigurationAttribute..ctor(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.AssemblyConfigurationAttribute.Configuration",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.AssemblyFileVersionAttribute..ctor(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.AssemblyFileVersionAttribute.Version",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.AssemblyInformationalVersionAttribute..ctor(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.AssemblyInformationalVersionAttribute.InformationalVersion",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.AssemblyProductAttribute..ctor(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.AssemblyProductAttribute.Product",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.AssemblyTitleAttribute..ctor(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.AssemblyTitleAttribute.Title",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.AssemblyVersionAttribute..ctor(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.AssemblyVersionAttribute.Version",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.CompilerServices.CompilationRelaxationsAttribute..ctor(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.CompilerServices.CompilationRelaxationsAttribute..ctor(System.Runtime.CompilerServices.CompilationRelaxations)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.CompilerServices.CompilationRelaxationsAttribute.CompilationRelaxations",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.CompilerServices.CompilerGeneratedAttribute..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.CompilerServices.RefSafetyRulesAttribute..ctor(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.CompilerServices.RefSafetyRulesAttribute.Version",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.CompilerServices.RuntimeCompatibilityAttribute..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.CompilerServices.RuntimeCompatibilityAttribute.WrapNonExceptionThrows",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.Versioning.TargetFrameworkAttribute..ctor(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.Versioning.TargetFrameworkAttribute.FrameworkDisplayName",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.Versioning.TargetFrameworkAttribute.FrameworkName",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.Versioning.TargetFrameworkAttribute._frameworkDisplayName",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.Versioning.TargetFrameworkAttribute._frameworkName",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.SerializableAttribute..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String..ctor(System.Char*)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String..ctor(System.Char*, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String..ctor(System.Char, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String..ctor(System.Char[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String..ctor(System.Char[], System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String..ctor(System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String..ctor(System.SByte*)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String..ctor(System.SByte*, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String..ctor(System.SByte*, System.Int32, System.Int32, System.Text.Encoding)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Chars",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CheckStringComparison(System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CheckStringSplitOptions(System.StringSplitOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Clone()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Compare(System.String, System.Int32, System.String, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Compare(System.String, System.Int32, System.String, System.Int32, System.Int32, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Compare(System.String, System.Int32, System.String, System.Int32, System.Int32, System.Boolean, System.Globalization.CultureInfo)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Compare(System.String, System.Int32, System.String, System.Int32, System.Int32, System.Globalization.CultureInfo, System.Globalization.CompareOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Compare(System.String, System.Int32, System.String, System.Int32, System.Int32, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Compare(System.String, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Compare(System.String, System.String, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Compare(System.String, System.String, System.Boolean, System.Globalization.CultureInfo)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Compare(System.String, System.String, System.Globalization.CultureInfo, System.Globalization.CompareOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Compare(System.String, System.String, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CompareOrdinal(System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CompareOrdinal(System.String, System.Int32, System.String, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CompareOrdinal(System.String, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CompareOrdinalHelper(System.String, System.Int32, System.Int32, System.String, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CompareOrdinalHelper(System.String, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CompareTo(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CompareTo(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.Collections.Generic.IEnumerable\u00601[[System.String]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.Collections.Generic.IEnumerable\u00601[[\u0060\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.Object, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.Object, System.Object, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.Object[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.ReadOnlySpan\u00601[[System.Object]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.ReadOnlySpan\u00601[[System.String]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.String, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.String, System.String, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.String, System.String, System.String, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Concat(System.String[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Contains(System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Contains(System.Char, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Contains(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Contains(System.String, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Copy(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CopyStringContent(System.String, System.Int32, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CopyTo(System.Int32, System.Char[], System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CopyTo(System.Span\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Create(System.IFormatProvider, System.Runtime.CompilerServices.DefaultInterpolatedStringHandler\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Create(System.IFormatProvider, System.Span\u00601[[System.Char]], System.Runtime.CompilerServices.DefaultInterpolatedStringHandler\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Create(System.Int32, \u0060\u00600, System.Buffers.SpanAction\u00602[[System.Char],[\u0060\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CreateFromChar(System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CreateFromChar(System.Char, System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CreateSplitArrayOfThisAsSoleValue(System.StringSplitOptions, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CreateStringForSByteConstructor(System.Byte*, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CreateStringFromEncoding(System.Byte*, System.Int32, System.Text.Encoding)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.CreateTrimmedString(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Ctor(System.Char*)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Ctor(System.Char*, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Ctor(System.Char, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Ctor(System.Char[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Ctor(System.Char[], System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Ctor(System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Ctor(System.SByte*)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Ctor(System.SByte*, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Ctor(System.SByte*, System.Int32, System.Int32, System.Text.Encoding)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Empty",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.EndsWith(System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.EndsWith(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.EndsWith(System.String, System.Boolean, System.Globalization.CultureInfo)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.EndsWith(System.String, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.EnumerateRunes()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Equals(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Equals(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Equals(System.String, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Equals(System.String, System.String, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Equals(System.String, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.EqualsHelper(System.String, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.EqualsOrdinalIgnoreCase(System.String, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.EqualsOrdinalIgnoreCaseNoLengthCheck(System.String, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.FastAllocateString(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.IFormatProvider, System.String, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.IFormatProvider, System.String, System.Object, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.IFormatProvider, System.String, System.Object, System.Object, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.IFormatProvider, System.String, System.Object[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.IFormatProvider, System.String, System.ReadOnlySpan\u00601[[System.Object]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.IFormatProvider, System.Text.CompositeFormat, System.Object[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.IFormatProvider, System.Text.CompositeFormat, System.ReadOnlySpan\u00601[[System.Object]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.IFormatProvider, System.Text.CompositeFormat, \u0060\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.IFormatProvider, System.Text.CompositeFormat, \u0060\u00600, \u0060\u00601)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.IFormatProvider, System.Text.CompositeFormat, \u0060\u00600, \u0060\u00601, \u0060\u00602)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.IFormatProvider, System.Text.CompositeFormat, \u0060\u00600, \u0060\u00601, \u0060\u00602, System.ReadOnlySpan\u00601[[System.Object]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.String, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.String, System.Object, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.String, System.Object, System.Object, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.String, System.Object[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Format(System.String, System.ReadOnlySpan\u00601[[System.Object]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.FormatHelper(System.IFormatProvider, System.String, System.ReadOnlySpan\u00601[[System.Object]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetBytesFromEncoding(System.Byte*, System.Int32, System.Text.Encoding)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetCaseCompareOfComparisonCulture(System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetCompareOptionsFromOrdinalStringComparison(System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetEnumerator()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetHashCode()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetHashCode(System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetHashCode(System.ReadOnlySpan\u00601[[System.Char]], System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetHashCode(System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetHashCodeOrdinalIgnoreCase()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetHashCodeOrdinalIgnoreCase(System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetNonRandomizedHashCode()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetNonRandomizedHashCode(System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetNonRandomizedHashCodeOrdinalIgnoreCase()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetNonRandomizedHashCodeOrdinalIgnoreCase(System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetNonRandomizedHashCodeOrdinalIgnoreCaseSlow(System.UInt32, System.UInt32, System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetPinnableReference()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetRawStringData()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetRawStringDataAsUInt16()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.GetTypeCode()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IndexOf(System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IndexOf(System.Char, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IndexOf(System.Char, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IndexOf(System.Char, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IndexOf(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IndexOf(System.String, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IndexOf(System.String, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IndexOf(System.String, System.Int32, System.Int32, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IndexOf(System.String, System.Int32, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IndexOf(System.String, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IndexOfAny(System.Char[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IndexOfAny(System.Char[], System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IndexOfAny(System.Char[], System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IndexOfCharOrdinalIgnoreCase(System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IndexOfNewlineChar(System.ReadOnlySpan\u00601[[System.Char]], System.String, System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Insert(System.Int32, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Intern(System.Runtime.CompilerServices.StringHandleOnStack)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Intern(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.InternalCopy(System.String, nint, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.InternalSubString(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IsInterned(System.Runtime.CompilerServices.StringHandleOnStack)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IsInterned(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IsNormalized()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IsNormalized(System.Text.NormalizationForm)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IsNullOrEmpty(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.IsNullOrWhiteSpace(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Join(System.Char, System.Collections.Generic.IEnumerable\u00601[[\u0060\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Join(System.Char, System.Object[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Join(System.Char, System.ReadOnlySpan\u00601[[System.Object]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Join(System.Char, System.ReadOnlySpan\u00601[[System.String]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Join(System.Char, System.String[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Join(System.Char, System.String[], System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Join(System.String, System.Collections.Generic.IEnumerable\u00601[[System.String]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Join(System.String, System.Collections.Generic.IEnumerable\u00601[[\u0060\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Join(System.String, System.Object[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Join(System.String, System.ReadOnlySpan\u00601[[System.Object]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Join(System.String, System.ReadOnlySpan\u00601[[System.String]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Join(System.String, System.String[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Join(System.String, System.String[], System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.JoinCore(System.ReadOnlySpan\u00601[[System.Char]], System.Collections.Generic.IEnumerable\u00601[[\u0060\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.JoinCore(System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Object]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.JoinCore(System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.String]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.JoinCore(System.ReadOnlySpan\u00601[[System.Char]], System.String[], System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.LastIndexOf(System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.LastIndexOf(System.Char, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.LastIndexOf(System.Char, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.LastIndexOf(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.LastIndexOf(System.String, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.LastIndexOf(System.String, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.LastIndexOf(System.String, System.Int32, System.Int32, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.LastIndexOf(System.String, System.Int32, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.LastIndexOf(System.String, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.LastIndexOfAny(System.Char[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.LastIndexOfAny(System.Char[], System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.LastIndexOfAny(System.Char[], System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Length",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.MakeSeparatorList(System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Char]], System.Collections.Generic.ValueListBuilder\u00601[[System.Int32]]\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.MakeSeparatorListAny(System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Char]], System.Collections.Generic.ValueListBuilder\u00601[[System.Int32]]\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.MakeSeparatorListAny(System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.String]], System.Collections.Generic.ValueListBuilder\u00601[[System.Int32]]\u0026, System.Collections.Generic.ValueListBuilder\u00601[[System.Int32]]\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.MakeSeparatorListVectorized(System.ReadOnlySpan\u00601[[System.Char]], System.Collections.Generic.ValueListBuilder\u00601[[System.Int32]]\u0026, System.Char, System.Char, System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Normalize()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Normalize(System.Text.NormalizationForm)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.PadLeft(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.PadLeft(System.Int32, System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.PadRight(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.PadRight(System.Int32, System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Remove(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Remove(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Replace(System.Char, System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Replace(System.String, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Replace(System.String, System.String, System.Boolean, System.Globalization.CultureInfo)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Replace(System.String, System.String, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ReplaceCore(System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Char]], System.ReadOnlySpan\u00601[[System.Char]], System.Globalization.CompareInfo, System.Globalization.CompareOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ReplaceCore(System.String, System.String, System.Globalization.CompareInfo, System.Globalization.CompareOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ReplaceHelper(System.Int32, System.String, System.ReadOnlySpan\u00601[[System.Int32]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ReplaceLineEndings()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ReplaceLineEndings(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ReplaceLineEndingsCore(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ReplaceLineEndingsWithLineFeed()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Split(System.Char, System.Int32, System.StringSplitOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Split(System.Char, System.StringSplitOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Split(System.Char[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Split(System.Char[], System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Split(System.Char[], System.Int32, System.StringSplitOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Split(System.Char[], System.StringSplitOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Split(System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Split(System.String, System.Int32, System.StringSplitOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Split(System.String, System.StringSplitOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Split(System.String[], System.Int32, System.StringSplitOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Split(System.String[], System.StringSplitOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.SplitInternal(System.ReadOnlySpan\u00601[[System.Char]], System.Int32, System.StringSplitOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.SplitInternal(System.String, System.Int32, System.StringSplitOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.SplitInternal(System.String, System.String[], System.Int32, System.StringSplitOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.SplitWithPostProcessing(System.ReadOnlySpan\u00601[[System.Int32]], System.ReadOnlySpan\u00601[[System.Int32]], System.Int32, System.Int32, System.StringSplitOptions)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.SplitWithoutPostProcessing(System.ReadOnlySpan\u00601[[System.Int32]], System.ReadOnlySpan\u00601[[System.Int32]], System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.StartsWith(System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.StartsWith(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.StartsWith(System.String, System.Boolean, System.Globalization.CultureInfo)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.StartsWith(System.String, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Substring(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Substring(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.Collections.IEnumerable.GetEnumerator()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.IConvertible.ToBoolean(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.IConvertible.ToByte(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.IConvertible.ToChar(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.IConvertible.ToDateTime(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.IConvertible.ToDecimal(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.IConvertible.ToDouble(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.IConvertible.ToInt16(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.IConvertible.ToInt32(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.IConvertible.ToInt64(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.IConvertible.ToSByte(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.IConvertible.ToSingle(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.IConvertible.ToType(System.Type, System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.IConvertible.ToUInt16(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.IConvertible.ToUInt32(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.System.IConvertible.ToUInt64(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ThrowSubstringArgumentOutOfRange(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ToCharArray()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ToCharArray(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ToLower()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ToLower(System.Globalization.CultureInfo)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ToLowerInvariant()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ToString()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ToString(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ToUpper()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ToUpper(System.Globalization.CultureInfo)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.ToUpperInvariant()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Trim()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Trim(System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Trim(System.Char[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.Trim(System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.TrimEnd()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.TrimEnd(System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.TrimEnd(System.Char[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.TrimEnd(System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.TrimHelper(System.Char*, System.Int32, System.Text.TrimType)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.TrimStart()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.TrimStart(System.Char)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.TrimStart(System.Char[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.TrimStart(System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.TrimWhiteSpaceHelper(System.Text.TrimType)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.TryCopyTo(System.Span\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.TryGetSpan(System.Int32, System.Int32, System.ReadOnlySpan\u00601[[System.Char]]\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String._firstChar",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String._stringLength",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.op_Equality(System.String, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.op_Implicit(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.op_Inequality(System.String, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.strlen(System.Byte*)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.String.wcslen(System.Char*)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type..cctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.Assembly",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.AssemblyQualifiedName",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.Attributes",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.BaseType",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.BinarySearch(System.Array, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.ContainsGenericParameters",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.CreateGetMemberWithSameMetadataDefinitionAsNotFoundException(System.Reflection.MemberInfo)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.DeclaringMethod",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.DeclaringType",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.DefaultBinder",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.Delimiter",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.EmptyTypes",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.Equals(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.Equals(System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.FilterAttribute",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.FilterAttributeImpl(System.Reflection.MemberInfo, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.FilterName",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.FilterNameIgnoreCase",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.FilterNameImpl(System.Reflection.MemberInfo, System.Object, System.StringComparison)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.FindInterfaces(System.Reflection.TypeFilter, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.FindMembers(System.Reflection.MemberTypes, System.Reflection.BindingFlags, System.Reflection.MemberFilter, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.FormatTypeName()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.FullName",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GUID",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GenericParameterAttributes",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GenericParameterPosition",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GenericTypeArguments",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetArrayRank()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetAttributeFlagsImpl()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetConstructor(System.Reflection.BindingFlags, System.Reflection.Binder, System.Reflection.CallingConventions, System.Type[], System.Reflection.ParameterModifier[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetConstructor(System.Reflection.BindingFlags, System.Reflection.Binder, System.Type[], System.Reflection.ParameterModifier[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetConstructor(System.Reflection.BindingFlags, System.Type[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetConstructor(System.Type[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetConstructorImpl(System.Reflection.BindingFlags, System.Reflection.Binder, System.Reflection.CallingConventions, System.Type[], System.Reflection.ParameterModifier[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetConstructors()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetConstructors(System.Reflection.BindingFlags)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetDefaultMembers()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetElementType()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetEnumData(System.String[]\u0026, System.Array\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetEnumName(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetEnumNames()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetEnumRawConstantValues()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetEnumUnderlyingType()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetEnumValues()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetEnumValuesAsUnderlyingType()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetEvent(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetEvent(System.String, System.Reflection.BindingFlags)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetEvents()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetEvents(System.Reflection.BindingFlags)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetField(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetField(System.String, System.Reflection.BindingFlags)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetFields()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetFields(System.Reflection.BindingFlags)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetFunctionPointerCallingConventions()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetFunctionPointerParameterTypes()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetFunctionPointerReturnType()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetGenericArguments()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetGenericParameterConstraints()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetGenericTypeDefinition()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetHashCode()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetInterface(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetInterface(System.String, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetInterfaceMap(System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetInterfaces()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMember(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMember(System.String, System.Reflection.BindingFlags)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMember(System.String, System.Reflection.MemberTypes, System.Reflection.BindingFlags)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMemberWithSameMetadataDefinitionAs(System.Reflection.MemberInfo)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMembers()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMembers(System.Reflection.BindingFlags)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethod(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethod(System.String, System.Int32, System.Reflection.BindingFlags, System.Reflection.Binder, System.Reflection.CallingConventions, System.Type[], System.Reflection.ParameterModifier[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethod(System.String, System.Int32, System.Reflection.BindingFlags, System.Reflection.Binder, System.Type[], System.Reflection.ParameterModifier[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethod(System.String, System.Int32, System.Reflection.BindingFlags, System.Type[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethod(System.String, System.Int32, System.Type[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethod(System.String, System.Int32, System.Type[], System.Reflection.ParameterModifier[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethod(System.String, System.Reflection.BindingFlags)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethod(System.String, System.Reflection.BindingFlags, System.Reflection.Binder, System.Reflection.CallingConventions, System.Type[], System.Reflection.ParameterModifier[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethod(System.String, System.Reflection.BindingFlags, System.Reflection.Binder, System.Type[], System.Reflection.ParameterModifier[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethod(System.String, System.Reflection.BindingFlags, System.Type[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethod(System.String, System.Type[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethod(System.String, System.Type[], System.Reflection.ParameterModifier[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethodImpl(System.String, System.Int32, System.Reflection.BindingFlags, System.Reflection.Binder, System.Reflection.CallingConventions, System.Type[], System.Reflection.ParameterModifier[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethodImpl(System.String, System.Reflection.BindingFlags, System.Reflection.Binder, System.Reflection.CallingConventions, System.Type[], System.Reflection.ParameterModifier[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethods()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetMethods(System.Reflection.BindingFlags)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetNestedType(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetNestedType(System.String, System.Reflection.BindingFlags)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetNestedTypes()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetNestedTypes(System.Reflection.BindingFlags)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetOptionalCustomModifiers()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetProperties()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetProperties(System.Reflection.BindingFlags)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetProperty(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetProperty(System.String, System.Reflection.BindingFlags)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetProperty(System.String, System.Reflection.BindingFlags, System.Reflection.Binder, System.Type, System.Type[], System.Reflection.ParameterModifier[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetProperty(System.String, System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetProperty(System.String, System.Type, System.Type[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetProperty(System.String, System.Type, System.Type[], System.Reflection.ParameterModifier[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetProperty(System.String, System.Type[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetPropertyImpl(System.String, System.Reflection.BindingFlags, System.Reflection.Binder, System.Type, System.Type[], System.Reflection.ParameterModifier[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetRequiredCustomModifiers()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetRootElementType()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetRuntimeTypeCode(System.RuntimeType)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetType()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetType(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetType(System.String, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetType(System.String, System.Boolean, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetType(System.String, System.Func\u00602[[System.Reflection.AssemblyName],[System.Reflection.Assembly]], System.Func\u00604[[System.Reflection.Assembly],[System.String],[System.Boolean],[System.Type]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetType(System.String, System.Func\u00602[[System.Reflection.AssemblyName],[System.Reflection.Assembly]], System.Func\u00604[[System.Reflection.Assembly],[System.String],[System.Boolean],[System.Type]], System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetType(System.String, System.Func\u00602[[System.Reflection.AssemblyName],[System.Reflection.Assembly]], System.Func\u00604[[System.Reflection.Assembly],[System.String],[System.Boolean],[System.Type]], System.Boolean, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetTypeArray(System.Object[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetTypeCode(System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetTypeCodeImpl()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetTypeFromCLSID(System.Guid)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetTypeFromCLSID(System.Guid, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetTypeFromCLSID(System.Guid, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetTypeFromCLSID(System.Guid, System.String, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetTypeFromHandle(System.RuntimeTypeHandle)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetTypeFromHandleUnsafe(nint)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetTypeFromProgID(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetTypeFromProgID(System.String, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetTypeFromProgID(System.String, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetTypeFromProgID(System.String, System.String, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.GetTypeHandle(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.HasElementType",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.HasElementTypeImpl()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.ImplementInterface(System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.InvokeMember(System.String, System.Reflection.BindingFlags, System.Reflection.Binder, System.Object, System.Object[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.InvokeMember(System.String, System.Reflection.BindingFlags, System.Reflection.Binder, System.Object, System.Object[], System.Globalization.CultureInfo)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.InvokeMember(System.String, System.Reflection.BindingFlags, System.Reflection.Binder, System.Object, System.Object[], System.Reflection.ParameterModifier[], System.Globalization.CultureInfo, System.String[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsAbstract",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsAnsiClass",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsArray",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsArrayImpl()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsAssignableFrom(System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsAssignableTo(System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsAutoClass",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsAutoLayout",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsByRef",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsByRefImpl()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsByRefLike",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsCOMObject",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsCOMObjectImpl()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsClass",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsConstructedGenericType",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsContextful",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsContextfulImpl()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsEnum",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsEnumDefined(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsEquivalentTo(System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsExplicitLayout",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsFunctionPointer",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsGenericMethodParameter",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsGenericParameter",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsGenericType",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsGenericTypeDefinition",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsGenericTypeParameter",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsImport",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsInstanceOfType(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsIntegerType(System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsInterface",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsLayoutSequential",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsMarshalByRef",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsMarshalByRefImpl()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsNested",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsNestedAssembly",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsNestedFamANDAssem",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsNestedFamORAssem",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsNestedFamily",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsNestedPrivate",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsNestedPublic",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsNotPublic",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsPointer",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsPointerImpl()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsPrimitive",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsPrimitiveImpl()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsPublic",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsSZArray",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsSealed",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsSecurityCritical",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsSecuritySafeCritical",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsSecurityTransparent",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsSerializable",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsSignatureType",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsSpecialName",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsSubclassOf(System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsTypeDefinition",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsUnicodeClass",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsUnmanagedFunctionPointer",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsValueType",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsValueTypeImpl()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsVariableBoundArray",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.IsVisible",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.MakeArrayType()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.MakeArrayType(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.MakeByRefType()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.MakeGenericMethodParameter(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.MakeGenericSignatureType(System.Type, System.Type[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.MakeGenericType(System.Type[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.MakePointerType()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.MemberType",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.Missing",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.Module",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.Namespace",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.ReflectedType",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.ReflectionOnlyGetType(System.String, System.Boolean, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.StructLayoutAttribute",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.ToString()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.TypeHandle",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.TypeInitializer",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.UnderlyingSystemType",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.op_Equality(System.Type, System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.op_Inequality(System.Type, System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Type.s_defaultBinder",
+          "Dependents": [],
+          "Root": false
+        },
+        {
           "Symbol": "TestExe.Program\u002B\u003C\u003Ec..cctor()",
           "Dependents": [],
           "Root": false
         },
         {
-          "Symbol": "TestExe.Program\u002B\u003C\u003Ec..ctor()",
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveConst",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveEvent",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveField",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveMethod()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers.Item",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassAndAliveMembers._value",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadComplexProperty",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadConst",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadEvent",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadField",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers.Item",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveClassButDeadMembers._value",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveDelegate..ctor(System.Object, nint)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveDelegate.Invoke()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveEnum.Blue",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveEnum.Green",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveEnum.Red",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "TestLibrary.AliveEnum.value__",
           "Dependents": [],
           "Root": false
         }
@@ -68,12 +3983,1597 @@
       ],
       "Members": [
         {
-          "Symbol": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
+          "Symbol": "Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute..ctor()",
           "Dependents": [],
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveByTestClas..ctor()",
+          "Symbol": "Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute.GetTestMethodAttribute(Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute..ctor(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.DisplayName",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.Execute(Microsoft.VisualStudio.TestTools.UnitTesting.ITestMethod)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.AsyncCallback..ctor(System.Object, nint)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.AsyncCallback.Invoke(System.IAsyncResult)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601..cctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601..ctor(System.Collections.Generic.IEnumerable\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601..ctor(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Add(\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.AddRange(System.Collections.Generic.IEnumerable\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.AddWithResize(\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.AsReadOnly()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.BinarySearch(System.Int32, System.Int32, \u00600, System.Collections.Generic.IComparer\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.BinarySearch(\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.BinarySearch(\u00600, System.Collections.Generic.IComparer\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Capacity",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Clear()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Contains(\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.ConvertAll(System.Converter\u00602[[\u00600],[\u0060\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.CopyTo(System.Int32, \u00600[], System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.CopyTo(\u00600[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.CopyTo(\u00600[], System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Count",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.EnsureCapacity(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Exists(System.Predicate\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Find(System.Predicate\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.FindAll(System.Predicate\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.FindIndex(System.Int32, System.Int32, System.Predicate\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.FindIndex(System.Int32, System.Predicate\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.FindIndex(System.Predicate\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.FindLast(System.Predicate\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.FindLastIndex(System.Int32, System.Int32, System.Predicate\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.FindLastIndex(System.Int32, System.Predicate\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.FindLastIndex(System.Predicate\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.ForEach(System.Action\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.GetEnumerator()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.GetNewCapacity(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.GetRange(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Grow(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.GrowForInsertion(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.IndexOf(\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.IndexOf(\u00600, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.IndexOf(\u00600, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Insert(System.Int32, \u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.InsertRange(System.Int32, System.Collections.Generic.IEnumerable\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.IsCompatibleObject(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Item",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.LastIndexOf(\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.LastIndexOf(\u00600, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.LastIndexOf(\u00600, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Remove(\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.RemoveAll(System.Predicate\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.RemoveAt(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.RemoveRange(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Reverse()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Reverse(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Slice(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Sort()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Sort(System.Collections.Generic.IComparer\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Sort(System.Comparison\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.Sort(System.Int32, System.Int32, System.Collections.Generic.IComparer\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.System.Collections.ICollection.CopyTo(System.Array, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.System.Collections.ICollection.IsSynchronized",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.System.Collections.ICollection.SyncRoot",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.System.Collections.IEnumerable.GetEnumerator()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.System.Collections.IList.Add(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.System.Collections.IList.Contains(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.System.Collections.IList.IndexOf(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.System.Collections.IList.Insert(System.Int32, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.System.Collections.IList.IsFixedSize",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.System.Collections.IList.IsReadOnly",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.System.Collections.IList.Item",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.System.Collections.IList.Remove(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.ToArray()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.TrimExcess()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.TrueForAll(System.Predicate\u00601[[\u00600]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601._items",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601._size",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601._version",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Collections.Generic.List\u00601.s_emptyArray",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggerBrowsableAttribute..ctor(System.Diagnostics.DebuggerBrowsableState)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggerBrowsableAttribute.State",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggerBrowsableState..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggerBrowsableState.Collapsed",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggerBrowsableState.Never",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggerBrowsableState.RootHidden",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Diagnostics.DebuggerBrowsableState.value__",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum..cctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.AreSequentialFromZero(\u0060\u00600[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.AreSorted(\u0060\u00600[])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.AssertValidGenerics()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.CompareTo(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.CreateInvalidFormatSpecifierException()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.CreateUnknownEnumTypeException()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.EnumSeparatorChar",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.Equals(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.FindDefinedIndex(\u0060\u00600[], \u0060\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.Format(System.Type, System.Object, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.FormatFlagNames(System.Enum\u002BEnumInfo\u00601[[\u0060\u00600]], \u0060\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.FormatNumberAsHex(System.Byte\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetEnumInfo(System.RuntimeType, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetEnumValuesAndNames(System.Runtime.CompilerServices.QCallTypeHandle, System.Runtime.CompilerServices.ObjectHandleOnStack, System.Runtime.CompilerServices.ObjectHandleOnStack, Interop\u002BBOOL)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetHashCode()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetMultipleEnumsFlagsFormatResultLength(System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetName(System.Enum\u002BEnumInfo\u00601[[\u0060\u00600]], \u0060\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetName(System.RuntimeType, System.UInt64)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetName(System.Type, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetName(\u0060\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetNameInlined(System.Enum\u002BEnumInfo\u00601[[\u0060\u00600]], \u0060\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetNames()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetNames(System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetNamesNoCopy(System.RuntimeType)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetSingleFlagsEnumNameForValue(\u0060\u00600, System.String[], \u0060\u00600[], System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetTypeCode()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetUnderlyingType(System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetValue()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetValues()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetValues(System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetValuesAsUnderlyingType()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetValuesAsUnderlyingType(System.RuntimeType)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetValuesAsUnderlyingType(System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.GetValuesAsUnderlyingTypeNoCopy(System.RuntimeType)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.HasFlag(System.Enum)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.InternalBoxEnum(System.RuntimeTypeHandle, System.Int64)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.InternalGetCorElementType()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.InternalGetCorElementType(System.RuntimeType)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.InternalGetUnderlyingType(System.RuntimeType)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.IsDefined(System.Type, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.IsDefined(\u0060\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.IsDefinedPrimitive(System.RuntimeType, \u0060\u00600)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.Parse(System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.Parse(System.ReadOnlySpan\u00601[[System.Char]], System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.Parse(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.Parse(System.String, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.Parse(System.Type, System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.Parse(System.Type, System.ReadOnlySpan\u00601[[System.Char]], System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.Parse(System.Type, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.Parse(System.Type, System.String, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.IConvertible.ToBoolean(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.IConvertible.ToByte(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.IConvertible.ToChar(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.IConvertible.ToDateTime(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.IConvertible.ToDecimal(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.IConvertible.ToDouble(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.IConvertible.ToInt16(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.IConvertible.ToInt32(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.IConvertible.ToInt64(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.IConvertible.ToSByte(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.IConvertible.ToSingle(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.IConvertible.ToType(System.Type, System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.IConvertible.ToUInt16(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.IConvertible.ToUInt32(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.IConvertible.ToUInt64(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.System.ISpanFormattable.TryFormat(System.Span\u00601[[System.Char]], System.Int32\u0026, System.ReadOnlySpan\u00601[[System.Char]], System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ThrowInvalidEmptyParseArgument()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ThrowInvalidRuntimeType(System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToObject(System.Type, System.Byte)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToObject(System.Type, System.Int16)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToObject(System.Type, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToObject(System.Type, System.Int64)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToObject(System.Type, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToObject(System.Type, System.SByte)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToObject(System.Type, System.UInt16)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToObject(System.Type, System.UInt32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToObject(System.Type, System.UInt64)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToString()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToString(System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToString(System.RuntimeType, System.Byte\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToString(System.RuntimeType, System.Char, System.Byte\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToString(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToString(System.String, System.IFormatProvider)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToStringInlined(System.RuntimeType, System.Byte\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToStringInlined(System.RuntimeType, System.Char, System.Byte\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ToUInt64(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryFindFlagsNames(\u0060\u00600, System.String[], \u0060\u00600[], System.Int32, System.Span\u00601[[System.Int32]], System.Int32\u0026, System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryFormat(\u0060\u00600, System.Span\u00601[[System.Char]], System.Int32\u0026, System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryFormatFlagNames(System.Enum\u002BEnumInfo\u00601[[\u0060\u00600]], \u0060\u00600, System.Span\u00601[[System.Char]], System.Int32\u0026, System.Boolean\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryFormatNumberAsHex(System.Byte\u0026, System.Span\u00601[[System.Char]], System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryFormatPrimitiveDefault(System.RuntimeType, \u0060\u00600, System.Span\u00601[[System.Char]], System.Int32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryFormatPrimitiveNonDefault(System.RuntimeType, \u0060\u00600, System.Span\u00601[[System.Char]], System.Int32\u0026, System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryFormatUnconstrained(\u0060\u00600, System.Span\u00601[[System.Char]], System.Int32\u0026, System.ReadOnlySpan\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryParse(System.ReadOnlySpan\u00601[[System.Char]], System.Boolean, System.Boolean, \u0060\u00600\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryParse(System.ReadOnlySpan\u00601[[System.Char]], System.Boolean, \u0060\u00600\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryParse(System.ReadOnlySpan\u00601[[System.Char]], \u0060\u00600\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryParse(System.String, System.Boolean, \u0060\u00600\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryParse(System.String, \u0060\u00600\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryParse(System.Type, System.ReadOnlySpan\u00601[[System.Char]], System.Boolean, System.Boolean, System.Object\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryParse(System.Type, System.ReadOnlySpan\u00601[[System.Char]], System.Boolean, System.Object\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryParse(System.Type, System.ReadOnlySpan\u00601[[System.Char]], System.Object\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryParse(System.Type, System.String, System.Boolean, System.Object\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryParse(System.Type, System.String, System.Object\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryParseByName(System.RuntimeType, System.ReadOnlySpan\u00601[[System.Char]], System.Boolean, System.Boolean, \u0060\u00600\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryParseByValueOrName(System.RuntimeType, System.ReadOnlySpan\u00601[[System.Char]], System.Boolean, System.Boolean, \u0060\u00600\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.TryParseRareTypeByValueOrName(System.RuntimeType, System.ReadOnlySpan\u00601[[System.Char]], System.Boolean, System.Boolean, \u0060\u00600\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.ValidateRuntimeType(System.Type)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.WriteMultipleFoundFlagsNames(System.String[], System.ReadOnlySpan\u00601[[System.Int32]], System.Span\u00601[[System.Char]])",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Enum.s_underlyingTypes",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception..ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception..ctor(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception..ctor(System.String, System.Exception)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.CanSetRemoteStackTrace()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.CaptureDispatchState()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.CreateDataContainer()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.Data",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.GetBaseException()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.GetClassName()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.GetExceptionCount()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.GetExceptionMethodFromStackTrace()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.GetFrozenStackTrace(System.Exception)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.GetHelpContext(System.UInt32\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.GetMessageFromNativeResources(System.Exception\u002BExceptionMessageKind)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.GetMessageFromNativeResources(System.Exception\u002BExceptionMessageKind, System.Runtime.CompilerServices.StringHandleOnStack)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.GetMethodFromStackTrace(System.Runtime.CompilerServices.ObjectHandleOnStack, System.Runtime.CompilerServices.ObjectHandleOnStack)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.GetStackTrace()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.GetType()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.HResult",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.HasBeenThrown",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.HelpLink",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.InnerException",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.InnerExceptionPrefix",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.InternalPreserveStackTrace()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.IsImmutableAgileException(System.Exception)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.Message",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.OnDeserialized(System.Runtime.Serialization.StreamingContext)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.PrepareForForeignExceptionRaise()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.RestoreDispatchState(System.Exception\u002BDispatchState\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.RestoreRemoteStackTrace(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.SerializationStackTraceString",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.SerializationWatsonBuckets",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.SerializeObjectState",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.SetCurrentStackTrace()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.SetRemoteStackTrace(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.Source",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.StackTrace",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.TargetSite",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception.ToString()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception._COMPlusExceptionCode",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception._HResult",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception._data",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception._exceptionMethod",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception._helpURL",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception._innerException",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception._ipForWatsonBuckets",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception._message",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception._remoteStackTraceString",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception._source",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception._stackTrace",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception._stackTraceString",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception._watsonBuckets",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception._xcode",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Exception._xptrs",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.IAsyncResult.AsyncState",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.IAsyncResult.AsyncWaitHandle",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.IAsyncResult.CompletedSynchronously",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.IAsyncResult.IsCompleted",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate..ctor(System.Object, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate..ctor(System.Type, System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.CombineImpl(System.Delegate)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.CtorClosed(System.Object, nint)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.CtorClosedStatic(System.Object, nint)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.CtorCollectibleClosedStatic(System.Object, nint, nint)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.CtorCollectibleOpened(System.Object, nint, nint, nint)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.CtorCollectibleVirtualDispatch(System.Object, nint, nint, nint)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.CtorOpened(System.Object, nint, nint)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.CtorRTClosed(System.Object, nint)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.CtorVirtualDispatch(System.Object, nint, nint)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.DeleteFromInvocationList(System.Object[], System.Int32, System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.EqualInvocationLists(System.Object[], System.Object[], System.Int32, System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.Equals(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.GetHashCode()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.GetInvocationList()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.GetMethodImpl()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.GetTarget()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.HasSingleTarget",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.InvocationListEquals(System.MulticastDelegate)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.InvocationListLogicallyNull()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.IsUnmanagedFunctionPtr()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.NewMulticastDelegate(System.Object[], System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.NewMulticastDelegate(System.Object[], System.Int32, System.Boolean)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.RemoveImpl(System.Delegate)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.StoreDynamicMethod(System.Reflection.MethodInfo)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.ThrowNullThisInDelegateToInstance()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.TryGetAt(System.Int32)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.TrySetSlot(System.Object[], System.Int32, System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate._invocationCount",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate._invocationList",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.op_Equality(System.MulticastDelegate, System.MulticastDelegate)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.MulticastDelegate.op_Inequality(System.MulticastDelegate, System.MulticastDelegate)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.DefaultMemberAttribute..ctor(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Reflection.DefaultMemberAttribute.MemberName",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.CompilerServices.InternalsVisibleToAttribute..ctor(System.String)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.CompilerServices.InternalsVisibleToAttribute.AllInternalsVisible",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.CompilerServices.InternalsVisibleToAttribute.AssemblyName",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.InteropServices.LayoutKind..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.InteropServices.LayoutKind.Auto",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.InteropServices.LayoutKind.Explicit",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.InteropServices.LayoutKind.Sequential",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.InteropServices.LayoutKind.value__",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.InteropServices.StructLayoutAttribute..ctor(System.Int16)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.InteropServices.StructLayoutAttribute..ctor(System.Runtime.InteropServices.LayoutKind)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.InteropServices.StructLayoutAttribute.CharSet",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.InteropServices.StructLayoutAttribute.Pack",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.InteropServices.StructLayoutAttribute.Size",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.Runtime.InteropServices.StructLayoutAttribute.Value",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.ValueType..ctor()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.ValueType.CanCompareBitsOrUseFastGetHashCode(System.Runtime.CompilerServices.MethodTable*)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.ValueType.CanCompareBitsOrUseFastGetHashCodeHelper(System.Runtime.CompilerServices.MethodTable*)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.ValueType.Equals(System.Object)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.ValueType.GetHashCode()",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.ValueType.GetHashCodeStrategy(System.Runtime.CompilerServices.MethodTable*, System.Runtime.CompilerServices.ObjectHandleOnStack, System.UInt32\u0026, System.UInt32\u0026, System.Runtime.CompilerServices.MethodTable*\u0026)",
+          "Dependents": [],
+          "Root": false
+        },
+        {
+          "Symbol": "System.ValueType.ToString()",
           "Dependents": [],
           "Root": false
         },
@@ -119,16 +5619,6 @@
         },
         {
           "Symbol": "TestLibrary.AliveClassAndAliveMembers.remove_AliveEvent(System.EventHandler)",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType..ctor()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers..ctor()",
           "Dependents": [],
           "Root": false
         },
@@ -213,37 +5703,12 @@
           "Root": false
         },
         {
-          "Symbol": "TestLibrary.AliveStruct..ctor()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.DeadClass..ctor()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
           "Symbol": "TestLibrary.DeadDelegate..ctor(System.Object, nint)",
           "Dependents": [],
           "Root": false
         },
         {
           "Symbol": "TestLibrary.DeadDelegate.Invoke()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.DeadStruct..ctor()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.GenericTypeArgument..ctor()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.MyException..ctor()",
           "Dependents": [],
           "Root": false
         }
