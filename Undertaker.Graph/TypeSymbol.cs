@@ -4,7 +4,7 @@ namespace Undertaker.Graph;
 
 internal sealed class TypeSymbol(Assembly assembly, string name) : Symbol(assembly, name, SymbolKind.Type)
 {
-    public TypeKind TypeKind { get; private set; }
+    public TypeKind TypeKind { get; set; }
     public IReadOnlyCollection<Symbol> Members => _members;
     public IReadOnlyCollection<TypeSymbol> InterfacesImplemented => _interfacesImplemented;
     public IReadOnlyCollection<TypeSymbol> BaseTypes => _baseTypes;
@@ -23,6 +23,7 @@ internal sealed class TypeSymbol(Assembly assembly, string name) : Symbol(assemb
         }
 
         base.Define(entity);
+
 
         TypeKind = typeDef.Kind;
     }

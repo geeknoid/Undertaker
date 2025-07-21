@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using ICSharpCode.Decompiler.CSharp.TypeSystem;
@@ -142,13 +143,13 @@ public sealed class AssemblyGraph
         {
             foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
             {
-                foreach (var ifaceMember in sym.Members)
+                foreach (var ifaceMember in sym.Members.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                 {
-                    foreach (var derived in sym.DerivedTypes)
+                    foreach (var derivedType in sym.DerivedTypes)
                     {
-                        foreach (var derivedMember in derived.Members)
+                        foreach (var derivedMember in derivedType.Members.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                         {
-                            if (ifaceMember.Name == derivedMember.Name)
+                            if (ifaceMember.GetSignature() == derivedMember.GetSignature())
                             {
                                 ifaceMember.RecordReferencedSymbol(derivedMember);
                             }
@@ -221,13 +222,13 @@ public sealed class AssemblyGraph
         {
             foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
             {
-                foreach (var ifaceMember in sym.Members)
+                foreach (var derivedType in sym.DerivedTypes)
                 {
-                    foreach (var derived in sym.DerivedTypes)
+                    foreach (var ifaceMember in sym.Members.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                     {
-                        foreach (var derivedMember in derived.Members)
+                        foreach (var derivedMember in derivedType.Members.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                         {
-                            if (ifaceMember.Name == derivedMember.Name)
+                            if (ifaceMember.GetSignature() == derivedMember.GetSignature())
                             {
                                 sym.RecordReferencedSymbol(derivedMember);
                             }
@@ -243,13 +244,13 @@ public sealed class AssemblyGraph
         {
             foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Class))
             {
-                foreach (var classMember in sym.Members.Where(member => member.Kind == SymbolKind.Method))
+                foreach (var classMember in sym.Members.Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                 {
-                    foreach (var derived in sym.DerivedTypes)
+                    foreach (var derivedType in sym.DerivedTypes)
                     {
-                        foreach (var derivedMember in derived.Members.Where(member => member.Kind == SymbolKind.Method))
+                        foreach (var derivedMember in derivedType.Members.Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                         {
-                            if (classMember.Name == derivedMember.Name)
+                            if (classMember.GetSignature() == derivedMember.GetSignature())
                             {
                                 sym.RecordReferencedSymbol(derivedMember);
                             }

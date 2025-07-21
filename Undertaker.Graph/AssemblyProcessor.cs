@@ -392,7 +392,10 @@ internal static class AssemblyProcessor
                 if (td?.ParentModule != null)
                 {
                     var definingAsm = getAssembly(td.ParentModule.AssemblyName);
-                    var toSym = definingAsm.GetSymbol(t.ReflectionName, SymbolKind.Type);
+
+                    var toSym = (TypeSymbol)definingAsm.GetSymbol(t.ReflectionName, SymbolKind.Type);
+                    toSym.TypeKind = t.Kind;
+                    
                     fromSym.RecordReferencedSymbol(toSym);
                 }
 

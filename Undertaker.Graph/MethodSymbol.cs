@@ -75,6 +75,6 @@ internal sealed class MethodSymbol(Assembly assembly, string name) : Symbol(asse
 
     public override string ToString()
     {
-        return $"{Name}, IsVirtualOrOverrideOrAbstract = {IsVirtualOrOverrideOrAbstract}, IsOverride={IsOverride}, IsTestMethod={IsTestMethod}";
+        return $"{Name}";
     }
 }
