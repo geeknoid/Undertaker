@@ -40,6 +40,11 @@ internal static class AssemblyProcessor
                 }
 
                 RecordSymbolsReferencedByMethod(sym, method);
+
+                if (method.IsConstructor && method.IsStatic)
+                {
+                    typeSym.RecordReferencedSymbol(sym);
+                }
             }
 
             foreach (var property in type.Properties)
