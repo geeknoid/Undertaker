@@ -107,7 +107,7 @@ current working directory with the following names:
 * `alive-symbols.json`
 * `needlessly-public-symbols.json`
 * `unreferenced-assemblies.json`
-* `unanalyzed-assemblies.json`
+* `unanalyzed-assemblies.txt`
 * `needless-internals-visible-to.json`
 * `assembly-layer-cake.json`
 * `dependency-diagram.mmd`

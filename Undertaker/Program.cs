@@ -119,7 +119,7 @@ internal static class Program
             args.AliveByTestSymbols = "./alive-by-test-symbols.json";
             args.NeedlesslyPublicSymbols = "./needlessly-public-symbols.json";
             args.UnreferencedAssemblies = "./unreferenced-assemblies.json";
-            args.UnanalyzedAssemblies= "./unanalyzed-assemblies.json";
+            args.UnanalyzedAssemblies= "./unanalyzed-assemblies.txt";
             args.NeedlessInternalsVisibleTo = "./needless-internals-visible-to.json";
             args.AssemblyLayerCake = "./assembly-layer-cake.json";
             args.DependencyDiagram = "./dependency-diagram.mmd";
