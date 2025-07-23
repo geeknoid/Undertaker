@@ -512,6 +512,16 @@ public sealed class AssemblyGraph
     }
 
     /// <summary>
+    /// Returns a list of assemblies which were referenced but not analyzed.
+    /// </summary>
+    public IReadOnlyList<string> CollectUnanalyzedAssemblies()
+    {
+        Done();
+
+        return [.. _assemblies.Values.Where(asm => !asm.Loaded).Select(asm => asm.Name)];
+    }
+
+    /// <summary>
     /// Returns a list of assemblies which have uses of [InternalsVisibleTo] that could be removed. 
     /// </summary>
     public IReadOnlyList<NeedlessInternalsVisibleToReport> CollectNeedlessInternalsVisibleTo()

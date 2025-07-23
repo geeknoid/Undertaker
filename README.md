@@ -33,6 +33,7 @@ Options:
   -abts, --alive-by-test-symbols <alive-by-test-symbols>                  Path of the report to produce symbols kept alive only by test methods
   -nps, --needlessly-public-symbols <needlessly-public-symbols>           Path of the report to produce on public symbols which could be made internal
   -ua, --unreferenced-assemblies <unreferenced-assemblies>                Path of the report to produce on completely unreferenced assemblies
+  -uaa, --unanalyzed-assemblies <unanalyzed-assemblies>                   Path of the report to produce on assemblies which were referenced but not analyzed
   -sivt, --needless-internals-visible-to <needless-internals-visible-to>  Path of the report to produce on needless uses of [InternalsVisibleTo]
   -alc, --assembly-layer-cake <assembly-layer-cake>                       Path of the assembly layer cake to produce
   -dd, --dependency-diagram <dependency-diagram>                          Path of the Mermaid-based assembly dependency diagram to produce
@@ -73,6 +74,12 @@ Options:
   assemblies should be written. This report contains a list of all the assemblies that were loaded as input
   but don't contain any symbols reachable from the roots.
  
+* `--unanalyzed-assemblies` lets you specify the path to the file where the report on unanalyzed
+  assemblies should be written. This report contains a list of all the assemblies that were referenced by
+  an analyzed assembly, but where not themselves analyzed. This will commonly include core .NET libraries
+  (System.* and Microsoft.Extensions.*). Look in this list to see if you're missing some assemblies which 
+  should we part of the set you want to be analyzed.
+ 
 * `--needless-internals-visible-to` lets you specify the path to the file where the report
   on needless uses of [InternalsVisibleTo] should be written.
 
@@ -100,6 +107,7 @@ current working directory with the following names:
 * `alive-symbols.json`
 * `needlessly-public-symbols.json`
 * `unreferenced-assemblies.json`
+* `unanalyzed-assemblies.json`
 * `needless-internals-visible-to.json`
 * `assembly-layer-cake.json`
 * `dependency-diagram.mmd`

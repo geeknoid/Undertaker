@@ -23,6 +23,7 @@ internal static class Program
         public string? AssemblyLayerCake { get; set; }
         public string? NeedlessInternalsVisibleTo { get; set; }
         public string? DependencyDiagram { get; set; }
+        public string? UnanalyzedAssemblies { get; set; }
         public string? GraphDump { get; set; }
         public bool ContinueOnLoadErrors { get; set; }
         public bool Verbose { get; set; }
@@ -64,6 +65,10 @@ internal static class Program
                 "Path of the report to produce on completely unreferenced assemblies"),
 
             new Option<string>(
+                ["-uaa", "--unanalyzed-assemblies"],
+                "Path of the report to produce on assemblies which were referenced but not analyzed"),
+
+            new Option<string>(
                 ["-nivt", "--needless-internals-visible-to"],
                 "Path of the report to produce on needless uses of [InternalsVisibleTo]"),
 
@@ -102,6 +107,7 @@ internal static class Program
             && args.AliveByTestSymbols == null
             && args.NeedlesslyPublicSymbols == null
             && args.UnreferencedAssemblies == null
+            && args.UnanalyzedAssemblies == null
             && args.NeedlessInternalsVisibleTo == null
             && args.AssemblyLayerCake == null
             && args.DependencyDiagram == null)
@@ -113,6 +119,7 @@ internal static class Program
             args.AliveByTestSymbols = "./alive-by-test-symbols.json";
             args.NeedlesslyPublicSymbols = "./needlessly-public-symbols.json";
             args.UnreferencedAssemblies = "./unreferenced-assemblies.json";
+            args.UnanalyzedAssemblies= "./unanalyzed-assemblies.json";
             args.NeedlessInternalsVisibleTo = "./needless-internals-visible-to.json";
             args.AssemblyLayerCake = "./assembly-layer-cake.json";
             args.DependencyDiagram = "./dependency-diagram.mmd";
@@ -192,16 +199,21 @@ internal static class Program
         int errorCount = 0;
         int skipCount = 0;
 
-        var files = new Queue<FileInfo>();
+        var buf = new List<FileInfo>();
         foreach (var file in args.AssemblyFolder!.GetFiles("*.dll", SearchOption.AllDirectories))
         {
-            files.Enqueue(file);
+            buf.Add(file);
         }
 
         foreach (var file in args.AssemblyFolder!.GetFiles("*.exe", SearchOption.AllDirectories))
         {
-            files.Enqueue(file);
+            buf.Add(file);
         }
+
+        // make the order of input files deterministic
+        buf.Sort((x, y) => string.Compare(x.FullName, y.FullName, StringComparison.OrdinalIgnoreCase));
+
+        var files = new Queue<FileInfo>(buf);
 
         var tasks = new HashSet<Task<LoadedAssembly>>(MaxConcurrentAssemblyLoads);
         var map = new Dictionary<Task<LoadedAssembly>, FileInfo>(MaxConcurrentAssemblyLoads);
@@ -254,6 +266,7 @@ internal static class Program
             !OutputAliveByTestSymbols() ||
             !OutputNeedlesslyPublicSymbols() ||
             !OutputUnreferencedAssemblies() ||
+            !OutputUnanalyzedAssemblies() ||
             !OutputNeedlessInternalsVisibleTo() ||
             !OutputAssemblyLayerCake() ||
             !OutputDependencyDiagram() ||
@@ -408,6 +421,28 @@ internal static class Program
                 catch (Exception ex)
                 {
                     Error($"Unable to output unreferenced assemblies report to {path}: {ex.Message}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        bool OutputUnanalyzedAssemblies()
+        {
+            if (args.UnanalyzedAssemblies != null)
+            {
+                var path = Path.GetFullPath(args.UnanalyzedAssemblies);
+                try
+                {
+                    var report = graph.CollectUnanalyzedAssemblies().Order();
+                    File.WriteAllLines(path, report);
+
+                    Out($"Output analyzed assemblies report to {path}");
+                }
+                catch (Exception ex)
+                {
+                    Error($"Unable to output unanalyzed assemblies report to {path}: {ex.Message}");
                     return false;
                 }
             }

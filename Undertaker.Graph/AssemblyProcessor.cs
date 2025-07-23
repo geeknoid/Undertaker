@@ -379,6 +379,11 @@ internal static class AssemblyProcessor
             }
             else
             {
+                if (fromSym.Name.Contains("ProcessManagerService..ctor"))
+                {
+                    System.Diagnostics.Debugger.Break();
+                }
+
                 fromSym.RecordUnhomedMethodReference(GetEntitySymbolName(toMember));
             }
         }
