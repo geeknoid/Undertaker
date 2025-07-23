@@ -1,7 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using ICSharpCode.Decompiler.TypeSystem;
-
-namespace Undertaker.Graph;
+﻿namespace Undertaker.Graph;
 
 internal sealed class Assembly(string name, bool root)
 {

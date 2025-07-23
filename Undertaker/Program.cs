@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.CommandLine;
+﻿using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Text.Json;
 using Undertaker.Graph;
@@ -188,8 +187,8 @@ internal static class Program
             graph.RecordTestMethodAttribute("MSTest.TestFramework.TestMethodAttribute");
         }
 
-            // load the assemblies
-            int successCount = 0;
+        // load the assemblies
+        int successCount = 0;
         int errorCount = 0;
         int skipCount = 0;
 

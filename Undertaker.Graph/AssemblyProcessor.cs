@@ -29,7 +29,7 @@ internal static class AssemblyProcessor
 
             foreach (var method in type.Methods)
             {
-                var sym = (MethodSymbol) DefineSymbol(method);
+                var sym = (MethodSymbol)DefineSymbol(method);
                 foreach (var a in method.GetAttributes())
                 {
                     if (isTestMethodAttribute(a.AttributeType.ReflectionName))
@@ -122,7 +122,7 @@ internal static class AssemblyProcessor
                     continue; // skip self-reference
                 }
 
-                var sym = (TypeSymbol) getAssembly(bt.ParentModule!.AssemblyName).GetSymbol(bt.ReflectionName, SymbolKind.Type);
+                var sym = (TypeSymbol)getAssembly(bt.ParentModule!.AssemblyName).GetSymbol(bt.ReflectionName, SymbolKind.Type);
 
                 if (bt.Kind == TypeKind.Interface)
                 {

@@ -1,10 +1,6 @@
 ﻿using System.Globalization;
-using System.IO;
-using System.Reflection;
 using System.Text;
-using ICSharpCode.Decompiler.CSharp.TypeSystem;
 using ICSharpCode.Decompiler.TypeSystem;
-using Microsoft.CodeAnalysis;
 
 namespace Undertaker.Graph;
 
@@ -101,7 +97,7 @@ public sealed class AssemblyGraph
         // Create a new assembly called the UNHOMED assembly, which will hold all unhomed references.
         var unhomedAssembly = new Assembly("UNHOMED", root: true);
         _assemblies["UNHOMED"] = unhomedAssembly;
-        
+
         log("Handling unhomed references...");
 
         // iterate through all the unhomed references in the graph
@@ -508,7 +504,7 @@ public sealed class AssemblyGraph
 
         var aliveReport = CollectAliveSymbols();
         foreach (var asm in aliveReport.Assemblies.Where(asm => asm.Types.Count == 0 && asm.Members.Count == 0))
-        { 
+        {
             result.Add(asm.Assembly);
         }
 

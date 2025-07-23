@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using ICSharpCode.Decompiler.TypeSystem;
+﻿using ICSharpCode.Decompiler.TypeSystem;
 
 namespace Undertaker.Graph;
 

@@ -48,8 +48,11 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolKind symbol
 
     public void RecordReferencedSymbol(Symbol sym)
     {
-        _ = _referencedSymbols.Add(sym);
-        _ = sym._referencers.Add(this);
+        if (sym != this)
+        {
+            _ = _referencedSymbols.Add(sym);
+            _ = sym._referencers.Add(this);
+        }
     }
 
     public void RecordUnhomedMethodReference(string methodSig)
