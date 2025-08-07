@@ -74,4 +74,13 @@ internal sealed class Assembly(string name, bool root)
             sym.Value.Trim();
         }
     }
+
+    public bool IsSystemAssembly
+    {
+        get
+        {
+            return Name.StartsWith("System.", StringComparison.Ordinal) ||
+                   Name.StartsWith("Microsoft.Extensions.", StringComparison.Ordinal);
+        }
+    }
 }
