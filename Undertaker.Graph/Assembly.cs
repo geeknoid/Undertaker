@@ -12,7 +12,7 @@ internal sealed class Assembly(string name, bool root)
 
     private readonly Dictionary<Key, Symbol> _symbols = [];
     private readonly HashSet<Assembly> _internalsVisibleTo = [];
-    private readonly HashSet<DuplicateAssembly> _duplicates = [];
+    private readonly List<DuplicateAssembly> _duplicates = [];
 
     private struct Key
     {
@@ -60,7 +60,7 @@ internal sealed class Assembly(string name, bool root)
 
     public void AddDuplicate(string path, Version version)
     {
-        _ = _duplicates.Add(new DuplicateAssembly(path, version));
+        _duplicates.Add(new DuplicateAssembly(path, version));
     }
 
     public void Trim()
