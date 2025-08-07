@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Net.WebSockets;
 using System.Text;
 using ICSharpCode.Decompiler.TypeSystem;
 
@@ -519,6 +520,22 @@ public sealed class AssemblyGraph
         Done();
 
         return [.. _assemblies.Values.Where(asm => !asm.Loaded).Select(asm => asm.Name)];
+    }
+
+    /// <summary>
+    /// Returns a list of assemblies which were seen multiple times.
+    /// </summary>
+    public IReadOnlyList<DuplicateAssemnblyReport> CollectDuplicateAssemblies()
+    {
+        Done();
+
+        var result = new List<DuplicateAssemnblyReport>();
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && asm.Duplicates.Count > 0))
+        {
+            result.Add(new DuplicateAssemnblyReport(asm.Name, asm.Version!, asm.Duplicates.ToList()));
+        }
+
+        return result;
     }
 
     /// <summary>

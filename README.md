@@ -24,17 +24,16 @@ Arguments:
   <assembly-folder>  Path to a folder containing all the assemblies to work with.
 
 Options:
-  -ra, --root-assemblies <root-assemblies>                                Path to a text file listing assemblies to be treated as roots, one assembly
-                                                                          name per line (with or without a .dll extension)
-  -tma, --test-method-attributes <test-method-attributes>                 Path to a text file listing all the attributes that can mark a method as a
-                                                                          test, one per line
+  -ra, --root-assemblies <root-assemblies>                                Path to a text file listing assemblies to be treated as roots, one assembly name per line (with or without a .dll extension)
+  -tma, --test-method-attributes <test-method-attributes>                 Path to a text file listing all the attributes that can mark a method as a test, one per line
   -ds, --dead-symbols <dead-symbols>                                      Path of the report to produce on dead symbols
   -as, --alive-symbols <alive-symbols>                                    Path of the report to produce on alive symbols
   -abts, --alive-by-test-symbols <alive-by-test-symbols>                  Path of the report to produce symbols kept alive only by test methods
   -nps, --needlessly-public-symbols <needlessly-public-symbols>           Path of the report to produce on public symbols which could be made internal
   -ua, --unreferenced-assemblies <unreferenced-assemblies>                Path of the report to produce on completely unreferenced assemblies
   -uaa, --unanalyzed-assemblies <unanalyzed-assemblies>                   Path of the report to produce on assemblies which were referenced but not analyzed
-  -sivt, --needless-internals-visible-to <needless-internals-visible-to>  Path of the report to produce on needless uses of [InternalsVisibleTo]
+  -da, --duplicate-assemblies <duplicate-assemblies>                      Path of the report to produce on assemblies which were found multiple times as input
+  -nivt, --needless-internals-visible-to <needless-internals-visible-to>  Path of the report to produce on needless uses of [InternalsVisibleTo]
   -alc, --assembly-layer-cake <assembly-layer-cake>                       Path of the assembly layer cake to produce
   -dd, --dependency-diagram <dependency-diagram>                          Path of the Mermaid-based assembly dependency diagram to produce
   -gd, --graph-dump <graph-dump>                                          Path of the graph dump file to produce

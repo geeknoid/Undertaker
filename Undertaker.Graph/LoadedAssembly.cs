@@ -16,6 +16,8 @@ public sealed class LoadedAssembly : IDisposable
                 LoadInMemory = false,
                 ThrowOnAssemblyResolveErrors = false,
             });
+
+            Path = path;
         }
         catch (MetadataFileNotSupportedException ex)
         {
@@ -29,4 +31,5 @@ public sealed class LoadedAssembly : IDisposable
     }
 
     internal CSharpDecompiler Decompiler { get; }
+    internal string Path { get; private set; }
 }

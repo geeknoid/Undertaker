@@ -15,6 +15,12 @@ internal static class AssemblyProcessor
         var asm = getAssembly(decomp.TypeSystem.MainModule.AssemblyName);
         var sb = new StringBuilder();
 
+        if (asm.Loaded)
+        {
+            asm.AddDuplicate(decomp.TypeSystem.MainModule.AssemblyName, decomp.TypeSystem.MainModule.AssemblyVersion);
+            return;
+        }
+
         foreach (var type in decomp.TypeSystem.MainModule.TypeDefinitions)
         {
             var typeSym = (TypeSymbol)DefineSymbol(type);
@@ -70,6 +76,7 @@ internal static class AssemblyProcessor
         }
 
         asm.Loaded = true;
+        asm.Version = decomp.TypeSystem.MainModule.AssemblyVersion;
 
         Symbol DefineSymbol(IEntity entity)
         {

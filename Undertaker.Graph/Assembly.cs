@@ -5,11 +5,14 @@ internal sealed class Assembly(string name, bool root)
     public string Name { get; } = name;
     public bool Root { get; } = root;
     public IReadOnlyCollection<Symbol> Symbols => _symbols.Values;
+    public IReadOnlyCollection<(string, Version)> Duplicates => _duplicates;
     public IReadOnlyCollection<Assembly> InternalsVisibleTo => _internalsVisibleTo;
     public bool Loaded { get; set; }
+    public Version? Version { get; set; }
 
     private readonly Dictionary<Key, Symbol> _symbols = [];
     private readonly HashSet<Assembly> _internalsVisibleTo = [];
+    private readonly HashSet<(string, Version)> _duplicates = [];
 
     private struct Key
     {
@@ -54,4 +57,9 @@ internal sealed class Assembly(string name, bool root)
     }
 
     public override string ToString() => Name;
+
+    public void AddDuplicate(string name, Version version)
+    {
+        _ = _duplicates.Add((name, version));
+    }
 }

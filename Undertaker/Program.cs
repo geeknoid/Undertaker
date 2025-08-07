@@ -24,6 +24,7 @@ internal static class Program
         public string? NeedlessInternalsVisibleTo { get; set; }
         public string? DependencyDiagram { get; set; }
         public string? UnanalyzedAssemblies { get; set; }
+        public string? DuplicateAssemblies { get; set; }
         public string? GraphDump { get; set; }
         public bool ContinueOnLoadErrors { get; set; }
         public bool Verbose { get; set; }
@@ -69,6 +70,10 @@ internal static class Program
                 "Path of the report to produce on assemblies which were referenced but not analyzed"),
 
             new Option<string>(
+                ["-da", "--duplicate-assemblies"],
+                "Path of the report to produce on assemblies which were found multiple times as input"),
+
+            new Option<string>(
                 ["-nivt", "--needless-internals-visible-to"],
                 "Path of the report to produce on needless uses of [InternalsVisibleTo]"),
 
@@ -108,6 +113,7 @@ internal static class Program
             && args.NeedlesslyPublicSymbols == null
             && args.UnreferencedAssemblies == null
             && args.UnanalyzedAssemblies == null
+            && args.DuplicateAssemblies == null
             && args.NeedlessInternalsVisibleTo == null
             && args.AssemblyLayerCake == null
             && args.DependencyDiagram == null)
@@ -120,6 +126,7 @@ internal static class Program
             args.NeedlesslyPublicSymbols = "./needlessly-public-symbols.json";
             args.UnreferencedAssemblies = "./unreferenced-assemblies.json";
             args.UnanalyzedAssemblies= "./unanalyzed-assemblies.txt";
+            args.DuplicateAssemblies = "./duplicate-assemblies.txt";
             args.NeedlessInternalsVisibleTo = "./needless-internals-visible-to.json";
             args.AssemblyLayerCake = "./assembly-layer-cake.json";
             args.DependencyDiagram = "./dependency-diagram.mmd";
@@ -267,6 +274,7 @@ internal static class Program
             !OutputNeedlesslyPublicSymbols() ||
             !OutputUnreferencedAssemblies() ||
             !OutputUnanalyzedAssemblies() ||
+            !OutputDuplicateAssemblies() ||
             !OutputNeedlessInternalsVisibleTo() ||
             !OutputAssemblyLayerCake() ||
             !OutputDependencyDiagram() ||
@@ -438,11 +446,36 @@ internal static class Program
                     var report = graph.CollectUnanalyzedAssemblies().Order();
                     File.WriteAllLines(path, report);
 
-                    Out($"Output analyzed assemblies report to {path}");
+                    Out($"Output unanalyzed assemblies report to {path}");
                 }
                 catch (Exception ex)
                 {
                     Error($"Unable to output unanalyzed assemblies report to {path}: {ex.Message}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        bool OutputDuplicateAssemblies()
+        {
+            if (args.DuplicateAssemblies != null)
+            {
+                var path = Path.GetFullPath(args.DuplicateAssemblies);
+                try
+                {
+                    var report = graph.CollectDuplicateAssemblies().Order();
+                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        JsonSerializer.Serialize(file, report, _serializationOptions);
+                    }
+
+                    Out($"Output duplicate assemblies report to {path}");
+                }
+                catch (Exception ex)
+                {
+                    Error($"Unable to output duplicate assemblies report to {path}: {ex.Message}");
                     return false;
                 }
             }

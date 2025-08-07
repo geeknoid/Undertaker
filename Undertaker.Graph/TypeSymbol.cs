@@ -24,7 +24,6 @@ internal sealed class TypeSymbol(Assembly assembly, string name) : Symbol(assemb
 
         base.Define(entity);
 
-
         TypeKind = typeDef.Kind;
     }
 
