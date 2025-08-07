@@ -61,6 +61,15 @@ public sealed class AssemblyGraph
         }
 
         AssemblyProcessor.Merge(la, GetAssembly, IsTestMethodAttribute);
+
+        // every once in a while, try to reclaim wasted space so we minimize RAM usage
+        if (_assemblies.Count % 100 == 0)
+        {
+            foreach (var asm in _assemblies)
+            {
+                asm.Value.Trim();
+            }
+        }
     }
 
     private Assembly GetAssembly(string assemblyName)
@@ -532,7 +541,7 @@ public sealed class AssemblyGraph
         var result = new List<DuplicateAssemnblyReport>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && asm.Duplicates.Count > 0))
         {
-            result.Add(new DuplicateAssemnblyReport(asm.Name, asm.Version!, asm.Duplicates.ToList()));
+            result.Add(new DuplicateAssemnblyReport(asm.Name, asm.Version!, asm.Duplicates));
         }
 
         return result;

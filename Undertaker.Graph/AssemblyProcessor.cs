@@ -17,7 +17,7 @@ internal static class AssemblyProcessor
 
         if (asm.Loaded)
         {
-            asm.AddDuplicate(decomp.TypeSystem.MainModule.AssemblyName, decomp.TypeSystem.MainModule.AssemblyVersion);
+            asm.AddDuplicate(la.Path, decomp.TypeSystem.MainModule.AssemblyVersion);
             return;
         }
 

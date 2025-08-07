@@ -1,6 +1,6 @@
 ﻿namespace Undertaker.Graph;
 
-internal enum SymbolKind
+internal enum SymbolKind : byte
 {
     Type,
     Method,

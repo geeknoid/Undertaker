@@ -4,15 +4,15 @@ internal sealed class Assembly(string name, bool root)
 {
     public string Name { get; } = name;
     public bool Root { get; } = root;
-    public IReadOnlyCollection<Symbol> Symbols => _symbols.Values;
-    public IReadOnlyCollection<(string, Version)> Duplicates => _duplicates;
-    public IReadOnlyCollection<Assembly> InternalsVisibleTo => _internalsVisibleTo;
     public bool Loaded { get; set; }
+    public IReadOnlyCollection<Symbol> Symbols => _symbols.Values;
+    public IReadOnlyCollection<DuplicateAssembly> Duplicates => _duplicates;
+    public IReadOnlyCollection<Assembly> InternalsVisibleTo => _internalsVisibleTo;
     public Version? Version { get; set; }
 
     private readonly Dictionary<Key, Symbol> _symbols = [];
     private readonly HashSet<Assembly> _internalsVisibleTo = [];
-    private readonly HashSet<(string, Version)> _duplicates = [];
+    private readonly HashSet<DuplicateAssembly> _duplicates = [];
 
     private struct Key
     {
@@ -58,8 +58,20 @@ internal sealed class Assembly(string name, bool root)
 
     public override string ToString() => Name;
 
-    public void AddDuplicate(string name, Version version)
+    public void AddDuplicate(string path, Version version)
     {
-        _ = _duplicates.Add((name, version));
+        _ = _duplicates.Add(new DuplicateAssembly(path, version));
+    }
+
+    public void Trim()
+    {
+        _symbols.TrimExcess();
+        _duplicates.TrimExcess();
+        _internalsVisibleTo.TrimExcess();
+
+        foreach (var sym in _symbols)
+        {
+            sym.Value.Trim();
+        }
     }
 }

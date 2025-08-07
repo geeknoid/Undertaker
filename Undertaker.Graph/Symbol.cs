@@ -75,4 +75,11 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolKind symbol
     }
 
     public override string ToString() => Name;
+
+    public virtual void Trim()
+    {
+        _referencers.TrimExcess();
+        _referencedSymbols.TrimExcess();
+        _unhomedReferencedMethods?.TrimExcess();
+    }
 }

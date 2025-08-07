@@ -126,7 +126,7 @@ internal static class Program
             args.NeedlesslyPublicSymbols = "./needlessly-public-symbols.json";
             args.UnreferencedAssemblies = "./unreferenced-assemblies.json";
             args.UnanalyzedAssemblies= "./unanalyzed-assemblies.txt";
-            args.DuplicateAssemblies = "./duplicate-assemblies.txt";
+            args.DuplicateAssemblies = "./duplicate-assemblies.json";
             args.NeedlessInternalsVisibleTo = "./needless-internals-visible-to.json";
             args.AssemblyLayerCake = "./assembly-layer-cake.json";
             args.DependencyDiagram = "./dependency-diagram.mmd";
@@ -206,30 +206,18 @@ internal static class Program
         int errorCount = 0;
         int skipCount = 0;
 
-        var buf = new List<FileInfo>();
-        foreach (var file in args.AssemblyFolder!.GetFiles("*.dll", SearchOption.AllDirectories))
-        {
-            buf.Add(file);
-        }
-
-        foreach (var file in args.AssemblyFolder!.GetFiles("*.exe", SearchOption.AllDirectories))
-        {
-            buf.Add(file);
-        }
-
-        // make the order of input files deterministic
-        buf.Sort((x, y) => string.Compare(x.FullName, y.FullName, StringComparison.OrdinalIgnoreCase));
-
-        var files = new Queue<FileInfo>(buf);
-
         var tasks = new HashSet<Task<LoadedAssembly>>(MaxConcurrentAssemblyLoads);
         var map = new Dictionary<Task<LoadedAssembly>, FileInfo>(MaxConcurrentAssemblyLoads);
 
-        while (files.Count > 0)
+        foreach (var file in args.AssemblyFolder!.EnumerateFiles("*", SearchOption.AllDirectories))
         {
-            while (tasks.Count < MaxConcurrentAssemblyLoads && files.Count > 0)
+            if (!(file.Name.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) || file.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)))
             {
-                var file = files.Dequeue();
+                continue;
+            }
+
+            if (tasks.Count < MaxConcurrentAssemblyLoads)
+            {
                 var task = Task.Run(() =>
                 {
                     Out($"Loading assembly {file.FullName}");
@@ -239,10 +227,12 @@ internal static class Program
                 _ = tasks.Add(task);
                 map.Add(task, file);
             }
-
-            var t = await Task.WhenAny(tasks);
-            await CompleteTask(t);
-            _ = tasks.Remove(t);
+            else
+            {
+                var t = await Task.WhenAny(tasks);
+                await CompleteTask(t);
+                _ = tasks.Remove(t);
+            }
         }
 
         await foreach (var task in Task.WhenEach(tasks))

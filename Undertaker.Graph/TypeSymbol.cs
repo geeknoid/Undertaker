@@ -45,11 +45,13 @@ internal sealed class TypeSymbol(Assembly assembly, string name) : Symbol(assemb
         _ = baseType._derivedTypes.Add(this);
     }
 
-    public void Trim()
+    public override void Trim()
     {
         _members.TrimExcess();
         _interfacesImplemented.TrimExcess();
         _baseTypes.TrimExcess();
         _derivedTypes.TrimExcess();
+
+        base.Trim();
     }
 }
