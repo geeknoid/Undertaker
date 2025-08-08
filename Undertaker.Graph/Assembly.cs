@@ -7,12 +7,12 @@ internal sealed class Assembly(string name, bool root)
     public string Name { get; } = name;
     public bool Root { get; } = root;
     public bool Loaded { get; set; }
-    public IReadOnlyCollection<Symbol> Symbols => _symbols.Values;
+    public IReadOnlyCollection<SymbolId> Symbols => _symbols.Values;
     public IReadOnlyCollection<DuplicateAssembly> Duplicates => _duplicates;
     public IReadOnlyCollection<Assembly> InternalsVisibleTo => _internalsVisibleTo;
     public Version? Version { get; set; }
 
-    private readonly Dictionary<Key, Symbol> _symbols = [];
+    private readonly Dictionary<Key, SymbolId> _symbols = [];
     private readonly HashSet<Assembly> _internalsVisibleTo = [];
     private readonly List<DuplicateAssembly> _duplicates = [];
 
@@ -22,30 +22,22 @@ internal sealed class Assembly(string name, bool root)
         public SymbolKind Kind;
     }
 
-    public Symbol GetSymbol(string name, SymbolKind symbolKind)
+    public Symbol GetSymbol(AssemblyGraph graph, string name, SymbolKind symbolKind)
     {
         var key = new Key { Name = name, Kind = symbolKind };
-        if (!_symbols.TryGetValue(key, out var sym))
+        if (!_symbols.TryGetValue(key, out var id))
         {
-            sym = symbolKind switch
-            {
-                SymbolKind.Method => new MethodSymbol(this, name),
-                SymbolKind.Type => new TypeSymbol(this, name),
-                SymbolKind.Field => new FieldSymbol(this, name),
-                SymbolKind.Event => new EventSymbol(this, name),
-                _ => new MiscSymbol(this, name)
-            };
-
-            _symbols.Add(key, sym);
+            id = graph.SymbolTable.AddSymbol(this, name, symbolKind);
+            _symbols.Add(key, id);
         }
 
-        return sym;
+        return graph.SymbolTable.GetSymbol(id);
     }
 
-    public Symbol? FindSymbol(string name, SymbolKind symbolKind)
+    public Symbol? FindSymbol(AssemblyGraph graph, string name, SymbolKind symbolKind)
     {
         var key = new Key { Name = name, Kind = symbolKind };
-        return !_symbols.TryGetValue(key, out var sym) ? null : sym;
+        return !_symbols.TryGetValue(key, out var id) ? null : graph.SymbolTable.GetSymbol(id);
     }
 
     public void RecordInternalsVisibleTo(Assembly other)
@@ -65,11 +57,6 @@ internal sealed class Assembly(string name, bool root)
         _symbols.TrimExcess();
         _duplicates.TrimExcess();
         _internalsVisibleTo.TrimExcess();
-
-        foreach (var sym in _symbols)
-        {
-            sym.Value.Trim();
-        }
     }
 
     public bool IsSystemAssembly

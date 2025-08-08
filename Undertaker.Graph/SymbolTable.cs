@@ -11,11 +11,30 @@ internal sealed class SymbolTable
 {
     private readonly List<Symbol> _symbols = [];
 
-    public SymbolId AddSymbol(Symbol symbol)
+    public SymbolId AddSymbol(Assembly container, string name, SymbolKind symbolKind)
     {
-        _symbols.Add(symbol);
-        return new SymbolId(_symbols.Count - 1);
+        var id = new SymbolId(_symbols.Count);
+
+        Symbol sym = symbolKind switch
+        {
+            SymbolKind.Method => new MethodSymbol(container, name, id),
+            SymbolKind.Type => new TypeSymbol(container, name, id),
+            SymbolKind.Field => new FieldSymbol(container, name, id),
+            SymbolKind.Event => new EventSymbol(container, name, id),
+            _ => new MiscSymbol(container, name, id)
+        };
+
+        _symbols.Add(sym);
+        return id;
     }
 
     public Symbol GetSymbol(SymbolId id) => _symbols[id.Index];
+
+    public void Trim()
+    {
+        foreach (var sym in _symbols)
+        {
+            sym.Trim();
+        }
+    }
 }

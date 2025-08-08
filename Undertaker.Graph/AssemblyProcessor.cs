@@ -80,14 +80,15 @@ internal static class AssemblyProcessor
 
         Symbol DefineSymbol(IEntity entity)
         {
-            var sym = asm.GetSymbol(GetEntitySymbolName(entity), GetEntitySymbolKind(entity));
+            var sym = asm.GetSymbol(graph, GetEntitySymbolName(entity), GetEntitySymbolKind(entity));
             sym.Define(entity);
 
             var parent = entity.DeclaringTypeDefinition;
             if (parent?.ParentModule != null && sym.DeclaringType == null)
             {
-                sym.DeclaringType = (TypeSymbol)graph.GetAssembly(parent.ParentModule.AssemblyName).GetSymbol(parent.ReflectionName, SymbolKind.Type);
-                sym.DeclaringType.AddMember(sym);
+                var dt = (TypeSymbol)graph.GetAssembly(parent.ParentModule.AssemblyName).GetSymbol(graph, parent.ReflectionName, SymbolKind.Type);
+                dt.AddMember(sym);
+                sym.DeclaringType = dt.Id;
             }
 
             return sym;
@@ -129,7 +130,7 @@ internal static class AssemblyProcessor
                     continue; // skip self-reference
                 }
 
-                var sym = (TypeSymbol)graph.GetAssembly(bt.ParentModule!.AssemblyName).GetSymbol(bt.ReflectionName, SymbolKind.Type);
+                var sym = (TypeSymbol)graph.GetAssembly(bt.ParentModule!.AssemblyName).GetSymbol(graph, bt.ReflectionName, SymbolKind.Type);
 
                 if (bt.Kind == TypeKind.Interface)
                 {
@@ -382,15 +383,10 @@ internal static class AssemblyProcessor
             var td = toMember.DeclaringTypeDefinition;
             if (td?.ParentModule != null)
             {
-                fromSym.RecordReferencedSymbol(graph.GetAssembly(td.ParentModule.AssemblyName).GetSymbol(GetEntitySymbolName(toMember), GetEntitySymbolKind(toMember)));
+                fromSym.RecordReferencedSymbol(graph.GetAssembly(td.ParentModule.AssemblyName).GetSymbol(graph, GetEntitySymbolName(toMember), GetEntitySymbolKind(toMember)));
             }
             else
             {
-                if (fromSym.Name.Contains("ProcessManagerService..ctor"))
-                {
-                    System.Diagnostics.Debugger.Break();
-                }
-
                 fromSym.RecordUnhomedMethodReference(GetEntitySymbolName(toMember));
             }
         }
@@ -404,7 +400,7 @@ internal static class AssemblyProcessor
                 if (td?.ParentModule != null)
                 {
                     var definingAsm = graph.GetAssembly(td.ParentModule.AssemblyName);
-                    var toSym = (TypeSymbol)definingAsm.GetSymbol(t.ReflectionName, SymbolKind.Type);
+                    var toSym = (TypeSymbol)definingAsm.GetSymbol(graph, t.ReflectionName, SymbolKind.Type);
 
                     if (toSym.TypeKind == TypeKind.Other)
                     {

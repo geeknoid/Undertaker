@@ -2,7 +2,7 @@
 
 namespace Undertaker.Graph;
 
-internal sealed class MiscSymbol(Assembly assembly, string name) : Symbol(assembly, name)
+internal sealed class MiscSymbol(Assembly assembly, string name, SymbolId id) : Symbol(assembly, name, id)
 {
     public override void Define(IEntity entity)
     {

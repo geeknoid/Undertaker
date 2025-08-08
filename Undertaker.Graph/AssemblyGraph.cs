@@ -19,6 +19,7 @@ public sealed class AssemblyGraph
     private readonly HashSet<string> _rootAssemblies = [];
     private readonly HashSet<string> _testMethodAttributes = [];
     private bool _finalized;
+    internal SymbolTable SymbolTable { get; } = new();
 
     /// <summary>
     /// Indicates a particular assembly should be considered a root assembly.
@@ -69,6 +70,8 @@ public sealed class AssemblyGraph
             {
                 asm.Value.Trim();
             }
+
+            SymbolTable.Trim();
         }
     }
 
@@ -90,14 +93,14 @@ public sealed class AssemblyGraph
         log("Marking used symbols...");
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            foreach (var sym in asm.Symbols)
+            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol))
             {
                 if (!sym.Root)
                 {
                     continue;
                 }
 
-                sym.Mark();
+                sym.Mark(this);
             }
         }
     }
@@ -113,7 +116,7 @@ public sealed class AssemblyGraph
         // iterate through all the unhomed references in the graph
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            foreach (var sym in asm.Symbols)
+            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol))
             {
                 // For each unhomed reference, we try to find a matching symbol in the loaded assemblies.
                 foreach (var member in sym.UnhomedReferencedMethods)
@@ -121,7 +124,7 @@ public sealed class AssemblyGraph
                     bool found = false;
                     foreach (var otherAsm in _assemblies.Values.Where(otherAsm => otherAsm.Loaded && otherAsm != unhomedAssembly))
                     {
-                        var method = otherAsm.FindSymbol(member, SymbolKind.Method) as MethodSymbol;
+                        var method = otherAsm.FindSymbol(this, member, SymbolKind.Method) as MethodSymbol;
                         if (method is not null)
                         {
                             sym.RecordReferencedSymbol(method);
@@ -133,7 +136,7 @@ public sealed class AssemblyGraph
                     // If we can't find a match, add it to the UNHOMED assembly as if that assembly had declared the symbol.
                     if (!found)
                     {
-                        var unhomedSym = unhomedAssembly.GetSymbol(member, SymbolKind.Method);
+                        var unhomedSym = unhomedAssembly.GetSymbol(this, member, SymbolKind.Method);
                         sym.RecordReferencedSymbol(unhomedSym);
                     }
                 }
@@ -147,13 +150,13 @@ public sealed class AssemblyGraph
         log("Linking interface members to matching implementations");
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
+            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
             {
-                foreach (var ifaceMember in sym.Members.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
+                foreach (var ifaceMember in sym.Members.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                 {
-                    foreach (var derivedType in sym.DerivedTypes)
+                    foreach (var derivedType in sym.DerivedTypes.Select(SymbolTable.GetSymbol).Cast<TypeSymbol>())
                     {
-                        foreach (var derivedMember in derivedType.Members.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
+                        foreach (var derivedMember in derivedType.Members.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                         {
                             if (ifaceMember.GetSignature() == derivedMember.GetSignature())
                             {
@@ -169,15 +172,15 @@ public sealed class AssemblyGraph
         log("Linking virtual and override methods to derived implementations");
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
+            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
             {
-                foreach (var member in sym.Members.Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsVirtualOrOverrideOrAbstract))
+                foreach (var member in sym.Members.Select(SymbolTable.GetSymbol).Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsVirtualOrOverrideOrAbstract))
                 {
                     var memberSig = member.GetSignature();
 
-                    foreach (var derived in sym.DerivedTypes)
+                    foreach (var derived in sym.DerivedTypes.Select(SymbolTable.GetSymbol).Cast<TypeSymbol>())
                     {
-                        foreach (var derivedMember in derived.Members.Where(x => x.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsOverride))
+                        foreach (var derivedMember in derived.Members.Select(SymbolTable.GetSymbol).Where(x => x.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsOverride))
                         {
                             if (memberSig == derivedMember.GetSignature())
                             {
@@ -197,7 +200,7 @@ public sealed class AssemblyGraph
         var signatureMap = new Dictionary<string, List<MethodSymbol>>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && asm != unhomedAssembly))
         {
-            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(sym => sym.IsOverride))
+            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(sym => sym.IsOverride))
             {
                 var signature = sym.GetSignature();
                 if (!signatureMap.TryGetValue(signature, out var methods))
@@ -210,7 +213,7 @@ public sealed class AssemblyGraph
             }
         }
 
-        foreach (var unhomedSym in unhomedAssembly.Symbols.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
+        foreach (var unhomedSym in unhomedAssembly.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
         {
             var sig = unhomedSym.GetSignature();
             if (signatureMap.TryGetValue(sig, out var matchingMethods))
@@ -226,13 +229,13 @@ public sealed class AssemblyGraph
         log("Linking interface members in unanalyzed assemblies to derived implementations");
         foreach (var asm in _assemblies.Values.Where(asm => !asm.Loaded))
         {
-            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
+            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
             {
-                foreach (var derivedType in sym.DerivedTypes)
+                foreach (var derivedType in sym.DerivedTypes.Select(SymbolTable.GetSymbol).Cast<TypeSymbol>())
                 {
-                    foreach (var ifaceMember in sym.Members.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
+                    foreach (var ifaceMember in sym.Members.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                     {
-                        foreach (var derivedMember in derivedType.Members.Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
+                        foreach (var derivedMember in derivedType.Members.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                         {
                             if (ifaceMember.GetSignature() == derivedMember.GetSignature())
                             {
@@ -248,13 +251,13 @@ public sealed class AssemblyGraph
         log("Linking virtual and override methods in unanalyzed assemblies to derived implementations");
         foreach (var asm in _assemblies.Values.Where(asm => !asm.Loaded))
         {
-            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Class))
+            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Class))
             {
-                foreach (var classMember in sym.Members.Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>())
+                foreach (var classMember in sym.Members.Select(SymbolTable.GetSymbol).Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                 {
-                    foreach (var derivedType in sym.DerivedTypes)
+                    foreach (var derivedType in sym.DerivedTypes.Select(SymbolTable.GetSymbol).Cast<TypeSymbol>())
                     {
-                        foreach (var derivedMember in derivedType.Members.Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>())
+                        foreach (var derivedMember in derivedType.Members.Select(SymbolTable.GetSymbol).Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                         {
                             if (classMember.GetSignature() == derivedMember.GetSignature())
                             {
@@ -281,6 +284,6 @@ public sealed class AssemblyGraph
             _finalized = true;
         }
 
-        return new Reporter(_assemblies);
+        return new Reporter(_assemblies, SymbolTable);
     }
 }

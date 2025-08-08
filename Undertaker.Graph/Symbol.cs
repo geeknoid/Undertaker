@@ -3,11 +3,12 @@ using ICSharpCode.Decompiler.TypeSystem;
 
 namespace Undertaker.Graph;
 
-internal abstract class Symbol(Assembly assembly, string name)
+internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
 {
     // set on construction
     public Assembly Assembly { get; } = assembly;
     public string Name { get; } = name;
+    public SymbolId Id { get; } = id;
 
     public abstract SymbolKind Kind { get; }
 
@@ -16,21 +17,21 @@ internal abstract class Symbol(Assembly assembly, string name)
     public bool IsPublic { get; private set; }
 
     // set by RecordReferencedSymbol
-    public IReadOnlyCollection<Symbol> Referencers => _referencers;
-    public IReadOnlyCollection<Symbol> ReferencedSymbols => _referencedSymbols;
+    public IReadOnlyCollection<SymbolId> Referencers => _referencers;
+    public IReadOnlyCollection<SymbolId> ReferencedSymbols => _referencedSymbols;
 
     // set by RecordUnhomedMethodReferenced
     public IReadOnlyCollection<string> UnhomedReferencedMethods => _unhomedReferencedMethods;
 
     // filled-in over time as the overall graph is populated
-    public TypeSymbol? DeclaringType { get; set; }
+    public SymbolId? DeclaringType { get; set; }
     public bool Root { get; protected set; }
 
     // set by Mark when visiting the graph
     public bool Marked { get; private set; }
 
-    private readonly HashSet<Symbol> _referencers = [];
-    private readonly HashSet<Symbol> _referencedSymbols = [];
+    private readonly HashSet<SymbolId> _referencers = [];
+    private readonly HashSet<SymbolId> _referencedSymbols = [];
     private readonly HashSet<string> _unhomedReferencedMethods = [];
 
     public virtual void Define(IEntity entity)
@@ -51,13 +52,13 @@ internal abstract class Symbol(Assembly assembly, string name)
     {
         if (sym != this)
         {
-            _ = _referencedSymbols.Add(sym);
+            _ = _referencedSymbols.Add(sym.Id);
 
             if (!sym.Assembly.IsSystemAssembly)
             {
                 // Don't bother keeping track of who is referencing system assembly symbols.
                 // Nobody cares, and doing so consumes a lot of memory.
-                _ = sym._referencers.Add(this);
+                _ = sym._referencers.Add(Id);
             }
         }
     }
@@ -67,7 +68,7 @@ internal abstract class Symbol(Assembly assembly, string name)
         _ = _unhomedReferencedMethods.Add(methodSig);
     }
 
-    public void Mark()
+    public void Mark(AssemblyGraph graph)
     {
         if (Marked)
         {
@@ -75,9 +76,9 @@ internal abstract class Symbol(Assembly assembly, string name)
         }
 
         Marked = true;
-        foreach (var refSym in ReferencedSymbols)
+        foreach (var refSym in ReferencedSymbols.Select(graph.SymbolTable.GetSymbol))
         {
-            refSym.Mark();
+            refSym.Mark(graph);
         }
     }
 

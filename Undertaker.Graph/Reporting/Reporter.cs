@@ -9,10 +9,12 @@ namespace Undertaker.Graph.Reporting;
 public sealed class Reporter
 {
     private readonly Dictionary<string, Assembly> _assemblies;
+    private readonly SymbolTable _symbolTable;
 
-    internal Reporter(Dictionary<string, Assembly> assemblies)
+    internal Reporter(Dictionary<string, Assembly> assemblies, SymbolTable symbolTable)
     {
         _assemblies = assemblies;
+        _symbolTable = symbolTable;
     }
 
     /// <summary>
@@ -27,11 +29,11 @@ public sealed class Reporter
             List<GraphReportSymbol>? deadTypes = null;
             List<GraphReportSymbol>? deadMembers = null;
 
-            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide).Cast<TypeSymbol>())
+            foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide).Cast<TypeSymbol>())
             {
                 if (sym.Marked)
                 {
-                    foreach (var member in sym.Members.Where(member => !member.Marked && !member.Hide && member.Kind != SymbolKind.Type))
+                    foreach (var member in sym.Members.Select(_symbolTable.GetSymbol).Where(member => !member.Marked && !member.Hide && member.Kind != SymbolKind.Type))
                     {
                         deadMembers ??= [];
                         deadMembers.Add(new(member.Name, [], member.Root));
@@ -75,18 +77,18 @@ public sealed class Reporter
             List<GraphReportSymbol>? aliveTypes = null;
             List<GraphReportSymbol>? aliveMembers = null;
 
-            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide && sym.Marked).Cast<TypeSymbol>())
+            foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide && sym.Marked).Cast<TypeSymbol>())
             {
-                var dependents = sym.Referencers.Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x).ToList();
+                var dependents = sym.Referencers.Select(_symbolTable.GetSymbol).Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x).ToList();
 
                 aliveTypes ??= [];
                 aliveTypes.Add(new(sym.Name, dependents, sym.Root));
 
-                foreach (var member in sym.Members)
+                foreach (var member in sym.Members.Select(_symbolTable.GetSymbol))
                 {
                     if (member.Marked && !member.Hide)
                     {
-                        dependents = [.. member.Referencers.Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x)];
+                        dependents = [.. member.Referencers.Select(_symbolTable.GetSymbol).Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x)];
 
                         aliveMembers ??= [];
                         aliveMembers.Add(new(member.Name, dependents, member.Root));
@@ -124,9 +126,9 @@ public sealed class Reporter
             List<GraphReportSymbol>? aliveTypes = null;
             List<GraphReportSymbol>? aliveMembers = null;
 
-            foreach (var sym in asm.Symbols.Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide && sym.Marked).Cast<TypeSymbol>())
+            foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide && sym.Marked).Cast<TypeSymbol>())
             {
-                var dependents = sym.Referencers.Where(x => x.Marked && x.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(x => x.IsTestMethod).Select(x => x.Name).OrderBy(x => x).ToList();
+                var dependents = sym.Referencers.Select(_symbolTable.GetSymbol).Where(x => x.Marked && x.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(x => x.IsTestMethod).Select(x => x.Name).OrderBy(x => x).ToList();
                 if (dependents.Count == 0)
                 {
                     continue;
@@ -135,11 +137,11 @@ public sealed class Reporter
                 aliveTypes ??= [];
                 aliveTypes.Add(new(sym.Name, dependents, sym.Root));
 
-                foreach (var member in sym.Members)
+                foreach (var member in sym.Members.Select(_symbolTable.GetSymbol))
                 {
                     if (member.Marked && !member.Hide)
                     {
-                        dependents = [.. member.Referencers.Where(x => x.Marked && x.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(x => x.IsTestMethod).Select(x => x.Name).OrderBy(x => x)];
+                        dependents = [.. member.Referencers.Select(_symbolTable.GetSymbol).Where(x => x.Marked && x.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(x => x.IsTestMethod).Select(x => x.Name).OrderBy(x => x)];
                         if (dependents.Count == 0)
                         {
                             continue;
@@ -181,10 +183,10 @@ public sealed class Reporter
             List<GraphReportSymbol>? affectedTypes = null;
             List<GraphReportSymbol>? affectedMembers = null;
 
-            foreach (var sym in asm.Symbols.Where(sym => !sym.Hide && !sym.Root))
+            foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => !sym.Hide && !sym.Root))
             {
                 bool usedOutside = false;
-                foreach (var r in sym.Referencers)
+                foreach (var r in sym.Referencers.Select(_symbolTable.GetSymbol))
                 {
                     if (r.Assembly != asm)
                     {
@@ -279,9 +281,9 @@ public sealed class Reporter
             foreach (var other in asm.InternalsVisibleTo.Where(other => other.Loaded))
             {
                 bool usesInternals = false;
-                foreach (var sym in other.Symbols)
+                foreach (var sym in other.Symbols.Select(_symbolTable.GetSymbol))
                 {
-                    foreach (var refSym in sym.ReferencedSymbols)
+                    foreach (var refSym in sym.ReferencedSymbols.Select(_symbolTable.GetSymbol))
                     {
                         if (refSym.Assembly == asm && !refSym.IsPublic)
                         {
@@ -328,9 +330,9 @@ public sealed class Reporter
         foreach (var asm in _assemblies.Values)
         {
             var referenced = new HashSet<string>();
-            foreach (var sym in asm.Symbols)
+            foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol))
             {
-                foreach (var rs in sym.ReferencedSymbols.Where(rs => rs.Assembly != asm))
+                foreach (var rs in sym.ReferencedSymbols.Select(_symbolTable.GetSymbol).Where(rs => rs.Assembly != asm))
                 {
                     _ = referenced.Add(rs.Assembly.Name);
                 }
@@ -398,9 +400,9 @@ public sealed class Reporter
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded).OrderBy(a => a.Name))
         {
             done.Clear();
-            foreach (var sym in asm.Symbols.OrderBy(sym => sym.Name))
+            foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).OrderBy(sym => sym.Name))
             {
-                foreach (var rs in sym.ReferencedSymbols.Where(rs => rs.Assembly != asm && rs.Assembly.Loaded).OrderBy(rs => rs.Name))
+                foreach (var rs in sym.ReferencedSymbols.Select(_symbolTable.GetSymbol).Where(rs => rs.Assembly != asm && rs.Assembly.Loaded).OrderBy(rs => rs.Name))
                 {
                     if (done.Add(rs.Assembly.Name))
                     {
@@ -427,7 +429,7 @@ public sealed class Reporter
                 continue;
             }
 
-            foreach (var sym in asm.Symbols.OrderBy(s => s.Name))
+            foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).OrderBy(s => s.Name))
             {
                 output.Write("  ");
                 output.Write(sym.Name);
@@ -440,7 +442,7 @@ public sealed class Reporter
                 if (sym.ReferencedSymbols.Count > 0)
                 {
                     output.WriteLine("    DIRECTLY REFERENCES");
-                    foreach (var s in sym.ReferencedSymbols)
+                    foreach (var s in sym.ReferencedSymbols.Select(_symbolTable.GetSymbol))
                     {
                         output.Write("      ");
                         output.WriteLine(s.Name);
@@ -460,7 +462,7 @@ public sealed class Reporter
                 if (sym.Referencers.Count > 0)
                 {
                     output.WriteLine("    DIRECTLY REFERENCED BY");
-                    foreach (var s in sym.Referencers)
+                    foreach (var s in sym.Referencers.Select(_symbolTable.GetSymbol))
                     {
                         output.Write("      ");
                         output.WriteLine(s.Name);

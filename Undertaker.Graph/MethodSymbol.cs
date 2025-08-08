@@ -2,7 +2,7 @@
 
 namespace Undertaker.Graph;
 
-internal sealed class MethodSymbol(Assembly assembly, string name) : Symbol(assembly, name)
+internal sealed class MethodSymbol(Assembly assembly, string name, SymbolId id) : Symbol(assembly, name, id)
 {
     public bool IsVirtualOrOverrideOrAbstract { get; private set; }
     public bool IsOverride { get; private set; }
