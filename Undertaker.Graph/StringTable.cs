@@ -2,14 +2,13 @@
 
 namespace Undertaker.Graph;
 
-internal struct StringId(uint bucketNum, uint index)
+internal readonly struct StringId(uint bucketNum, uint index)
 {
     private readonly uint _id = (bucketNum << 20) | index;
 
     public uint BucketNum => (_id >> 20) & 0xfff;
     public uint Index => (_id & 0xfffff);
 }
-
 
 internal sealed class StringTable
 {

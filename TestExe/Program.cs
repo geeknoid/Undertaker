@@ -9,10 +9,14 @@ internal static class Program
         Console.WriteLine(typeof(AliveClassButDeadMembers));
 
         var a = new AliveClass();
+#pragma warning disable CS0219 // Variable is assigned but its value is never used
         var b = new AliveStruct();
         var c = AliveEnum.Red;
+#pragma warning restore CS0219 // Variable is assigned but its value is never used
 
+#pragma warning disable IDE0039 // Use local function
         AliveDelegate d = () => { };
+#pragma warning restore IDE0039 // Use local function
 
         var e = new AliveClassAndAliveMembers();
         e.AliveMethod();

@@ -1,4 +1,4 @@
-﻿namespace Undertaker.Graph;
+﻿namespace Undertaker.Graph.Reporting;
 
 /// <summary>
 /// Captures the set of unecessary InternalsVisibleTo attributes in an assembly.

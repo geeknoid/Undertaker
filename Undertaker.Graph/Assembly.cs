@@ -1,4 +1,6 @@
-﻿namespace Undertaker.Graph;
+﻿using Undertaker.Graph.Reporting;
+
+namespace Undertaker.Graph;
 
 internal sealed class Assembly(string name, bool root)
 {
@@ -43,12 +45,7 @@ internal sealed class Assembly(string name, bool root)
     public Symbol? FindSymbol(string name, SymbolKind symbolKind)
     {
         var key = new Key { Name = name, Kind = symbolKind };
-        if (!_symbols.TryGetValue(key, out var sym))
-        {
-            return null;
-        }
-
-        return sym;
+        return !_symbols.TryGetValue(key, out var sym) ? null : sym;
     }
 
     public void RecordInternalsVisibleTo(Assembly other)

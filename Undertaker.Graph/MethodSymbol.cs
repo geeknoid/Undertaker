@@ -59,12 +59,7 @@ internal sealed class MethodSymbol(Assembly assembly, string name) : Symbol(asse
         }
 
         var lastDotIndex = Name.LastIndexOf('.', index);
-        if (lastDotIndex < 0)
-        {
-            return 0;
-        }
-
-        return lastDotIndex + 1;
+        return lastDotIndex < 0 ? 0 : lastDotIndex + 1;
     }
 
     public string GetSignature()

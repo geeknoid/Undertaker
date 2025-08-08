@@ -20,18 +20,19 @@ public class Tests
             graph.MergeAssembly(lib);
         }
 
+        var reporter = graph.Done(x => { });
         var serializerOptions = new JsonSerializerOptions { WriteIndented = true };
-        var deadReport = JsonSerializer.Serialize(graph.CollectDeadSymbols(), serializerOptions);
-        var aliveReport = JsonSerializer.Serialize(graph.CollectAliveSymbols(), serializerOptions);
-        var aliveByTestReport = JsonSerializer.Serialize(graph.CollectAliveByTestSymbols(), serializerOptions);
-        var needlesslyPublicReport = JsonSerializer.Serialize(graph.CollectNeedlesslyPublicSymbols(), serializerOptions);
-        var unreferencedReport = JsonSerializer.Serialize(graph.CollectUnreferencedAssemblies(), serializerOptions);
-        var needlessIVTReport = JsonSerializer.Serialize(graph.CollectNeedlessInternalsVisibleTo(), serializerOptions);
-        var assemblyLayerCake = JsonSerializer.Serialize(graph.CreateAssemblyLayerCake(), serializerOptions);
-        var diagram = graph.CreateDependencyDiagram();
+        var deadReport = JsonSerializer.Serialize(reporter.CollectDeadSymbols(), serializerOptions);
+        var aliveReport = JsonSerializer.Serialize(reporter.CollectAliveSymbols(), serializerOptions);
+        var aliveByTestReport = JsonSerializer.Serialize(reporter.CollectAliveByTestSymbols(), serializerOptions);
+        var needlesslyPublicReport = JsonSerializer.Serialize(reporter.CollectNeedlesslyPublicSymbols(), serializerOptions);
+        var unreferencedReport = JsonSerializer.Serialize(reporter.CollectUnreferencedAssemblies(), serializerOptions);
+        var needlessIVTReport = JsonSerializer.Serialize(reporter.CollectNeedlessInternalsVisibleTo(), serializerOptions);
+        var assemblyLayerCake = JsonSerializer.Serialize(reporter.CreateAssemblyLayerCake(), serializerOptions);
+        var diagram = reporter.CreateDependencyDiagram();
 
         var sw = new StringWriter();
-        graph.Dump(sw);
+        reporter.Dump(sw);
         var graphDump = sw.ToString();
 
 #if false

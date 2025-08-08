@@ -256,9 +256,9 @@ internal static class Program
         Out($"Done loading assemblies: loaded {successCount}, skipped {skipCount}, failed {errorCount}");
 
         Out("Analyzing...");
-        graph.Done(x => Out($"  {x}"));
+        var reporter = graph.Done(x => Out($"  {x}"));
 
-        if (!OutputDeadSymbols() ||
+        return !OutputDeadSymbols() ||
             !OutputAliveSymbols() ||
             !OutputAliveByTestSymbols() ||
             !OutputNeedlesslyPublicSymbols() ||
@@ -268,12 +268,9 @@ internal static class Program
             !OutputNeedlessInternalsVisibleTo() ||
             !OutputAssemblyLayerCake() ||
             !OutputDependencyDiagram() ||
-            !OutputGraphDump())
-        {
-            return 1;
-        }
-
-        return 0;
+            !OutputGraphDump()
+            ? 1
+            : 0;
 
         async Task CompleteTask(Task<LoadedAssembly> task)
         {
@@ -308,7 +305,7 @@ internal static class Program
                 var path = Path.GetFullPath(args.DeadSymbols);
                 try
                 {
-                    var report = graph.CollectDeadSymbols();
+                    var report = reporter.CollectDeadSymbols();
                     using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
                         JsonSerializer.Serialize(file, report, _serializationOptions);
@@ -333,7 +330,7 @@ internal static class Program
                 var path = Path.GetFullPath(args.AliveSymbols);
                 try
                 {
-                    var report = graph.CollectAliveSymbols();
+                    var report = reporter.CollectAliveSymbols();
                     using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
                         JsonSerializer.Serialize(file, report, _serializationOptions);
@@ -358,7 +355,7 @@ internal static class Program
                 var path = Path.GetFullPath(args.AliveByTestSymbols);
                 try
                 {
-                    var report = graph.CollectAliveByTestSymbols();
+                    var report = reporter.CollectAliveByTestSymbols();
                     using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
                         JsonSerializer.Serialize(file, report, _serializationOptions);
@@ -383,7 +380,7 @@ internal static class Program
                 var path = Path.GetFullPath(args.NeedlesslyPublicSymbols);
                 try
                 {
-                    var report = graph.CollectNeedlesslyPublicSymbols();
+                    var report = reporter.CollectNeedlesslyPublicSymbols();
                     using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
                         JsonSerializer.Serialize(file, report, _serializationOptions);
@@ -408,7 +405,7 @@ internal static class Program
                 var path = Path.GetFullPath(args.UnreferencedAssemblies);
                 try
                 {
-                    var report = graph.CollectUnreferencedAssemblies();
+                    var report = reporter.CollectUnreferencedAssemblies();
                     using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
                         JsonSerializer.Serialize(file, report, _serializationOptions);
@@ -433,7 +430,7 @@ internal static class Program
                 var path = Path.GetFullPath(args.UnanalyzedAssemblies);
                 try
                 {
-                    var report = graph.CollectUnanalyzedAssemblies().Order();
+                    var report = reporter.CollectUnanalyzedAssemblies().Order();
                     File.WriteAllLines(path, report);
 
                     Out($"Output unanalyzed assemblies report to {path}");
@@ -455,7 +452,7 @@ internal static class Program
                 var path = Path.GetFullPath(args.DuplicateAssemblies);
                 try
                 {
-                    var report = graph.CollectDuplicateAssemblies().Order();
+                    var report = reporter.CollectDuplicateAssemblies().Order();
                     using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
                         JsonSerializer.Serialize(file, report, _serializationOptions);
@@ -480,7 +477,7 @@ internal static class Program
                 var path = Path.GetFullPath(args.NeedlessInternalsVisibleTo);
                 try
                 {
-                    var report = graph.CollectNeedlessInternalsVisibleTo();
+                    var report = reporter.CollectNeedlessInternalsVisibleTo();
                     using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
                         JsonSerializer.Serialize(file, report, _serializationOptions);
@@ -505,7 +502,7 @@ internal static class Program
                 var path = Path.GetFullPath(args.AssemblyLayerCake);
                 try
                 {
-                    var cake = graph.CreateAssemblyLayerCake();
+                    var cake = reporter.CreateAssemblyLayerCake();
                     using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
                         JsonSerializer.Serialize(file, cake, _serializationOptions);
@@ -530,7 +527,7 @@ internal static class Program
                 var path = Path.GetFullPath(args.DependencyDiagram);
                 try
                 {
-                    var dd = graph.CreateDependencyDiagram();
+                    var dd = reporter.CreateDependencyDiagram();
                     File.WriteAllText(path, dd);
                     Out($"Output assembly dependency diagram to {path}");
                 }
@@ -553,7 +550,7 @@ internal static class Program
                 {
                     using (var file = File.CreateText(path))
                     {
-                        graph.Dump(file);
+                        reporter.Dump(file);
                     }
 
                     Out($"Output graph dump to {path}");

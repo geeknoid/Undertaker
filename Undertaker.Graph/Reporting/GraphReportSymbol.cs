@@ -1,4 +1,4 @@
-﻿namespace Undertaker.Graph;
+﻿namespace Undertaker.Graph.Reporting;
 
 /// <summary>
 /// Information about a symbol.

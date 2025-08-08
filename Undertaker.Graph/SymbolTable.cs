@@ -2,7 +2,7 @@
 
 namespace Undertaker.Graph;
 
-internal struct SymbolId(int index)
+internal readonly struct SymbolId(int index)
 {
     public int Index { get; } = index;
 }

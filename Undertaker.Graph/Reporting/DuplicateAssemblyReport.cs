@@ -1,4 +1,4 @@
-﻿namespace Undertaker.Graph;
+﻿namespace Undertaker.Graph.Reporting;
 
 /// <summary>
 /// Captures the set of duplicates found for a loaded assembly.
@@ -27,7 +27,7 @@ public class DuplicateAssemnblyReport
     }
 }
 
-public struct DuplicateAssembly(string path, Version version)
+public readonly struct DuplicateAssembly(string path, Version version)
 {
     public string Path { get; } = path;
     public Version Version { get; } = version;

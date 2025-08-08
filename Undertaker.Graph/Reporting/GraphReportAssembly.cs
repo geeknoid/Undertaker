@@ -1,4 +1,4 @@
-﻿namespace Undertaker.Graph;
+﻿namespace Undertaker.Graph.Reporting;
 
 /// <summary>
 /// Captures a set of symbols defined in a specific assembly.
