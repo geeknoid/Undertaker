@@ -2,7 +2,7 @@
 
 namespace Undertaker.Graph;
 
-internal sealed class FieldSymbol(Assembly assembly, string name) : Symbol(assembly, name, SymbolKind.Field)
+internal sealed class FieldSymbol(Assembly assembly, string name) : Symbol(assembly, name)
 {
     public override void Define(IEntity entity)
     {
@@ -13,4 +13,6 @@ internal sealed class FieldSymbol(Assembly assembly, string name) : Symbol(assem
 
         base.Define(entity);
     }
+
+    public override SymbolKind Kind => SymbolKind.Field;
 }

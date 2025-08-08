@@ -3,12 +3,13 @@ using ICSharpCode.Decompiler.TypeSystem;
 
 namespace Undertaker.Graph;
 
-internal abstract class Symbol(Assembly assembly, string name, SymbolKind symbolKind)
+internal abstract class Symbol(Assembly assembly, string name)
 {
     // set on construction
     public Assembly Assembly { get; } = assembly;
     public string Name { get; } = name;
-    public SymbolKind Kind { get; } = symbolKind;
+
+    public abstract SymbolKind Kind { get; }
 
     // set by Define
     public bool Hide { get; protected set; }

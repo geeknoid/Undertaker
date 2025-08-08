@@ -2,7 +2,7 @@
 
 namespace Undertaker.Graph;
 
-internal sealed class TypeSymbol(Assembly assembly, string name) : Symbol(assembly, name, SymbolKind.Type)
+internal sealed class TypeSymbol(Assembly assembly, string name) : Symbol(assembly, name)
 {
     public TypeKind TypeKind { get; set; }
     public IReadOnlyCollection<Symbol> Members => _members;
@@ -54,4 +54,6 @@ internal sealed class TypeSymbol(Assembly assembly, string name) : Symbol(assemb
 
         base.Trim();
     }
+
+    public override SymbolKind Kind => SymbolKind.Type;
 }
