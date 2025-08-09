@@ -1,9 +1,12 @@
-﻿namespace Undertaker.Graph.Reporting;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Undertaker.Graph.Reporting;
 
 /// <summary>
 /// Captures the set of duplicates found for a loaded assembly.
 /// </summary>
-public class DuplicateAssemnblyReport
+[SuppressMessage("Design", "CA1036:Override methods on comparable types", Justification = "Superfluous")]
+public class DuplicateAssemblyReport : IComparable<DuplicateAssemblyReport>
 {
     /// <summary>
     /// The name of the assembly.
@@ -19,12 +22,37 @@ public class DuplicateAssemnblyReport
     /// </summary>
     public IEnumerable<DuplicateAssembly> Duplicates { get; }
 
-    internal DuplicateAssemnblyReport(string assemblyName, Version version, IEnumerable<DuplicateAssembly> duplicates)
+    internal DuplicateAssemblyReport(string assemblyName, Version version, IEnumerable<DuplicateAssembly> duplicates)
     {
         Assembly = assemblyName;
         Version = version;
         Duplicates = duplicates;
     }
+
+    public int CompareTo(DuplicateAssemblyReport? other)
+    {
+        if (other is null)
+        {
+            return 1; // this instance is greater than null
+        }
+
+        int nameComparison = string.Compare(Assembly, other.Assembly, StringComparison.OrdinalIgnoreCase);
+        if (nameComparison != 0)
+        {
+            return nameComparison;
+        }
+
+        return Version.CompareTo(other.Version);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is DuplicateAssemblyReport other
+            && string.Equals(Assembly, other.Assembly, StringComparison.OrdinalIgnoreCase)
+            && Version.Equals(other.Version);
+    }
+
+    public override int GetHashCode() => HashCode.Combine(Assembly, Version);
 }
 
 public readonly struct DuplicateAssembly(string path, Version version)

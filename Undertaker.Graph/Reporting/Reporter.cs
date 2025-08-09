@@ -256,12 +256,12 @@ public sealed class Reporter
     /// <summary>
     /// Returns a list of assemblies which were seen multiple times.
     /// </summary>
-    public IReadOnlyList<DuplicateAssemnblyReport> CollectDuplicateAssemblies()
+    public IReadOnlyList<DuplicateAssemblyReport> CollectDuplicateAssemblies()
     {
-        var result = new List<DuplicateAssemnblyReport>();
+        var result = new List<DuplicateAssemblyReport>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && asm.Duplicates.Count > 0))
         {
-            result.Add(new DuplicateAssemnblyReport(asm.Name, asm.Version!, asm.Duplicates));
+            result.Add(new DuplicateAssemblyReport(asm.Name, asm.Version!, asm.Duplicates));
         }
 
         return result;
