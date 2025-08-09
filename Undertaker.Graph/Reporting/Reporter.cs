@@ -24,7 +24,7 @@ public sealed class Reporter
     public DeadReport CollectDeadSymbols()
     {
         var assemblies = new List<DeadReportAssembly>();
-        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && !asm.IsSystemAssembly))
         {
             List<string>? deadTypes = null;
             List<string>? deadMembers = null;
@@ -72,7 +72,7 @@ public sealed class Reporter
     public AliveReport CollectAliveSymbols()
     {
         var assemblies = new List<AliveReportAssembly>();
-        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && !asm.IsSystemAssembly))
         {
             List<AliveReportSymbol>? aliveTypes = null;
             List<AliveReportSymbol>? aliveMembers = null;
@@ -121,7 +121,7 @@ public sealed class Reporter
     public AliveReport CollectAliveByTestSymbols()
     {
         var assemblies = new List<AliveReportAssembly>();
-        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && !asm.IsSystemAssembly))
         {
             List<AliveReportSymbol>? aliveTypes = null;
             List<AliveReportSymbol>? aliveMembers = null;
@@ -178,7 +178,7 @@ public sealed class Reporter
     public NeedlesslyPublicReport CollectNeedlesslyPublicSymbols()
     {
         var assemblies = new List<NeedlesslyPublicReportAssembly>();
-        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && !asm.IsSystemAssembly))
         {
             List<string>? affectedTypes = null;
             List<string>? affectedMembers = null;
@@ -274,7 +274,7 @@ public sealed class Reporter
     {
         var result = new List<NeedlessInternalsVisibleToReport>();
 
-        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && !asm.IsSystemAssembly))
         {
             var otherAssemblies = new List<string>();
 
