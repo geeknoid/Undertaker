@@ -26,6 +26,7 @@ public class AliveClassAndAliveMembers
     {
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
     public void AliveMethod()
     {
         _ = new List<GenericTypeArgument>();

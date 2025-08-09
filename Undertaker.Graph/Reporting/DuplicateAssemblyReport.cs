@@ -13,6 +13,9 @@ public class DuplicateAssemblyReport : IComparable<DuplicateAssemblyReport>
     /// </summary>
     public string Assembly { get; }
 
+    /// <summary>
+    /// The version of the assembly.
+    /// </summary>
     public Version Version { get; }
 
     /// <summary>
@@ -37,12 +40,9 @@ public class DuplicateAssemblyReport : IComparable<DuplicateAssemblyReport>
         }
 
         int nameComparison = string.Compare(Assembly, other.Assembly, StringComparison.OrdinalIgnoreCase);
-        if (nameComparison != 0)
-        {
-            return nameComparison;
-        }
-
-        return Version.CompareTo(other.Version);
+        return nameComparison != 0
+            ? nameComparison
+            : Version.CompareTo(other.Version);
     }
 
     public override bool Equals(object? obj)

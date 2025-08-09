@@ -29,6 +29,7 @@ public class Tests
         var unreferencedReport = JsonSerializer.Serialize(reporter.CollectUnreferencedAssemblies(), serializerOptions);
         var needlessIVTReport = JsonSerializer.Serialize(reporter.CollectNeedlessInternalsVisibleTo(), serializerOptions);
         var assemblyLayerCake = JsonSerializer.Serialize(reporter.CreateAssemblyLayerCake(), serializerOptions);
+        var duplicateAssemblies = JsonSerializer.Serialize(reporter.CollectDuplicateAssemblies(), serializerOptions);
         var diagram = reporter.CreateDependencyDiagram();
 
         var sw = new StringWriter();
@@ -44,6 +45,7 @@ public class Tests
         File.WriteAllText("../../../Golden/unreferenced.json", unreferencedReport);
         File.WriteAllText("../../../Golden/needless-ivt.json", needlessIVTReport);
         File.WriteAllText("../../../Golden/assembly-layer-cake.json", assemblyLayerCake);
+        File.WriteAllText("../../../Golden/duplicate-assemblies.json", duplicateAssemblies);
         File.WriteAllText("../../../Golden/diagram.mmd", diagram);
         File.WriteAllText("../../../Golden/graph.txt", graphDump);
 #else
@@ -54,6 +56,7 @@ public class Tests
         var goldenUnreferencedReport = File.ReadAllText("../../../Golden/unreferenced.json");
         var goldenNeedlessIVTReport = File.ReadAllText("../../../Golden/needless-ivt.json");
         var goldenAssemblyLayerCake = File.ReadAllText("../../../Golden/assembly-layer-cake.json");
+        var goldenDuplicateAssemblies = File.ReadAllText("../../../Golden/duplicate-assemblies.json");
         var goldenDiagram = File.ReadAllText("../../../Golden/diagram.mmd");
         var goldenGraphDump = File.ReadAllText("../../../Golden/graph.txt");
 
@@ -64,6 +67,7 @@ public class Tests
         Assert.Equal(goldenUnreferencedReport, unreferencedReport);
         Assert.Equal(goldenNeedlessIVTReport, needlessIVTReport);
         Assert.Equal(goldenAssemblyLayerCake, assemblyLayerCake);
+        Assert.Equal(goldenDuplicateAssemblies, duplicateAssemblies);
         Assert.Equal(goldenDiagram, diagram);
         Assert.Equal(goldenGraphDump, graphDump);
 #endif

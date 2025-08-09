@@ -1,4 +1,5 @@
-﻿using Undertaker.Graph.Reporting;
+﻿using Undertaker.Graph.Collections;
+using Undertaker.Graph.Reporting;
 
 namespace Undertaker.Graph;
 
@@ -14,7 +15,7 @@ internal sealed class Assembly(string name, bool root)
 
     private readonly Dictionary<Key, SymbolId> _symbols = [];
     private readonly HashSet<Assembly> _internalsVisibleTo = [];
-    private readonly List<DuplicateAssembly> _duplicates = [];
+    private readonly SmallList<DuplicateAssembly> _duplicates = [];
 
     private struct Key
     {
@@ -52,7 +53,7 @@ internal sealed class Assembly(string name, bool root)
         _duplicates.Add(new DuplicateAssembly(path, version));
     }
 
-    public void Trim()
+    public void TrimExcess()
     {
         _symbols.TrimExcess();
         _duplicates.TrimExcess();

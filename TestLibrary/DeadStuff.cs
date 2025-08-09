@@ -42,6 +42,7 @@ public class AliveClassButDeadMembers
         set { _value = value * 2; }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
     public event EventHandler DeadEvent
     {
         add { }

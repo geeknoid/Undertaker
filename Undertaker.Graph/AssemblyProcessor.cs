@@ -1,5 +1,6 @@
 ﻿using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using ICSharpCode.Decompiler.Disassembler;
 using ICSharpCode.Decompiler.Metadata;
@@ -24,7 +25,6 @@ internal static class AssemblyProcessor
         foreach (var type in decomp.TypeSystem.MainModule.TypeDefinitions)
         {
             var typeSym = (TypeSymbol)DefineSymbol(type);
-
             RecordSymbolsReferencedByType(typeSym, type);
 
             if (type.Kind == TypeKind.Enum)
@@ -33,12 +33,24 @@ internal static class AssemblyProcessor
                 continue;
             }
 
+            // find the static constructor (if any)
             IMethod? cctor = null;
             foreach (var method in type.Methods)
             {
                 if (method.IsConstructor && method.IsStatic)
                 {
                     cctor = method;
+                    break;
+                }
+            }
+
+            // find the default constructor (if any)
+            IMethod? ctor = null;
+            foreach (var method in type.Methods)
+            {
+                if (method.IsConstructor && !method.IsStatic && method.Parameters.Count == 0)
+                {
+                    ctor = method;
                     break;
                 }
             }
@@ -51,6 +63,13 @@ internal static class AssemblyProcessor
                     if (graph.IsTestMethodAttribute(a.AttributeType.ReflectionName))
                     {
                         sym.MarkAsTestMethod();
+
+                        if (ctor != null)
+                        {
+                            // test methods keep the class constructor alive
+                            RecordReferenceToMember(sym, ctor);
+                        }
+
                         break;
                     }
                 }
@@ -85,7 +104,12 @@ internal static class AssemblyProcessor
 
         Symbol DefineSymbol(IEntity entity)
         {
-            var sym = asm.GetSymbol(graph, GetEntitySymbolName(entity), GetEntitySymbolKind(entity));
+            return DefineSymbolIn(entity, asm);
+        }
+
+        Symbol DefineSymbolIn(IEntity entity, Assembly a)
+        {
+            var sym = a.GetSymbol(graph, GetEntitySymbolName(entity), GetEntitySymbolKind(entity));
             sym.Define(entity);
 
             var parent = entity.DeclaringTypeDefinition;
@@ -170,8 +194,6 @@ internal static class AssemblyProcessor
                     }
                 }
             }
-
-            typeSym.Trim();
         }
 
         void RecordSymbolsReferencedByMethod(Symbol methodSym, IMethod method, IMethod? cctor)
@@ -422,7 +444,7 @@ internal static class AssemblyProcessor
                         toSym.TypeKind = t.Kind;
                         foreach (var member in td.Members)
                         {
-                            toSym.AddMember(DefineSymbol(member));
+                            toSym.AddMember(DefineSymbolIn(member, definingAsm));
                         }
                     }
 

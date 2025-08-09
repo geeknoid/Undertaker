@@ -1,6 +1,4 @@
-﻿// NOT YET USED
-
-namespace Undertaker.Graph;
+﻿namespace Undertaker.Graph;
 
 internal readonly struct SymbolId(int index)
 {
@@ -30,11 +28,11 @@ internal sealed class SymbolTable
 
     public Symbol GetSymbol(SymbolId id) => _symbols[id.Index];
 
-    public void Trim()
+    public void TrimExcess()
     {
         foreach (var sym in _symbols)
         {
-            sym.Trim();
+            sym.TrimExcess();
         }
     }
 }

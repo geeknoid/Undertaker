@@ -1,16 +1,16 @@
 ﻿namespace Undertaker.Graph.Reporting;
 
 /// <summary>
-/// Captures a set of symbols in the graph.
+/// Captures a set of dead symbols in the graph.
 /// </summary>
-public sealed class GraphReport
+public sealed class DeadReport
 {
     /// <summary>
     /// The set of assemblies where the symbols are defined.
     /// </summary>
-    public IReadOnlyList<GraphReportAssembly> Assemblies { get; }
+    public IReadOnlyList<DeadReportAssembly> Assemblies { get; }
 
-    internal GraphReport(IReadOnlyList<GraphReportAssembly> assemblies)
+    internal DeadReport(IReadOnlyList<DeadReportAssembly> assemblies)
     {
         Assemblies = assemblies;
     }

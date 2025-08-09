@@ -2,229 +2,45 @@
   "Assemblies": [
     {
       "Assembly": "TestLibrary",
-      "Types": [
-        {
-          "Symbol": "TestLibrary.DeadDelegate",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.DeadEnum",
-          "Dependents": [],
-          "Root": false
-        }
+      "DeadTypes": [
+        "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType",
+        "TestLibrary.DeadClass",
+        "TestLibrary.DeadDelegate",
+        "TestLibrary.DeadEnum",
+        "TestLibrary.DeadStruct"
       ],
-      "Members": [
-        {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveConst",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveEvent",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveField",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveMethod()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.Item",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers._value",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.get_Item(System.Int32)",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassAndAliveMembers.remove_AliveEvent(System.EventHandler)",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadComplexProperty",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadComplexProperty",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadConst",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadEvent",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadEvent",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadField",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadField",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.Item",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.Item",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers._value",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers._value",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.add_DeadEvent(System.EventHandler)",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.get_Item(System.Int32)",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.remove_DeadEvent(System.EventHandler)",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(System.Int32)",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(System.Int32)",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveClassButDeadMembers.set_Item(System.Int32, System.Int32)",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveDelegate..ctor(System.Object, nint)",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveDelegate.Invoke()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveDelegate.Invoke()",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveEnum.Blue",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveEnum.Green",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveEnum.Red",
-          "Dependents": [],
-          "Root": false
-        },
-        {
-          "Symbol": "TestLibrary.AliveEnum.value__",
-          "Dependents": [],
-          "Root": false
-        }
+      "DeadMembers": [
+        "TestLibrary.AliveClassAndAliveMembers.AliveConst",
+        "TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()",
+        "TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()",
+        "TestLibrary.AliveClassAndAliveMembers.get_Item(System.Int32)",
+        "TestLibrary.AliveClassAndAliveMembers.remove_AliveEvent(System.EventHandler)",
+        "TestLibrary.AliveClassButDeadMembers._value",
+        "TestLibrary.AliveClassButDeadMembers..ctor()",
+        "TestLibrary.AliveClassButDeadMembers.add_DeadEvent(System.EventHandler)",
+        "TestLibrary.AliveClassButDeadMembers.DeadComplexProperty",
+        "TestLibrary.AliveClassButDeadMembers.DeadConst",
+        "TestLibrary.AliveClassButDeadMembers.DeadEvent",
+        "TestLibrary.AliveClassButDeadMembers.DeadField",
+        "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
+        "TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty",
+        "TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()",
+        "TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty()",
+        "TestLibrary.AliveClassButDeadMembers.get_Item(System.Int32)",
+        "TestLibrary.AliveClassButDeadMembers.Item",
+        "TestLibrary.AliveClassButDeadMembers.remove_DeadEvent(System.EventHandler)",
+        "TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(System.Int32)",
+        "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(System.Int32)",
+        "TestLibrary.AliveClassButDeadMembers.set_Item(System.Int32, System.Int32)",
+        "TestLibrary.AliveDelegate.Invoke()",
+        "TestLibrary.AliveEnum..ctor()",
+        "TestLibrary.AliveEnum.Blue",
+        "TestLibrary.AliveEnum.Green",
+        "TestLibrary.AliveEnum.Red",
+        "TestLibrary.AliveEnum.value__",
+        "TestLibrary.AliveStruct..ctor()",
+        "TestLibrary.GenericTypeArgument..ctor()",
+        "TestLibrary.MyException..ctor()"
       ]
     }
   ]

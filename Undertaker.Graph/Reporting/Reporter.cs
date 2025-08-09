@@ -21,13 +21,13 @@ public sealed class Reporter
     /// Gets information about the dead symbols in the graph.
     /// </summary>
     /// <remarks>Dead symbols are ones which aren't reachable from the various roots known to the graph.</remarks>
-    public GraphReport CollectDeadSymbols()
+    public DeadReport CollectDeadSymbols()
     {
-        var assemblies = new List<GraphReportAssembly>();
+        var assemblies = new List<DeadReportAssembly>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            List<GraphReportSymbol>? deadTypes = null;
-            List<GraphReportSymbol>? deadMembers = null;
+            List<string>? deadTypes = null;
+            List<string>? deadMembers = null;
 
             foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide).Cast<TypeSymbol>())
             {
@@ -36,25 +36,25 @@ public sealed class Reporter
                     foreach (var member in sym.Members.Select(_symbolTable.GetSymbol).Where(member => !member.Marked && !member.Hide && member.Kind != SymbolKind.Type))
                     {
                         deadMembers ??= [];
-                        deadMembers.Add(new(member.Name, [], member.Root));
+                        deadMembers.Add(member.Name);
                     }
                 }
                 else
                 {
                     deadTypes ??= [];
-                    deadTypes.Add(new(sym.Name, [], sym.Root));
+                    deadTypes.Add(sym.Name);
                 }
             }
 
             if (deadTypes != null || deadMembers != null)
             {
-                deadTypes?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
-                deadMembers?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+                deadTypes?.Sort();
+                deadMembers?.Sort();
 
-                IReadOnlyList<GraphReportSymbol>? dt = deadTypes;
+                IReadOnlyList<String>? dt = deadTypes;
                 dt ??= [];
 
-                IReadOnlyList<GraphReportSymbol>? dm = deadMembers;
+                IReadOnlyList<String>? dm = deadMembers;
                 dm ??= [];
 
                 assemblies.Add(new(asm.Name, dt, dm));
@@ -69,13 +69,13 @@ public sealed class Reporter
     /// Gets information about the alive symbols in the graph.
     /// </summary>
     /// <remarks>Alive symbols are ones which are reachable from the various roots known to the graph.</remarks>
-    public GraphReport CollectAliveSymbols()
+    public AliveReport CollectAliveSymbols()
     {
-        var assemblies = new List<GraphReportAssembly>();
+        var assemblies = new List<AliveReportAssembly>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            List<GraphReportSymbol>? aliveTypes = null;
-            List<GraphReportSymbol>? aliveMembers = null;
+            List<AliveReportSymbol>? aliveTypes = null;
+            List<AliveReportSymbol>? aliveMembers = null;
 
             foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide && sym.Marked).Cast<TypeSymbol>())
             {
@@ -101,10 +101,10 @@ public sealed class Reporter
                 aliveTypes?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
                 aliveMembers?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
 
-                IReadOnlyList<GraphReportSymbol>? at = aliveTypes;
+                IReadOnlyList<AliveReportSymbol>? at = aliveTypes;
                 at ??= [];
 
-                IReadOnlyList<GraphReportSymbol>? am = aliveMembers;
+                IReadOnlyList<AliveReportSymbol>? am = aliveMembers;
                 am ??= [];
 
                 assemblies.Add(new(asm.Name, at, am));
@@ -118,13 +118,13 @@ public sealed class Reporter
     /// <summary>
     /// Gets information about the alive symbols in the graph that are kept alive strictly by test methods.
     /// </summary>
-    public GraphReport CollectAliveByTestSymbols()
+    public AliveReport CollectAliveByTestSymbols()
     {
-        var assemblies = new List<GraphReportAssembly>();
+        var assemblies = new List<AliveReportAssembly>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            List<GraphReportSymbol>? aliveTypes = null;
-            List<GraphReportSymbol>? aliveMembers = null;
+            List<AliveReportSymbol>? aliveTypes = null;
+            List<AliveReportSymbol>? aliveMembers = null;
 
             foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide && sym.Marked).Cast<TypeSymbol>())
             {
@@ -158,10 +158,10 @@ public sealed class Reporter
                 aliveTypes?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
                 aliveMembers?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
 
-                IReadOnlyList<GraphReportSymbol>? at = aliveTypes;
+                IReadOnlyList<AliveReportSymbol>? at = aliveTypes;
                 at ??= [];
 
-                IReadOnlyList<GraphReportSymbol>? am = aliveMembers;
+                IReadOnlyList<AliveReportSymbol>? am = aliveMembers;
                 am ??= [];
 
                 assemblies.Add(new(asm.Name, at, am));
@@ -175,15 +175,15 @@ public sealed class Reporter
     /// <summary>
     /// Gets the set of symbols which could be made internal.
     /// </summary>
-    public GraphReport CollectNeedlesslyPublicSymbols()
+    public NeedlesslyPublicReport CollectNeedlesslyPublicSymbols()
     {
-        var assemblies = new List<GraphReportAssembly>();
+        var assemblies = new List<NeedlesslyPublicReportAssembly>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            List<GraphReportSymbol>? affectedTypes = null;
-            List<GraphReportSymbol>? affectedMembers = null;
+            List<string>? affectedTypes = null;
+            List<string>? affectedMembers = null;
 
-            foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => !sym.Hide && !sym.Root))
+            foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => !sym.Hide && !sym.Root && sym.IsPublic))
             {
                 bool usedOutside = false;
                 foreach (var r in sym.Referencers.Select(_symbolTable.GetSymbol))
@@ -200,25 +200,25 @@ public sealed class Reporter
                     if (sym.Kind == SymbolKind.Type)
                     {
                         affectedTypes ??= [];
-                        affectedTypes.Add(new(sym.Name, [], sym.Root));
+                        affectedTypes.Add(sym.Name);
                     }
                     else
                     {
                         affectedMembers ??= [];
-                        affectedMembers.Add(new(sym.Name, [], sym.Root));
+                        affectedMembers.Add(sym.Name);
                     }
                 }
             }
 
             if (affectedTypes != null || affectedTypes != null)
             {
-                affectedTypes?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
-                affectedMembers?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+                affectedTypes?.Sort();
+                affectedMembers?.Sort();
 
-                IReadOnlyList<GraphReportSymbol>? at = affectedTypes;
+                IReadOnlyList<string>? at = affectedTypes;
                 at ??= [];
 
-                IReadOnlyList<GraphReportSymbol>? am = affectedMembers;
+                IReadOnlyList<string>? am = affectedMembers;
                 am ??= [];
 
                 assemblies.Add(new(asm.Name, at, am));
@@ -237,7 +237,7 @@ public sealed class Reporter
         var result = new List<string>();
 
         var aliveReport = CollectAliveSymbols();
-        foreach (var asm in aliveReport.Assemblies.Where(asm => asm.Types.Count == 0 && asm.Members.Count == 0))
+        foreach (var asm in aliveReport.Assemblies.Where(asm => asm.AliveTypes.Count == 0 && asm.AliveMembers.Count == 0))
         {
             result.Add(asm.Assembly);
         }

@@ -3,7 +3,7 @@
 /// <summary>
 /// Captures a set of symbols defined in a specific assembly.
 /// </summary>
-public sealed class GraphReportAssembly
+public sealed class AliveReportAssembly
 {
     /// <summary>
     /// Name of the aasembly where the symbol is defined.
@@ -13,17 +13,17 @@ public sealed class GraphReportAssembly
     /// <summary>
     /// The set of types within the assembly.
     /// </summary>
-    public IReadOnlyList<GraphReportSymbol> Types { get; }
+    public IReadOnlyList<AliveReportSymbol> AliveTypes { get; }
 
     /// <summary>
     /// The set of type members (methods, fields, etc) within the assemnbly.
     /// </summary>
-    public IReadOnlyList<GraphReportSymbol> Members { get; }
+    public IReadOnlyList<AliveReportSymbol> AliveMembers { get; }
 
-    internal GraphReportAssembly(string assembly, IReadOnlyList<GraphReportSymbol> types, IReadOnlyList<GraphReportSymbol> members)
+    internal AliveReportAssembly(string assembly, IReadOnlyList<AliveReportSymbol> types, IReadOnlyList<AliveReportSymbol> members)
     {
         Assembly = assembly;
-        Types = types;
-        Members = members;
+        AliveTypes = types;
+        AliveMembers = members;
     }
 }

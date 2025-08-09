@@ -68,10 +68,10 @@ public sealed class AssemblyGraph
         {
             foreach (var asm in _assemblies)
             {
-                asm.Value.Trim();
+                asm.Value.TrimExcess();
             }
 
-            SymbolTable.Trim();
+            SymbolTable.TrimExcess();
         }
     }
 

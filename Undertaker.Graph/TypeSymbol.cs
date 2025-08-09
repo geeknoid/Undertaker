@@ -1,4 +1,5 @@
 ﻿using ICSharpCode.Decompiler.TypeSystem;
+using Undertaker.Graph.Collections;
 
 namespace Undertaker.Graph;
 
@@ -11,9 +12,9 @@ internal sealed class TypeSymbol(Assembly assembly, string name, SymbolId id) : 
     public IReadOnlyCollection<SymbolId> DerivedTypes => _derivedTypes;
 
     private readonly HashSet<SymbolId> _members = [];
-    private readonly List<SymbolId> _interfacesImplemented = [];
-    private readonly List<SymbolId> _baseTypes = [];
-    private readonly List<SymbolId> _derivedTypes = [];
+    private readonly SmallList<SymbolId> _interfacesImplemented = [];
+    private readonly SmallList<SymbolId> _baseTypes = [];
+    private readonly SmallList<SymbolId> _derivedTypes = [];
 
     public override void Define(IEntity entity)
     {
@@ -45,14 +46,14 @@ internal sealed class TypeSymbol(Assembly assembly, string name, SymbolId id) : 
         baseType._derivedTypes.Add(Id);
     }
 
-    public override void Trim()
+    public override void TrimExcess()
     {
         _members.TrimExcess();
         _interfacesImplemented.TrimExcess();
         _baseTypes.TrimExcess();
         _derivedTypes.TrimExcess();
 
-        base.Trim();
+        base.TrimExcess();
     }
 
     public override SymbolKind Kind => SymbolKind.Type;

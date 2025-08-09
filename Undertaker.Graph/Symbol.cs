@@ -1,5 +1,6 @@
 ﻿using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.TypeSystem;
+using Undertaker.Graph.Collections;
 
 namespace Undertaker.Graph;
 
@@ -84,10 +85,10 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
 
     public override string ToString() => Name;
 
-    public virtual void Trim()
+    public virtual void TrimExcess()
     {
         _referencers.TrimExcess();
         _referencedSymbols.TrimExcess();
-        _unhomedReferencedMethods?.TrimExcess();
+        _unhomedReferencedMethods.TrimExcess();
     }
 }
