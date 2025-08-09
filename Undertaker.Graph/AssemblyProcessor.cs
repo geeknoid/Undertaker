@@ -33,6 +33,16 @@ internal static class AssemblyProcessor
                 continue;
             }
 
+            IMethod? cctor = null;
+            foreach (var method in type.Methods)
+            {
+                if (method.IsConstructor && method.IsStatic)
+                {
+                    cctor = method;
+                    break;
+                }
+            }
+
             foreach (var method in type.Methods)
             {
                 var sym = (MethodSymbol)DefineSymbol(method);
@@ -45,22 +55,17 @@ internal static class AssemblyProcessor
                     }
                 }
 
-                RecordSymbolsReferencedByMethod(sym, method);
-
-                if (method.IsConstructor && method.IsStatic)
-                {
-                    typeSym.RecordReferencedSymbol(sym);
-                }
+                RecordSymbolsReferencedByMethod(sym, method, cctor);
             }
 
             foreach (var property in type.Properties)
             {
-                RecordSymbolsReferencedByProperty(property);
+                RecordSymbolsReferencedByProperty(property, cctor);
             }
 
             foreach (var evt in type.Events)
             {
-                RecordSymbolsReferencedByEvent(evt);
+                RecordSymbolsReferencedByEvent(evt, cctor);
             }
 
             foreach (var field in type.Fields)
@@ -71,7 +76,7 @@ internal static class AssemblyProcessor
                     continue;
                 }
 
-                RecordSymbolsReferencedByField(DefineSymbol(field), field);
+                RecordSymbolsReferencedByField(DefineSymbol(field), field, cctor);
             }
         }
 
@@ -169,7 +174,7 @@ internal static class AssemblyProcessor
             typeSym.Trim();
         }
 
-        void RecordSymbolsReferencedByMethod(Symbol methodSym, IMethod method)
+        void RecordSymbolsReferencedByMethod(Symbol methodSym, IMethod method, IMethod? cctor)
         {
             RecordReferenceToType(methodSym, method.DeclaringType);
 
@@ -313,9 +318,14 @@ internal static class AssemblyProcessor
                     RecordReferenceToType(methodSym, type);
                 }
             }
+
+            if (cctor != null && method != cctor)
+            {
+                RecordReferenceToMember(methodSym, cctor);
+            }
         }
 
-        void RecordSymbolsReferencedByProperty(IProperty property)
+        void RecordSymbolsReferencedByProperty(IProperty property, IMethod? cctor)
         {
             var propertySym = DefineSymbol(property);
             RecordReferenceToType(propertySym, property.DeclaringType);
@@ -324,17 +334,17 @@ internal static class AssemblyProcessor
             if (property.Getter != null)
             {
                 var sym = DefineSymbol(property.Getter);
-                RecordSymbolsReferencedByMethod(sym, property.Getter);
+                RecordSymbolsReferencedByMethod(sym, property.Getter, cctor);
             }
 
             if (property.Setter != null)
             {
                 var sym = DefineSymbol(property.Setter);
-                RecordSymbolsReferencedByMethod(sym, property.Setter);
+                RecordSymbolsReferencedByMethod(sym, property.Setter, cctor);
             }
         }
 
-        void RecordSymbolsReferencedByEvent(IEvent evt)
+        void RecordSymbolsReferencedByEvent(IEvent evt, IMethod? cctor)
         {
             var eventSym = DefineSymbol(evt);
             RecordReferenceToType(eventSym, evt.DeclaringType);
@@ -343,21 +353,26 @@ internal static class AssemblyProcessor
             if (evt.AddAccessor != null)
             {
                 var sym = DefineSymbol(evt.AddAccessor);
-                RecordSymbolsReferencedByMethod(sym, evt.AddAccessor);
+                RecordSymbolsReferencedByMethod(sym, evt.AddAccessor, cctor );
             }
 
             if (evt.RemoveAccessor != null)
             {
                 var sym = DefineSymbol(evt.RemoveAccessor);
-                RecordSymbolsReferencedByMethod(sym, evt.RemoveAccessor);
+                RecordSymbolsReferencedByMethod(sym, evt.RemoveAccessor, cctor);
             }
         }
 
-        void RecordSymbolsReferencedByField(Symbol fieldSym, IField field)
+        void RecordSymbolsReferencedByField(Symbol fieldSym, IField field, IMethod? cctor)
         {
             RecordReferenceToType(fieldSym, field.DeclaringType);
             RecordReferenceToType(fieldSym, field.Type);
             RecordSymbolsReferencedByAttributes(fieldSym, field.GetAttributes());
+
+            if (cctor != null)
+            {
+                RecordReferenceToMember(fieldSym, cctor);
+            }
         }
 
         void RecordSymbolsReferencedByAttributes(Symbol sym, IEnumerable<IAttribute> attributes)
