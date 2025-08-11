@@ -4,34 +4,44 @@
       "Assembly": "TestLibrary",
       "AliveTypes": [
         {
-          "Symbol": "TestLibrary.AliveByTestClas",
-          "Dependents": [
+          "Name": "TestLibrary.AliveByTestClas",
+          "ReferencedBy": [
+            "TestLibrary.AliveByTestClas.MyTestMethod()",
+            "TestLibrary.AliveByTestClas.MyTestMethod()",
             "TestLibrary.AliveByTestClas.MyTestMethod()"
           ]
         },
         {
-          "Symbol": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
-          "Dependents": [
+          "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
+          "ReferencedBy": [
+            "TestLibrary.AliveByTestClas.MyTestMethod()",
             "TestLibrary.AliveByTestClas.MyTestMethod()"
           ]
         }
       ],
       "AliveMembers": [
         {
-          "Symbol": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
-          "Dependents": [
+          "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
+          "ReferencedBy": [
+            "TestLibrary.AliveByTestClas.MyTestMethod()",
             "TestLibrary.AliveByTestClas.MyTestMethod()"
           ]
         },
         {
-          "Symbol": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
-          "Dependents": [
+          "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
+          "ReferencedBy": [
             "TestLibrary.AliveByTestClas.MyTestMethod()"
           ]
         },
         {
-          "Symbol": "TestLibrary.AliveByTestClas..ctor()",
-          "Dependents": [
+          "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
+          "ReferencedBy": [
+            "TestLibrary.AliveByTestClas.MyTestMethod()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveByTestClas..ctor()",
+          "ReferencedBy": [
             "TestLibrary.AliveByTestClas.MyTestMethod()"
           ]
         }

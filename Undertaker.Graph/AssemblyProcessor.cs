@@ -10,6 +10,23 @@ namespace Undertaker.Graph;
 
 internal static class AssemblyProcessor
 {
+    private static readonly HashSet<string> _ignorables = [
+        "System.Object",
+        "System.ValueType",
+        "System.Int32",
+        "System.Int64",
+        "System.Int8",
+        "System.Int16",
+        "System.UInt32",
+        "System.UInt16",
+        "System.UInt8",
+        "System.UInt64",
+        "System.Boolean",
+        "System.Guid",
+        "System.String",
+        "System.Text.StringBuilder"
+        ];
+
     public static void Merge(AssemblyGraph graph, LoadedAssembly la)
     {
         var decomp = la.Decompiler;
@@ -102,10 +119,7 @@ internal static class AssemblyProcessor
         asm.Loaded = true;
         asm.Version = decomp.TypeSystem.MainModule.AssemblyVersion;
 
-        Symbol DefineSymbol(IEntity entity)
-        {
-            return DefineSymbolIn(entity, asm);
-        }
+        Symbol DefineSymbol(IEntity entity) => DefineSymbolIn(entity, asm);
 
         Symbol DefineSymbolIn(IEntity entity, Assembly a)
         {
@@ -375,7 +389,7 @@ internal static class AssemblyProcessor
             if (evt.AddAccessor != null)
             {
                 var sym = DefineSymbol(evt.AddAccessor);
-                RecordSymbolsReferencedByMethod(sym, evt.AddAccessor, cctor );
+                RecordSymbolsReferencedByMethod(sym, evt.AddAccessor, cctor);
             }
 
             if (evt.RemoveAccessor != null)
@@ -439,6 +453,13 @@ internal static class AssemblyProcessor
                     var definingAsm = graph.GetAssembly(td.ParentModule.AssemblyName);
                     var toSym = (TypeSymbol)definingAsm.GetSymbol(graph, t.ReflectionName, SymbolKind.Type);
 
+#if false
+                    if (definingAsm.IsSystemAssembly && _ignorables.Contains(t.ReflectionName))
+                    {
+                        // Don't record references to some some system types, they are too common and not useful.
+                        return;
+                    }
+#endif
                     if (toSym.TypeKind == TypeKind.Other)
                     {
                         toSym.TypeKind = t.Kind;

@@ -79,7 +79,7 @@ public sealed class Reporter
 
             foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide && sym.Marked).Cast<TypeSymbol>())
             {
-                var dependents = sym.Referencers.Select(_symbolTable.GetSymbol).Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x).ToList();
+                var dependents = sym.Referencers.Select(_symbolTable.GetSymbol).Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x).Distinct().ToList();
 
                 aliveTypes ??= [];
                 aliveTypes.Add(new(sym.Name, dependents, sym.Root));
@@ -98,8 +98,8 @@ public sealed class Reporter
 
             if (aliveTypes != null || aliveMembers != null)
             {
-                aliveTypes?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
-                aliveMembers?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+                aliveTypes?.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
+                aliveMembers?.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
 
                 IReadOnlyList<AliveReportSymbol>? at = aliveTypes;
                 at ??= [];
@@ -155,8 +155,8 @@ public sealed class Reporter
 
             if (aliveTypes != null || aliveMembers != null)
             {
-                aliveTypes?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
-                aliveMembers?.Sort((x, y) => string.CompareOrdinal(x.Symbol, y.Symbol));
+                aliveTypes?.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
+                aliveMembers?.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
 
                 IReadOnlyList<AliveReportSymbol>? at = aliveTypes;
                 at ??= [];
@@ -425,7 +425,7 @@ public sealed class Reporter
 
             if (!asm.Loaded)
             {
-                output.WriteLine("  UNPROCESSED ASSEMBLY");
+                output.WriteLine("  !LOADED ASSEMBLY");
                 continue;
             }
 
@@ -437,7 +437,7 @@ public sealed class Reporter
                 output.Write(sym.Kind.ToString().ToUpperInvariant());
 
                 output.Write(sym.Marked ? ", ALIVE" : ", DEAD");
-                output.WriteLine(sym.Root ? ", ROOT]" : ", NOT ROOT]");
+                output.WriteLine(sym.Root ? ", ROOT]" : ", !ROOT]");
 
                 if (sym.ReferencedSymbols.Count > 0)
                 {

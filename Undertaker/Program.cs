@@ -258,6 +258,14 @@ internal static class Program
         Out("Analyzing...");
         var reporter = graph.Done(x => Out($"  {x}"));
 
+        if (args.Verbose)
+        {
+            System.GC.Collect(2, GCCollectionMode.Aggressive);
+            var proc = System.Diagnostics.Process.GetCurrentProcess();
+            var mem = proc.PrivateMemorySize64 / 1024 / 1024;
+            Out($"Total memory used: {mem}MB");
+        }
+
         return !OutputDeadSymbols() ||
             !OutputAliveSymbols() ||
             !OutputAliveByTestSymbols() ||

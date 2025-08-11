@@ -12,7 +12,6 @@
         "TestLibrary.GenericTypeArgument"
       ],
       "NeedlesslyPublicMembers": [
-        "TestLibrary.AliveByTestClas..ctor()",
         "TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty",
         "TestLibrary.AliveClassAndAliveMembers.AliveConst",
         "TestLibrary.AliveClassAndAliveMembers.AliveEvent",
@@ -22,7 +21,6 @@
         "TestLibrary.AliveClassAndAliveMembers.get_Item(System.Int32)",
         "TestLibrary.AliveClassAndAliveMembers.Item",
         "TestLibrary.AliveClassAndAliveMembers.remove_AliveEvent(System.EventHandler)",
-        "TestLibrary.AliveClassButDeadMembers..ctor()",
         "TestLibrary.AliveClassButDeadMembers.add_DeadEvent(System.EventHandler)",
         "TestLibrary.AliveClassButDeadMembers.DeadComplexProperty",
         "TestLibrary.AliveClassButDeadMembers.DeadConst",
@@ -38,20 +36,13 @@
         "TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(System.Int32)",
         "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(System.Int32)",
         "TestLibrary.AliveClassButDeadMembers.set_Item(System.Int32, System.Int32)",
-        "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType..ctor()",
         "TestLibrary.AliveDelegate.Invoke()",
-        "TestLibrary.AliveEnum..ctor()",
         "TestLibrary.AliveEnum.Blue",
         "TestLibrary.AliveEnum.Green",
         "TestLibrary.AliveEnum.Red",
         "TestLibrary.AliveEnum.value__",
-        "TestLibrary.AliveStruct..ctor()",
-        "TestLibrary.DeadClass..ctor()",
         "TestLibrary.DeadDelegate..ctor(System.Object, nint)",
-        "TestLibrary.DeadDelegate.Invoke()",
-        "TestLibrary.DeadStruct..ctor()",
-        "TestLibrary.GenericTypeArgument..ctor()",
-        "TestLibrary.MyException..ctor()"
+        "TestLibrary.DeadDelegate.Invoke()"
       ]
     }
   ]

@@ -62,15 +62,7 @@ internal sealed class MethodSymbol(Assembly assembly, string name, SymbolId id) 
         return lastDotIndex < 0 ? 0 : lastDotIndex + 1;
     }
 
-    public string GetSignature()
-    {
-        return Name.Substring(FindSignatureStartIndex());
-    }
-
-    public override string ToString()
-    {
-        return $"{Name}";
-    }
-
+    public string GetSignature() => Name.Substring(FindSignatureStartIndex());
+    public override string ToString() => Name;
     public override SymbolKind Kind => SymbolKind.Method;
 }

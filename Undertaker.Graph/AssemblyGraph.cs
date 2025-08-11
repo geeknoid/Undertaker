@@ -66,13 +66,18 @@ public sealed class AssemblyGraph
         // every once in a while, try to reclaim wasted space so we minimize RAM usage
         if (_assemblies.Count % 100 == 0)
         {
-            foreach (var asm in _assemblies)
-            {
-                asm.Value.TrimExcess();
-            }
-
-            SymbolTable.TrimExcess();
+            TrimExcess();
         }
+    }
+
+    private void TrimExcess()
+    {
+        foreach (var asm in _assemblies)
+        {
+            asm.Value.TrimExcess();
+        }
+
+        SymbolTable.TrimExcess();
     }
 
     internal Assembly GetAssembly(string assemblyName)
@@ -278,6 +283,7 @@ public sealed class AssemblyGraph
     {
         if (!_finalized)
         {
+            TrimExcess();
             HandleUnhomedReferences(log);
             HookupDerivedSymbols(log);
             MarkUsedSymbols(log);

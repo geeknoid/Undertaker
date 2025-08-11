@@ -1,4 +1,5 @@
-﻿using ICSharpCode.Decompiler;
+﻿using System.Reflection.Metadata;
+using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.TypeSystem;
 using Undertaker.Graph.Collections;
 
@@ -40,7 +41,7 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
         Hide = entity.IsCompilerGenerated() || entity.Name.Contains('<');
         IsPublic = entity.EffectiveAccessibility() == Accessibility.Public;
 
-        if (Assembly.Root)
+        if (Assembly.IsRootAssembly)
         {
             if (entity.EffectiveAccessibility() is Accessibility.Public or Accessibility.Protected)
             {
@@ -55,19 +56,16 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
         {
             _ = _referencedSymbols.Add(sym.Id);
 
+            // Don't bother keeping track of who is referencing system assembly symbols.
+            // Nobody cares, and doing so consumes a lot of memory.
             if (!sym.Assembly.IsSystemAssembly)
             {
-                // Don't bother keeping track of who is referencing system assembly symbols.
-                // Nobody cares, and doing so consumes a lot of memory.
                 _ = sym._referencers.Add(Id);
             }
         }
     }
 
-    public void RecordUnhomedMethodReference(string methodSig)
-    {
-        _ = _unhomedReferencedMethods.Add(methodSig);
-    }
+    public void RecordUnhomedMethodReference(string methodSig) => _ = _unhomedReferencedMethods.Add(methodSig!);
 
     public void Mark(AssemblyGraph graph)
     {

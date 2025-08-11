@@ -1,8 +1,11 @@
 ﻿namespace Undertaker.Graph;
 
-internal readonly struct SymbolId(int index)
+internal readonly struct SymbolId(int index) : IComparable<SymbolId>
 {
     public int Index { get; } = index;
+    public int CompareTo(SymbolId other) => Index.CompareTo(other.Index);
+    public override int GetHashCode() => Index.GetHashCode();
+    public override bool Equals(object? obj) => Index.Equals(obj);
 }
 
 internal sealed class SymbolTable

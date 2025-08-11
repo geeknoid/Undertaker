@@ -12,9 +12,9 @@ internal sealed class TypeSymbol(Assembly assembly, string name, SymbolId id) : 
     public IReadOnlyCollection<SymbolId> DerivedTypes => _derivedTypes;
 
     private readonly HashSet<SymbolId> _members = [];
-    private readonly SmallList<SymbolId> _interfacesImplemented = [];
-    private readonly SmallList<SymbolId> _baseTypes = [];
-    private readonly SmallList<SymbolId> _derivedTypes = [];
+    private SmallList<SymbolId> _interfacesImplemented = [];
+    private SmallList<SymbolId> _baseTypes = [];
+    private SmallList<SymbolId> _derivedTypes = [];
 
     public override void Define(IEntity entity)
     {

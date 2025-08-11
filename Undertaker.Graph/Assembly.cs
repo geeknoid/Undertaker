@@ -6,8 +6,10 @@ namespace Undertaker.Graph;
 internal sealed class Assembly(string name, bool root)
 {
     public string Name { get; } = name;
-    public bool Root { get; } = root;
+    public bool IsRootAssembly { get; } = root;
+    public bool IsSystemAssembly { get; } = name.StartsWith("System.", StringComparison.Ordinal) || name.StartsWith("Microsoft.Extensions.", StringComparison.Ordinal) || name == "mscorlib" || name == "System";
     public bool Loaded { get; set; }
+
     public IReadOnlyCollection<SymbolId> Symbols => _symbols.Values;
     public IReadOnlyCollection<DuplicateAssembly> Duplicates => _duplicates;
     public IReadOnlyCollection<Assembly> InternalsVisibleTo => _internalsVisibleTo;
@@ -15,7 +17,7 @@ internal sealed class Assembly(string name, bool root)
 
     private readonly Dictionary<Key, SymbolId> _symbols = [];
     private readonly HashSet<Assembly> _internalsVisibleTo = [];
-    private readonly SmallList<DuplicateAssembly> _duplicates = [];
+    private SmallList<DuplicateAssembly> _duplicates = [];
 
     private struct Key
     {
@@ -41,31 +43,16 @@ internal sealed class Assembly(string name, bool root)
         return !_symbols.TryGetValue(key, out var id) ? null : graph.SymbolTable.GetSymbol(id);
     }
 
-    public void RecordInternalsVisibleTo(Assembly other)
-    {
-        _ = _internalsVisibleTo.Add(other);
-    }
+    public void RecordInternalsVisibleTo(Assembly other) => _ = _internalsVisibleTo.Add(other);
 
     public override string ToString() => Name;
 
-    public void AddDuplicate(string path, Version version)
-    {
-        _duplicates.Add(new DuplicateAssembly(path, version));
-    }
+    public void AddDuplicate(string path, Version version) => _duplicates.Add(new DuplicateAssembly(path, version));
 
     public void TrimExcess()
     {
         _symbols.TrimExcess();
         _duplicates.TrimExcess();
         _internalsVisibleTo.TrimExcess();
-    }
-
-    public bool IsSystemAssembly
-    {
-        get
-        {
-            return Name.StartsWith("System.", StringComparison.Ordinal) ||
-                   Name.StartsWith("Microsoft.Extensions.", StringComparison.Ordinal);
-        }
     }
 }
