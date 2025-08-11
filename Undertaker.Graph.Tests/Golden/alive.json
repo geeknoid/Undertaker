@@ -21,7 +21,6 @@
       "AliveMembers": [
         {
           "Name": "TestExe.Program.Main()",
-          "ReferencedBy": [],
           "Root": true
         }
       ]
@@ -83,16 +82,7 @@
         {
           "Name": "TestLibrary.AliveClassButDeadMembers",
           "ReferencedBy": [
-            "TestExe.Program.Main()",
-            "TestLibrary.AliveClassButDeadMembers..ctor()",
-            "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType",
-            "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType..ctor()"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType",
-          "ReferencedBy": [
-            "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType..ctor()"
+            "TestExe.Program.Main()"
           ]
         },
         {
@@ -112,27 +102,13 @@
         {
           "Name": "TestLibrary.AliveStruct",
           "ReferencedBy": [
-            "TestExe.Program.Main()",
-            "TestLibrary.AliveStruct..ctor()"
-          ]
-        },
-        {
-          "Name": "TestLibrary.DeadClass",
-          "ReferencedBy": [
-            "TestLibrary.DeadClass..ctor()"
-          ]
-        },
-        {
-          "Name": "TestLibrary.DeadStruct",
-          "ReferencedBy": [
-            "TestLibrary.DeadStruct..ctor()"
+            "TestExe.Program.Main()"
           ]
         },
         {
           "Name": "TestLibrary.GenericTypeArgument",
           "ReferencedBy": [
-            "TestLibrary.AliveClassAndAliveMembers.AliveMethod()",
-            "TestLibrary.GenericTypeArgument..ctor()"
+            "TestLibrary.AliveClassAndAliveMembers.AliveMethod()"
           ]
         },
         {
@@ -148,60 +124,28 @@
           "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
           "ReferencedBy": [
             "TestLibrary.AliveByTestClas.MyTestMethod()",
-            "TestLibrary.AliveByTestClas.MyTestMethod()",
             "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()"
           ]
         },
         {
           "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
           "ReferencedBy": [
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "TestLibrary.AliveByTestClas.MyTestMethod()"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
-          "ReferencedBy": [
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object",
             "TestLibrary.AliveByTestClas.MyTestMethod()"
           ]
         },
         {
           "Name": "TestLibrary.AliveByTestClas..ctor()",
           "ReferencedBy": [
-            "System.Object",
-            "System.Object",
             "TestLibrary.AliveByTestClas.MyTestMethod()"
           ]
         },
         {
           "Name": "TestLibrary.AliveByTestClas.MyTestMethod()",
-          "ReferencedBy": [],
           "Root": true
         },
         {
           "Name": "TestLibrary.AliveClass..ctor()",
           "ReferencedBy": [
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "TestExe.Program.Main()"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveClass..ctor()",
-          "ReferencedBy": [
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object",
             "TestExe.Program.Main()"
           ]
         },
@@ -215,47 +159,13 @@
         {
           "Name": "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType..ctor()",
           "ReferencedBy": [
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "TestExe.Program.Main()"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType..ctor()",
-          "ReferencedBy": [
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object",
             "TestExe.Program.Main()"
           ]
         },
         {
           "Name": "TestLibrary.AliveClassAndAliveMembers..ctor()",
           "ReferencedBy": [
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object",
             "TestExe.Program.Main()"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveClassAndAliveMembers..ctor()",
-          "ReferencedBy": [
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "TestExe.Program.Main()"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty",
-          "ReferencedBy": [
-            "TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(System.Int32)"
           ]
         },
         {
@@ -271,25 +181,7 @@
           ]
         },
         {
-          "Name": "TestLibrary.AliveClassAndAliveMembers.AliveEvent",
-          "ReferencedBy": [
-            "TestLibrary.AliveClassAndAliveMembers.add_AliveEvent(System.EventHandler)"
-          ]
-        },
-        {
           "Name": "TestLibrary.AliveClassAndAliveMembers.AliveField",
-          "ReferencedBy": [
-            "TestExe.Program.Main()"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveClassAndAliveMembers.AliveField",
-          "ReferencedBy": [
-            "TestExe.Program.Main()"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveClassAndAliveMembers.AliveMethod()",
           "ReferencedBy": [
             "TestExe.Program.Main()"
           ]
@@ -307,27 +199,9 @@
           ]
         },
         {
-          "Name": "TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty",
-          "ReferencedBy": [
-            "TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(System.Int32)"
-          ]
-        },
-        {
           "Name": "TestLibrary.AliveClassAndAliveMembers.Item",
           "ReferencedBy": [
             "TestLibrary.AliveClassAndAliveMembers.set_Item(System.Int32, System.Int32)"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveClassAndAliveMembers.Item",
-          "ReferencedBy": [
-            "TestLibrary.AliveClassAndAliveMembers.set_Item(System.Int32, System.Int32)"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveClassAndAliveMembers._value",
-          "ReferencedBy": [
-            "TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(System.Int32)"
           ]
         },
         {
@@ -361,43 +235,6 @@
           ]
         },
         {
-          "Name": "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType",
-          "ReferencedBy": [
-            "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType..ctor()"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType..ctor()",
-          "ReferencedBy": [
-            "System.Object",
-            "System.Object"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveClassButDeadMembers..ctor()",
-          "ReferencedBy": [
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveClassButDeadMembers..ctor()",
-          "ReferencedBy": [
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveDelegate..ctor(System.Object, nint)",
-          "ReferencedBy": [
-            "TestExe.Program.Main()"
-          ]
-        },
-        {
           "Name": "TestLibrary.AliveDelegate..ctor(System.Object, nint)",
           "ReferencedBy": [
             "TestExe.Program.Main()"
@@ -406,121 +243,13 @@
         {
           "Name": "TestLibrary.AliveEnum..ctor()",
           "ReferencedBy": [
-            "System.Enum",
-            "System.Enum",
-            "System.Enum",
-            "System.Enum",
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.ValueType",
-            "System.ValueType",
-            "System.ValueType",
-            "System.ValueType"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveEnum..ctor()",
-          "ReferencedBy": [
-            "System.Enum",
-            "System.Enum",
-            "System.Enum",
-            "System.Enum",
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.ValueType",
-            "System.ValueType",
-            "System.ValueType",
-            "System.ValueType"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveStruct..ctor()",
-          "ReferencedBy": [
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.ValueType",
-            "System.ValueType",
-            "System.ValueType",
-            "System.ValueType"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveStruct..ctor()",
-          "ReferencedBy": [
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.ValueType",
-            "System.ValueType",
-            "System.ValueType",
-            "System.ValueType"
-          ]
-        },
-        {
-          "Name": "TestLibrary.DeadClass..ctor()",
-          "ReferencedBy": [
-            "System.Object",
-            "System.Object"
-          ]
-        },
-        {
-          "Name": "TestLibrary.DeadStruct..ctor()",
-          "ReferencedBy": [
-            "System.Object",
-            "System.Object",
-            "System.ValueType",
-            "System.ValueType"
-          ]
-        },
-        {
-          "Name": "TestLibrary.GenericTypeArgument..ctor()",
-          "ReferencedBy": [
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object"
-          ]
-        },
-        {
-          "Name": "TestLibrary.GenericTypeArgument..ctor()",
-          "ReferencedBy": [
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object"
+            "System.Enum"
           ]
         },
         {
           "Name": "TestLibrary.MyException..ctor()",
           "ReferencedBy": [
-            "System.Exception",
-            "System.Exception",
-            "System.Exception",
-            "System.Exception",
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object"
-          ]
-        },
-        {
-          "Name": "TestLibrary.MyException..ctor()",
-          "ReferencedBy": [
-            "System.Exception",
-            "System.Exception",
-            "System.Exception",
-            "System.Exception",
-            "System.Object",
-            "System.Object",
-            "System.Object",
-            "System.Object"
+            "System.Exception"
           ]
         }
       ]

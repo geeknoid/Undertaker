@@ -55,13 +55,7 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
         if (sym != this)
         {
             _ = _referencedSymbols.Add(sym.Id);
-
-            // Don't bother keeping track of who is referencing system assembly symbols.
-            // Nobody cares, and doing so consumes a lot of memory.
-            if (!sym.Assembly.IsSystemAssembly)
-            {
-                _ = sym._referencers.Add(Id);
-            }
+            _ = sym._referencers.Add(Id);
         }
     }
 

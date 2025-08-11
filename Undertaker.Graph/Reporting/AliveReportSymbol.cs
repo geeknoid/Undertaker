@@ -16,7 +16,7 @@ public sealed class AliveReportSymbol
     /// The name of the other symbols that have a dependence on this symbol.
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public IReadOnlyList<string> ReferencedBy { get; }
+    public IReadOnlyList<string>? ReferencedBy { get; }
 
     /// <summary>
     /// Gets a value indicating whether the symbol is considered a root.
@@ -27,7 +27,12 @@ public sealed class AliveReportSymbol
     internal AliveReportSymbol(string symbol, IReadOnlyList<string> dependents, bool root)
     {
         Name = symbol;
-        ReferencedBy = dependents;
+
+        if (dependents.Count > 0)
+        { 
+            ReferencedBy = dependents;
+        }
+
         Root = root;
     }
 }

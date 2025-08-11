@@ -159,6 +159,9 @@ Undertaker does a pretty good job at finding most of the dead code in a code bas
 
 * **Enum Members and Const Values**. Undertaker cannot detect unused enum members or const values.
 
+* **Conflicting Assembly Versions**. If you have multiple versions of the same assembly in the input folder, the tool will load the first
+  version it encounters and will skip other versions. This could lead to discrepancies in the analysis.
+
 ## False Positives
 
 Undertaker tries really hard not to produce any false positives (i.e. claiming code is dead when it really isn't). But ultimately, the tool

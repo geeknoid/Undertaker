@@ -5,7 +5,7 @@ internal readonly struct SymbolId(int index) : IComparable<SymbolId>
     public int Index { get; } = index;
     public int CompareTo(SymbolId other) => Index.CompareTo(other.Index);
     public override int GetHashCode() => Index.GetHashCode();
-    public override bool Equals(object? obj) => Index.Equals(obj);
+    public override bool Equals(object? obj) => obj is SymbolId other && Index == other.Index;
 }
 
 internal sealed class SymbolTable

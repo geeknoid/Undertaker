@@ -13,6 +13,7 @@ internal static class AssemblyProcessor
     private static readonly HashSet<string> _ignorables = [
         "System.Object",
         "System.ValueType",
+#if false
         "System.Int32",
         "System.Int64",
         "System.Int8",
@@ -25,6 +26,7 @@ internal static class AssemblyProcessor
         "System.Guid",
         "System.String",
         "System.Text.StringBuilder"
+#endif
         ];
 
     public static void Merge(AssemblyGraph graph, LoadedAssembly la)
@@ -92,16 +94,21 @@ internal static class AssemblyProcessor
                 }
 
                 RecordSymbolsReferencedByMethod(sym, method, cctor);
+                typeSym.AddMember(sym);
             }
 
             foreach (var property in type.Properties)
             {
-                RecordSymbolsReferencedByProperty(property, cctor);
+                var sym = DefineSymbol(property);
+                RecordSymbolsReferencedByProperty(sym, property, cctor);
+                typeSym.AddMember(sym);
             }
 
             foreach (var evt in type.Events)
             {
-                RecordSymbolsReferencedByEvent(evt, cctor);
+                var sym = DefineSymbol(evt);
+                RecordSymbolsReferencedByEvent(sym, evt, cctor);
+                typeSym.AddMember(sym);
             }
 
             foreach (var field in type.Fields)
@@ -112,7 +119,9 @@ internal static class AssemblyProcessor
                     continue;
                 }
 
-                RecordSymbolsReferencedByField(DefineSymbol(field), field, cctor);
+                var sym = DefineSymbol(field);
+                RecordSymbolsReferencedByField(sym, field, cctor);
+                typeSym.AddMember(sym);
             }
         }
 
@@ -174,6 +183,7 @@ internal static class AssemblyProcessor
                 }
 
                 var sym = (TypeSymbol)graph.GetAssembly(bt.ParentModule!.AssemblyName).GetSymbol(graph, bt.ReflectionName, SymbolKind.Type);
+                RecordReferenceToType(typeSym, bt);
 
                 if (bt.Kind == TypeKind.Interface)
                 {
@@ -361,9 +371,8 @@ internal static class AssemblyProcessor
             }
         }
 
-        void RecordSymbolsReferencedByProperty(IProperty property, IMethod? cctor)
+        void RecordSymbolsReferencedByProperty(Symbol propertySym, IProperty property, IMethod? cctor)
         {
-            var propertySym = DefineSymbol(property);
             RecordReferenceToType(propertySym, property.DeclaringType);
             RecordSymbolsReferencedByAttributes(propertySym, property.GetAttributes());
 
@@ -380,9 +389,8 @@ internal static class AssemblyProcessor
             }
         }
 
-        void RecordSymbolsReferencedByEvent(IEvent evt, IMethod? cctor)
+        void RecordSymbolsReferencedByEvent(Symbol eventSym, IEvent evt, IMethod? cctor)
         {
-            var eventSym = DefineSymbol(evt);
             RecordReferenceToType(eventSym, evt.DeclaringType);
             RecordSymbolsReferencedByAttributes(eventSym, evt.GetAttributes());
 
@@ -451,15 +459,14 @@ internal static class AssemblyProcessor
                 if (td?.ParentModule != null)
                 {
                     var definingAsm = graph.GetAssembly(td.ParentModule.AssemblyName);
-                    var toSym = (TypeSymbol)definingAsm.GetSymbol(graph, t.ReflectionName, SymbolKind.Type);
 
-#if false
                     if (definingAsm.IsSystemAssembly && _ignorables.Contains(t.ReflectionName))
                     {
-                        // Don't record references to some some system types, they are too common and not useful.
+                        // Don't record references to some system types, they are too common and not useful.
                         return;
                     }
-#endif
+
+                    var toSym = (TypeSymbol)definingAsm.GetSymbol(graph, t.ReflectionName, SymbolKind.Type);
                     if (toSym.TypeKind == TypeKind.Other)
                     {
                         toSym.TypeKind = t.Kind;

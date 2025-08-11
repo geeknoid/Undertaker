@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text;
 
 namespace Undertaker.Graph.Reporting;
@@ -28,6 +29,8 @@ public sealed class Reporter
         {
             List<string>? deadTypes = null;
             List<string>? deadMembers = null;
+
+            var l = asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide).Cast<TypeSymbol>().ToList();
 
             foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide).Cast<TypeSymbol>())
             {
@@ -79,7 +82,7 @@ public sealed class Reporter
 
             foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide && sym.Marked).Cast<TypeSymbol>())
             {
-                var dependents = sym.Referencers.Select(_symbolTable.GetSymbol).Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x).Distinct().ToList();
+                var dependents = sym.Referencers.Select(_symbolTable.GetSymbol).Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x).ToList();
 
                 aliveTypes ??= [];
                 aliveTypes.Add(new(sym.Name, dependents, sym.Root));
