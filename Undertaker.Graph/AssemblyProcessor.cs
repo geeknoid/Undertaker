@@ -472,6 +472,11 @@ internal static class AssemblyProcessor
                         toSym.TypeKind = t.Kind;
                         foreach (var member in td.Members)
                         {
+                            if (member is IField field && field.IsConst)
+                            {
+                                continue;
+                            }
+
                             toSym.AddMember(DefineSymbolIn(member, definingAsm));
                         }
                     }

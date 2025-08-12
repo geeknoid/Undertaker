@@ -60,6 +60,18 @@ public class MyException : Exception
 {
 }
 
+[TestAttribute(GenericTypeArgument.Name)]
 public class GenericTypeArgument
 {
+    public const string Name = "name";
+}
+
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Interface | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Event | AttributeTargets.Delegate)]
+public class TestAttribute : Attribute
+{
+    public TestAttribute(string name)
+    {
+        Name = name;
+    }
+    public string Name { get; }
 }

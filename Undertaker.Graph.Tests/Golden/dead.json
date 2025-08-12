@@ -10,7 +10,6 @@
         "TestLibrary.DeadStruct"
       ],
       "DeadMembers": [
-        "TestLibrary.AliveClassAndAliveMembers.AliveConst",
         "TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()",
         "TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()",
         "TestLibrary.AliveClassAndAliveMembers.get_Item(System.Int32)",
@@ -19,7 +18,6 @@
         "TestLibrary.AliveClassButDeadMembers..ctor()",
         "TestLibrary.AliveClassButDeadMembers.add_DeadEvent(System.EventHandler)",
         "TestLibrary.AliveClassButDeadMembers.DeadComplexProperty",
-        "TestLibrary.AliveClassButDeadMembers.DeadConst",
         "TestLibrary.AliveClassButDeadMembers.DeadEvent",
         "TestLibrary.AliveClassButDeadMembers.DeadField",
         "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
@@ -33,12 +31,12 @@
         "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(System.Int32)",
         "TestLibrary.AliveClassButDeadMembers.set_Item(System.Int32, System.Int32)",
         "TestLibrary.AliveDelegate.Invoke()",
-        "TestLibrary.AliveEnum.Blue",
-        "TestLibrary.AliveEnum.Green",
-        "TestLibrary.AliveEnum.Red",
         "TestLibrary.AliveEnum.value__",
         "TestLibrary.AliveStruct..ctor()",
-        "TestLibrary.GenericTypeArgument..ctor()"
+        "TestLibrary.GenericTypeArgument..ctor()",
+        "TestLibrary.TestAttribute..ctor(System.String)",
+        "TestLibrary.TestAttribute.get_Name()",
+        "TestLibrary.TestAttribute.Name"
       ]
     }
   ]

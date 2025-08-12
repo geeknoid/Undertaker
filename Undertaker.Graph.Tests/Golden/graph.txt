@@ -282,7 +282,6 @@ ASSEMBLY TestLibrary.dll
     DIRECTLY REFERENCED BY
       TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()
       TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(System.Int32)
-  TestLibrary.AliveClassAndAliveMembers.AliveConst [FIELD, DEAD, !ROOT]
   TestLibrary.AliveClassAndAliveMembers.AliveEvent [EVENT, ALIVE, !ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassAndAliveMembers
@@ -440,7 +439,6 @@ ASSEMBLY TestLibrary.dll
     DIRECTLY REFERENCED BY
       TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()
       TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(System.Int32)
-  TestLibrary.AliveClassButDeadMembers.DeadConst [FIELD, DEAD, !ROOT]
   TestLibrary.AliveClassButDeadMembers.DeadEvent [EVENT, DEAD, !ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassButDeadMembers
@@ -568,9 +566,6 @@ ASSEMBLY TestLibrary.dll
   TestLibrary.AliveEnum..ctor() [METHOD, ALIVE, !ROOT]
     DIRECTLY REFERENCED BY
       System.Enum
-  TestLibrary.AliveEnum.Blue [FIELD, DEAD, !ROOT]
-  TestLibrary.AliveEnum.Green [FIELD, DEAD, !ROOT]
-  TestLibrary.AliveEnum.Red [FIELD, DEAD, !ROOT]
   TestLibrary.AliveEnum.value__ [FIELD, DEAD, !ROOT]
   TestLibrary.AliveStruct [TYPE, ALIVE, !ROOT]
     DIRECTLY REFERENCES
@@ -640,6 +635,9 @@ ASSEMBLY TestLibrary.dll
       TestLibrary.DeadStruct
       System.Void
   TestLibrary.GenericTypeArgument [TYPE, ALIVE, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.TestAttribute
+      System.String
     DIRECTLY REFERENCED BY
       TestLibrary.AliveClassAndAliveMembers.AliveMethod()
       TestLibrary.GenericTypeArgument..ctor()
@@ -663,5 +661,46 @@ ASSEMBLY TestLibrary.dll
       System.Exception
     DIRECTLY REFERENCED BY
       System.Exception
+  TestLibrary.TestAttribute [TYPE, ALIVE, !ROOT]
+    DIRECTLY REFERENCES
+      System.Attribute
+      System.AttributeUsageAttribute
+      System.AttributeTargets
+    DIRECTLY REFERENCED BY
+      TestLibrary.GenericTypeArgument
+      TestLibrary.TestAttribute..ctor(System.String)
+      TestLibrary.TestAttribute.Name
+      TestLibrary.TestAttribute.get_Name()
+      TestLibrary.TestAttribute.<Name>k__BackingField
+  TestLibrary.TestAttribute..ctor(System.String) [METHOD, DEAD, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.TestAttribute
+      System.String
+      System.Void
+      System.Attribute..ctor()
+      System.Attribute
+      TestLibrary.TestAttribute.<Name>k__BackingField
+  TestLibrary.TestAttribute.<Name>k__BackingField [FIELD, DEAD, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.TestAttribute
+      System.String
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      System.Diagnostics.DebuggerBrowsableAttribute
+      System.Diagnostics.DebuggerBrowsableState
+    DIRECTLY REFERENCED BY
+      TestLibrary.TestAttribute..ctor(System.String)
+      TestLibrary.TestAttribute.get_Name()
+  TestLibrary.TestAttribute.get_Name() [METHOD, DEAD, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.TestAttribute
+      System.String
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.TestAttribute.Name
+      TestLibrary.TestAttribute.<Name>k__BackingField
+  TestLibrary.TestAttribute.Name [MISC, DEAD, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.TestAttribute
+    DIRECTLY REFERENCED BY
+      TestLibrary.TestAttribute.get_Name()
 ASSEMBLY UNHOMED.dll
   !LOADED ASSEMBLY

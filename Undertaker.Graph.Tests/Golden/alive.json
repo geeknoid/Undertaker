@@ -117,6 +117,12 @@
             "TestExe.Program.Main()",
             "TestLibrary.MyException..ctor()"
           ]
+        },
+        {
+          "Name": "TestLibrary.TestAttribute",
+          "ReferencedBy": [
+            "TestLibrary.GenericTypeArgument"
+          ]
         }
       ],
       "AliveMembers": [
