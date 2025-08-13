@@ -121,6 +121,7 @@ public sealed class AssemblyGraph
         // iterate through all the unhomed references in the graph
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
+            log($"  Handling unhomed references in {asm.Name}");
             foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol))
             {
                 // For each unhomed reference, we try to find a matching symbol in the loaded assemblies.

@@ -216,23 +216,21 @@ internal static class Program
                 continue;
             }
 
-            if (tasks.Count < MaxConcurrentAssemblyLoads)
-            {
-                var task = Task.Run(() =>
-                {
-                    Out($"Loading assembly {file.FullName}");
-                    return new LoadedAssembly(file.FullName);
-                });
-
-                _ = tasks.Add(task);
-                map.Add(task, file);
-            }
-            else
+            if (tasks.Count >= MaxConcurrentAssemblyLoads)
             {
                 var t = await Task.WhenAny(tasks);
                 await CompleteTask(t);
                 _ = tasks.Remove(t);
             }
+
+            var task = Task.Run(() =>
+            {
+                Out($"Loading assembly {file.FullName}");
+                return new LoadedAssembly(file.FullName);
+            });
+
+            _ = tasks.Add(task);
+            map.Add(task, file);
         }
 
         await foreach (var task in Task.WhenEach(tasks))
@@ -296,7 +294,7 @@ internal static class Program
             }
             catch (BadImageFormatException)
             {
-                Warn($"{file.FullName} is not a .NET assembly, ignoring");
+                Warn($"{file.FullName} is not a .NET assembly, skipping");
                 skipCount++;
             }
             catch (Exception ex)
