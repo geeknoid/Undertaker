@@ -446,7 +446,7 @@ internal static class AssemblyProcessor
             }
             else
             {
-                fromSym.RecordUnhomedMethodReference(GetEntitySymbolName(toMember));
+                fromSym.RecordReferencedSymbol(graph.UnhomedAssembly.GetSymbol(graph, GetEntitySymbolName(toMember), GetEntitySymbolKind(toMember)));
             }
         }
 

@@ -20,6 +20,12 @@ public sealed class AssemblyGraph
     private readonly HashSet<string> _testMethodAttributes = [];
     private bool _finalized;
     internal SymbolTable SymbolTable { get; } = new();
+    internal Assembly UnhomedAssembly { get; } = new Assembly("$$UNHOMED$$", root: false);
+
+    public AssemblyGraph()
+    {
+        _assemblies[UnhomedAssembly.Name] = UnhomedAssembly;
+    }
 
     /// <summary>
     /// Indicates a particular assembly should be considered a root assembly.
@@ -112,42 +118,29 @@ public sealed class AssemblyGraph
 
     private void HandleUnhomedReferences(Action<string> log)
     {
-        // Create a new assembly called the UNHOMED assembly, which will hold all unhomed references.
-        var unhomedAssembly = new Assembly("UNHOMED", root: true);
-        _assemblies["UNHOMED"] = unhomedAssembly;
-
         log("Handling unhomed references...");
 
-        // iterate through all the unhomed references in the graph
-        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
-        {
-            log($"  Handling unhomed references in {asm.Name}");
-            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol))
-            {
-                // For each unhomed reference, we try to find a matching symbol in the loaded assemblies.
-                foreach (var member in sym.UnhomedReferencedMethods)
-                {
-                    bool found = false;
-                    foreach (var otherAsm in _assemblies.Values.Where(otherAsm => otherAsm.Loaded && otherAsm != unhomedAssembly))
-                    {
-                        var method = otherAsm.FindSymbol(this, member, SymbolKind.Method) as MethodSymbol;
-                        if (method is not null)
-                        {
-                            sym.RecordReferencedSymbol(method);
-                            found = true;
-                            break;
-                        }
-                    }
+        HashSet<SymbolId> removals = [];
 
-                    // If we can't find a match, add it to the UNHOMED assembly as if that assembly had declared the symbol.
-                    if (!found)
-                    {
-                        var unhomedSym = unhomedAssembly.GetSymbol(this, member, SymbolKind.Method);
-                        sym.RecordReferencedSymbol(unhomedSym);
-                    }
+        // For each unhomed method reference, we try to find a matching symbol in the loaded assemblies.
+        foreach (var symId in UnhomedAssembly.Symbols)
+        {
+            var sym = SymbolTable.GetSymbol(symId);
+                
+            foreach (var otherAsm in _assemblies.Values.Where(otherAsm => otherAsm.Loaded && otherAsm != UnhomedAssembly))
+            {
+                var method = otherAsm.FindSymbol(this, sym.Name, SymbolKind.Method) as MethodSymbol;
+                if (method is not null)
+                {
+                    sym.ReplaceMethodReference(this, method);
+                    _ = removals.Add(symId);
+                    break;
                 }
             }
         }
+
+        UnhomedAssembly.RemoveSymbols(this, removals);
+        _ = _assemblies.Remove(UnhomedAssembly.Name);
     }
 
     private void HookupDerivedSymbols(Action<string> log)
@@ -194,39 +187,6 @@ public sealed class AssemblyGraph
                             }
                         }
                     }
-                }
-            }
-        }
-
-        // for any methods declared in the UNHOMED assembly, we need to add a reference from the unhomed assembly symbol to each
-        // override method in the graph having the same signature.
-        var unhomedAssembly = _assemblies["UNHOMED"];
-        log($"Linking {unhomedAssembly.Symbols.Count} unhomed methods to overrides in any assembly");
-
-        var signatureMap = new Dictionary<string, List<MethodSymbol>>();
-        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && asm != unhomedAssembly))
-        {
-            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(sym => sym.IsOverride))
-            {
-                var signature = sym.GetSignature();
-                if (!signatureMap.TryGetValue(signature, out var methods))
-                {
-                    methods = [];
-                    signatureMap[signature] = methods;
-                }
-
-                methods.Add(sym);
-            }
-        }
-
-        foreach (var unhomedSym in unhomedAssembly.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
-        {
-            var sig = unhomedSym.GetSignature();
-            if (signatureMap.TryGetValue(sig, out var matchingMethods))
-            {
-                foreach (var matchingMethod in matchingMethods)
-                {
-                    unhomedSym.RecordReferencedSymbol(matchingMethod);
                 }
             }
         }

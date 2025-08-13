@@ -424,13 +424,17 @@ public sealed class Reporter
         {
             output.Write("ASSEMBLY ");
             output.Write(asm.Name);
-            output.WriteLine(".dll");
+            output.Write(".dll");
 
             if (!asm.Loaded)
             {
-                output.WriteLine("  !LOADED ASSEMBLY");
+                output.WriteLine(" [!LOADED]");
                 continue;
             }
+
+            output.Write(" [LOADED");
+            output.Write(asm.IsRootAssembly ? ", ROOT" : ", !ROOT");
+            output.WriteLine(asm.IsSystemAssembly ? ", SYSTEM]" : ", !SYSTEM]");
 
             foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).OrderBy(s => s.Name))
             {
@@ -440,6 +444,7 @@ public sealed class Reporter
                 output.Write(sym.Kind.ToString().ToUpperInvariant());
 
                 output.Write(sym.Marked ? ", ALIVE" : ", DEAD");
+                output.Write(sym.Hide ? ", HIDE" : ", !HIDE");
                 output.WriteLine(sym.Root ? ", ROOT]" : ", !ROOT]");
 
                 if (sym.ReferencedSymbols.Count > 0)
@@ -449,16 +454,6 @@ public sealed class Reporter
                     {
                         output.Write("      ");
                         output.WriteLine(s.Name);
-                    }
-                }
-
-                if (sym.UnhomedReferencedMethods.Count > 0)
-                {
-                    output.WriteLine("    UNHOMED REFERENCES");
-                    foreach (var m in sym.UnhomedReferencedMethods)
-                    {
-                        output.Write("      ");
-                        output.WriteLine(m);
                     }
                 }
 

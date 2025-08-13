@@ -31,6 +31,11 @@ internal sealed class SymbolTable
 
     public Symbol GetSymbol(SymbolId id) => _symbols[id.Index];
 
+    /// <summary>
+    /// Makes an id point to a different existing symbol.
+    /// </summary>
+    public void Redirect(SymbolId id, Symbol sym) => _symbols[id.Index] = sym;
+
     public void TrimExcess()
     {
         foreach (var sym in _symbols)

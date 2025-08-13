@@ -8,7 +8,7 @@ namespace Undertaker.Graph;
 internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
 {
     // set on construction
-    public Assembly Assembly { get; } = assembly;
+    public Assembly Assembly { get; private set;  } = assembly;
     public string Name { get; } = name;
     public SymbolId Id { get; } = id;
 
@@ -22,9 +22,6 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
     public IReadOnlyCollection<SymbolId> Referencers => _referencers;
     public IReadOnlyCollection<SymbolId> ReferencedSymbols => _referencedSymbols;
 
-    // set by RecordUnhomedMethodReferenced
-    public IReadOnlyCollection<string> UnhomedReferencedMethods => _unhomedReferencedMethods;
-
     // filled-in over time as the overall graph is populated
     public SymbolId? DeclaringType { get; set; }
     public bool Root { get; protected set; }
@@ -34,7 +31,6 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
 
     private readonly HashSet<SymbolId> _referencers = [];
     private readonly HashSet<SymbolId> _referencedSymbols = [];
-    private readonly HashSet<string> _unhomedReferencedMethods = [];
 
     public virtual void Define(IEntity entity)
     {
@@ -59,7 +55,17 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
         }
     }
 
-    public void RecordUnhomedMethodReference(string methodSig) => _ = _unhomedReferencedMethods.Add(methodSig!);
+    public void ReplaceMethodReference(AssemblyGraph graph, Symbol replacement)
+    {
+        foreach (var referencer in _referencers)
+        {
+            var r = graph.SymbolTable.GetSymbol(referencer);
+            _ = r._referencedSymbols.Remove(Id);
+            _ = r._referencedSymbols.Add(replacement.Id);
+        }
+
+        graph.SymbolTable.Redirect(Id, replacement);
+    }
 
     public void Mark(AssemblyGraph graph)
     {
@@ -81,6 +87,5 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
     {
         _referencers.TrimExcess();
         _referencedSymbols.TrimExcess();
-        _unhomedReferencedMethods.TrimExcess();
     }
 }

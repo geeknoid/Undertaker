@@ -43,6 +43,16 @@ internal sealed class Assembly(string name, bool root)
         return !_symbols.TryGetValue(key, out var id) ? null : graph.SymbolTable.GetSymbol(id);
     }
 
+    public void RemoveSymbols(AssemblyGraph graph, IEnumerable<SymbolId> removals)
+    {
+        foreach (var id in removals)
+        {
+            var sym = graph.SymbolTable.GetSymbol(id);
+            var key = new Key { Kind = sym.Kind, Name = sym.Name };
+            _ = _symbols.Remove(key);
+        }
+    }
+
     public void RecordInternalsVisibleTo(Assembly other) => _ = _internalsVisibleTo.Add(other);
 
     public override string ToString() => Name;
