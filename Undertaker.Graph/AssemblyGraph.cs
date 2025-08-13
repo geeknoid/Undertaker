@@ -101,17 +101,15 @@ public sealed class AssemblyGraph
 
     private void MarkUsedSymbols(Action<string> log)
     {
-        log("Marking used symbols...");
+        log("Marking alive symbols...");
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
             foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol))
             {
-                if (!sym.Root)
+                if (sym.Root || sym.Pinned)
                 {
-                    continue;
+                    sym.Mark(this);
                 }
-
-                sym.Mark(this);
             }
         }
     }
@@ -235,6 +233,7 @@ public sealed class AssemblyGraph
             }
         }
     }
+
 
     /// <summary>
     /// Completes the graph and returns a reporter to extract meaning from the graph.

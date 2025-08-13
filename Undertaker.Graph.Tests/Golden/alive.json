@@ -20,6 +20,19 @@
       ],
       "AliveMembers": [
         {
+          "Name": "TestExe.Program\u002B\u003C\u003Ec",
+          "ReferencedBy": [
+            "TestExe.Program.Main()",
+            "TestExe.Program\u002B\u003C\u003Ec..cctor()",
+            "TestExe.Program\u002B\u003C\u003Ec..ctor()",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003C\u003E9",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003C\u003E9__0_0",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003C\u003E9__0_1",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003CMain\u003Eb__0_0()",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003CMain\u003Eb__0_1(System.Object, System.EventArgs)"
+          ]
+        },
+        {
           "Name": "TestExe.Program.Main()",
           "Root": true
         }
@@ -172,6 +185,12 @@
           "Name": "TestLibrary.AliveClassAndAliveMembers..ctor()",
           "ReferencedBy": [
             "TestExe.Program.Main()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveClassAndAliveMembers.\u003CAliveSimpleProperty\u003Ek__BackingField",
+          "ReferencedBy": [
+            "TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(System.Int32)"
           ]
         },
         {

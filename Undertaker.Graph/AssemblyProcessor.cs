@@ -13,6 +13,7 @@ internal static class AssemblyProcessor
     private static readonly HashSet<string> _ignorables = [
         "System.Object",
         "System.ValueType",
+        "System.Void",
 #if false
         "System.Int32",
         "System.Int64",
@@ -74,8 +75,12 @@ internal static class AssemblyProcessor
                 }
             }
 
+            bool moreThanConstants = false;
+            bool gotConstants = false;
             foreach (var method in type.Methods)
             {
+                moreThanConstants = true;
+
                 var sym = (MethodSymbol)DefineSymbol(method);
                 foreach (var a in method.GetAttributes())
                 {
@@ -99,6 +104,8 @@ internal static class AssemblyProcessor
 
             foreach (var property in type.Properties)
             {
+                moreThanConstants = true;
+
                 var sym = DefineSymbol(property);
                 RecordSymbolsReferencedByProperty(sym, property, cctor);
                 typeSym.AddMember(sym);
@@ -106,6 +113,8 @@ internal static class AssemblyProcessor
 
             foreach (var evt in type.Events)
             {
+                moreThanConstants = true;
+
                 var sym = DefineSymbol(evt);
                 RecordSymbolsReferencedByEvent(sym, evt, cctor);
                 typeSym.AddMember(sym);
@@ -116,14 +125,24 @@ internal static class AssemblyProcessor
                 if (field.IsConst)
                 {
                     // we don't handle const values, so pretend they don't exist
+                    gotConstants = true;
                     continue;
                 }
 
+                moreThanConstants = true;
                 var sym = DefineSymbol(field);
                 RecordSymbolsReferencedByField(sym, field, cctor);
                 typeSym.AddMember(sym);
             }
+
+            if (!moreThanConstants && gotConstants)
+            {
+                // since we can tell whether constants are used or not, when we find types that only define constants, let's pin them
+                // so they appear alive (to avoid false positives)
+                typeSym.Pin();
+            }
         }
+
 
         asm.Loaded = true;
         asm.Version = decomp.TypeSystem.MainModule.AssemblyVersion;
@@ -132,13 +151,13 @@ internal static class AssemblyProcessor
 
         Symbol DefineSymbolIn(IEntity entity, Assembly a)
         {
-            var sym = a.GetSymbol(graph, GetEntitySymbolName(entity), GetEntitySymbolKind(entity));
+            var sym = a.GetSymbol(graph, entity);
             sym.Define(entity);
 
             var parent = entity.DeclaringTypeDefinition;
             if (parent?.ParentModule != null && sym.DeclaringType == null)
             {
-                var dt = (TypeSymbol)graph.GetAssembly(parent.ParentModule.AssemblyName).GetSymbol(graph, parent.ReflectionName, SymbolKind.Type);
+                var dt = (TypeSymbol)graph.GetAssembly(parent.ParentModule.AssemblyName).GetSymbol(graph, parent);
                 dt.AddMember(sym);
                 sym.DeclaringType = dt.Id;
             }
@@ -182,7 +201,7 @@ internal static class AssemblyProcessor
                     continue; // skip self-reference
                 }
 
-                var sym = (TypeSymbol)graph.GetAssembly(bt.ParentModule!.AssemblyName).GetSymbol(graph, bt.ReflectionName, SymbolKind.Type);
+                var sym = (TypeSymbol)graph.GetAssembly(bt.ParentModule!.AssemblyName).GetSymbol(graph, bt);
                 RecordReferenceToType(typeSym, bt);
 
                 if (bt.Kind == TypeKind.Interface)
@@ -261,7 +280,7 @@ internal static class AssemblyProcessor
                 {
                     foreach (var bm in bt.GetMethods().Where(bm => bm.Name == method.Name && bm.Parameters.Count == method.Parameters.Count))
                     {
-                        if (methodSym.Name == GetEntitySymbolName(bm))
+                        if (methodSym.Name == Assembly.GetEntitySymbolName(bm))
                         {
                             RecordReferenceToMember(methodSym, bm);
                         }
@@ -274,7 +293,7 @@ internal static class AssemblyProcessor
             {
                 foreach (var im in it.GetMethods().Where(bm => bm.Name == method.Name && bm.Parameters.Count == method.Parameters.Count))
                 {
-                    if (methodSym.Name == GetEntitySymbolName(im))
+                    if (methodSym.Name == Assembly.GetEntitySymbolName(im))
                     {
                         RecordReferenceToMember(methodSym, im);
                     }
@@ -309,7 +328,6 @@ internal static class AssemblyProcessor
                                 var token = blobReader.ReadInt32();
                                 var handle = (EntityHandle)MetadataTokens.Handle(token);
                                 var m = metadataModule.ResolveMethod(handle, default);
-
                                 RecordReferenceToMember(methodSym, m);
                                 RecordReferenceToType(methodSym, m.DeclaringType);
                                 break;
@@ -442,11 +460,11 @@ internal static class AssemblyProcessor
             var td = toMember.DeclaringTypeDefinition;
             if (td?.ParentModule != null)
             {
-                fromSym.RecordReferencedSymbol(graph.GetAssembly(td.ParentModule.AssemblyName).GetSymbol(graph, GetEntitySymbolName(toMember), GetEntitySymbolKind(toMember)));
+                fromSym.RecordReferencedSymbol(graph.GetAssembly(td.ParentModule.AssemblyName).GetSymbol(graph, toMember));
             }
             else
             {
-                fromSym.RecordReferencedSymbol(graph.UnhomedAssembly.GetSymbol(graph, GetEntitySymbolName(toMember), GetEntitySymbolKind(toMember)));
+                fromSym.RecordReferencedSymbol(graph.UnhomedAssembly.GetSymbol(graph, toMember));
             }
         }
 
@@ -466,7 +484,7 @@ internal static class AssemblyProcessor
                         return;
                     }
 
-                    var toSym = (TypeSymbol)definingAsm.GetSymbol(graph, t.ReflectionName, SymbolKind.Type);
+                    var toSym = (TypeSymbol)definingAsm.GetSymbol(graph, td);
                     if (toSym.TypeKind == TypeKind.Other)
                     {
                         toSym.TypeKind = t.Kind;
@@ -492,50 +510,5 @@ internal static class AssemblyProcessor
                 t = t.DeclaringType;
             }
         }
-
-        string GetEntitySymbolName(IEntity entity)
-        {
-            if (entity is IMethod method)
-            {
-                _ = sb.Clear()
-                    .Append(entity.ReflectionName)
-                    .Append('(');
-
-                bool first = true;
-                foreach (var p in method.Parameters)
-                {
-                    if (!first)
-                    {
-                        _ = sb.Append(", ");
-                    }
-                    else
-                    {
-                        first = false;
-                    }
-
-                    _ = sb.Append(p.Type.ReflectionName);
-                }
-
-                return sb.Append(')').ToString();
-            }
-
-            return entity.ReflectionName;
-        }
-    }
-
-    public static SymbolKind GetEntitySymbolKind(IEntity entity)
-    {
-        return entity.SymbolKind switch
-        {
-            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Method => SymbolKind.Method,
-            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Constructor => SymbolKind.Method,
-            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Destructor => SymbolKind.Method,
-            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Accessor => SymbolKind.Method,
-            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Operator => SymbolKind.Method,
-            ICSharpCode.Decompiler.TypeSystem.SymbolKind.TypeDefinition => SymbolKind.Type,
-            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Field => SymbolKind.Field,
-            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Event => SymbolKind.Event,
-            _ => SymbolKind.Misc,
-        };
     }
 }

@@ -30,8 +30,6 @@ public sealed class Reporter
             List<string>? deadTypes = null;
             List<string>? deadMembers = null;
 
-            var l = asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide).Cast<TypeSymbol>().ToList();
-
             foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide).Cast<TypeSymbol>())
             {
                 if (sym.Marked)
@@ -89,7 +87,7 @@ public sealed class Reporter
 
                 foreach (var member in sym.Members.Select(_symbolTable.GetSymbol))
                 {
-                    if (member.Marked && !member.Hide)
+                    if (member.Marked)
                     {
                         dependents = [.. member.Referencers.Select(_symbolTable.GetSymbol).Where(x => x.Marked).Select(x => x.Name).OrderBy(x => x)];
 
@@ -445,6 +443,7 @@ public sealed class Reporter
 
                 output.Write(sym.Marked ? ", ALIVE" : ", DEAD");
                 output.Write(sym.Hide ? ", HIDE" : ", !HIDE");
+                output.Write(sym.Pinned ? ", PINNED" : ", !PINNED");
                 output.WriteLine(sym.Root ? ", ROOT]" : ", !ROOT]");
 
                 if (sym.ReferencedSymbols.Count > 0)

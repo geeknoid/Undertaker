@@ -1,4 +1,6 @@
-﻿using Undertaker.Graph.Collections;
+﻿using System.Text;
+using ICSharpCode.Decompiler.TypeSystem;
+using Undertaker.Graph.Collections;
 using Undertaker.Graph.Reporting;
 
 namespace Undertaker.Graph;
@@ -25,12 +27,12 @@ internal sealed class Assembly(string name, bool root)
         public SymbolKind Kind;
     }
 
-    public Symbol GetSymbol(AssemblyGraph graph, string name, SymbolKind symbolKind)
+    public Symbol GetSymbol(AssemblyGraph graph, IEntity entity)
     {
-        var key = new Key { Name = name, Kind = symbolKind };
+        var key = new Key { Name = GetEntitySymbolName(entity), Kind = GetEntitySymbolKind(entity) };
         if (!_symbols.TryGetValue(key, out var id))
         {
-            id = graph.SymbolTable.AddSymbol(this, name, symbolKind);
+            id = graph.SymbolTable.AddSymbol(this, key.Name, key.Kind);
             _symbols.Add(key, id);
         }
 
@@ -64,5 +66,50 @@ internal sealed class Assembly(string name, bool root)
         _symbols.TrimExcess();
         _duplicates.TrimExcess();
         _internalsVisibleTo.TrimExcess();
+    }
+
+    public static string GetEntitySymbolName(IEntity entity)
+    {
+        if (entity is IMethod method)
+        {
+            var sb = new StringBuilder()
+                .Append(entity.ReflectionName)
+                .Append('(');
+
+            bool first = true;
+            foreach (var p in method.Parameters)
+            {
+                if (!first)
+                {
+                    _ = sb.Append(", ");
+                }
+                else
+                {
+                    first = false;
+                }
+
+                _ = sb.Append(p.Type.ReflectionName);
+            }
+
+            return sb.Append(')').ToString();
+        }
+
+        return entity.ReflectionName;
+    }
+
+    private static SymbolKind GetEntitySymbolKind(IEntity entity)
+    {
+        return entity.SymbolKind switch
+        {
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Method => SymbolKind.Method,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Constructor => SymbolKind.Method,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Destructor => SymbolKind.Method,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Accessor => SymbolKind.Method,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Operator => SymbolKind.Method,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.TypeDefinition => SymbolKind.Type,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Field => SymbolKind.Field,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Event => SymbolKind.Event,
+            _ => SymbolKind.Misc,
+        };
     }
 }

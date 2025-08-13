@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Metadata;
+using System.Text;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.TypeSystem;
 using Undertaker.Graph.Collections;
@@ -28,6 +29,9 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
 
     // set by Mark when visiting the graph
     public bool Marked { get; private set; }
+
+    // set by Pin to force something to be alive
+    public bool Pinned { get; private set; }
 
     private readonly HashSet<SymbolId> _referencers = [];
     private readonly HashSet<SymbolId> _referencedSymbols = [];
@@ -80,6 +84,8 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
             refSym.Mark(graph);
         }
     }
+
+    public void Pin() => Pinned = true;
 
     public override string ToString() => Name;
 
