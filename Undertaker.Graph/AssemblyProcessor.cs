@@ -143,7 +143,6 @@ internal static class AssemblyProcessor
             }
         }
 
-
         asm.Loaded = true;
         asm.Version = decomp.TypeSystem.MainModule.AssemblyVersion;
 
@@ -152,7 +151,6 @@ internal static class AssemblyProcessor
         Symbol DefineSymbolIn(IEntity entity, Assembly a)
         {
             var sym = a.GetSymbol(graph, entity);
-            sym.Define(entity);
 
             var parent = entity.DeclaringTypeDefinition;
             if (parent?.ParentModule != null && sym.DeclaringType == null)

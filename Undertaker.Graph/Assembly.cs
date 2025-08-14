@@ -34,9 +34,15 @@ internal sealed class Assembly(string name, bool root)
         {
             id = graph.SymbolTable.AddSymbol(this, key.Name, key.Kind);
             _symbols.Add(key, id);
-        }
 
-        return graph.SymbolTable.GetSymbol(id);
+            var sym = graph.SymbolTable.GetSymbol(id);
+            sym.Define(entity);
+            return sym;
+        }
+        else
+        {
+            return graph.SymbolTable.GetSymbol(id);
+        }
     }
 
     public Symbol? FindSymbol(AssemblyGraph graph, string name, SymbolKind symbolKind)

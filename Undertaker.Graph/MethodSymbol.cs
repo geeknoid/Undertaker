@@ -28,7 +28,7 @@ internal sealed class MethodSymbol(Assembly assembly, string name, SymbolId id) 
         {
             Root = m.Name == "Main" && m.IsStatic;
 
-            if (m.DeclaringTypeDefinition.GetDelegateInvokeMethod() != null)
+            if (m.DeclaringTypeDefinition?.GetDelegateInvokeMethod() != null)
             {
                 if (m.Name is "BeginInvoke" or "EndInvoke")
                 {

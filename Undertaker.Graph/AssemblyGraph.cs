@@ -234,7 +234,6 @@ public sealed class AssemblyGraph
         }
     }
 
-
     /// <summary>
     /// Completes the graph and returns a reporter to extract meaning from the graph.
     /// </summary>

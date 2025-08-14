@@ -27,8 +27,8 @@ public sealed class Reporter
         var assemblies = new List<DeadReportAssembly>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && !asm.IsSystemAssembly))
         {
-            List<string>? deadTypes = null;
-            List<string>? deadMembers = null;
+            List<DeadReportSymbol>? deadTypes = null;
+            List<DeadReportSymbol>? deadMembers = null;
 
             foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide).Cast<TypeSymbol>())
             {
@@ -36,26 +36,36 @@ public sealed class Reporter
                 {
                     foreach (var member in sym.Members.Select(_symbolTable.GetSymbol).Where(member => !member.Marked && !member.Hide && member.Kind != SymbolKind.Type))
                     {
+                        var kind = "Method";
+                        if (member is FieldSymbol)
+                        {
+                            kind = "Field";
+                        }
+                        else if (member is EventSymbol)
+                        {
+                            kind = "Event";
+                        }
+
                         deadMembers ??= [];
-                        deadMembers.Add(member.Name);
+                        deadMembers.Add(new DeadReportSymbol(member.Name, kind));
                     }
                 }
                 else
                 {
                     deadTypes ??= [];
-                    deadTypes.Add(sym.Name);
+                    deadTypes.Add(new DeadReportSymbol(sym.Name, sym.TypeKind.ToString()));
                 }
             }
 
             if (deadTypes != null || deadMembers != null)
             {
-                deadTypes?.Sort();
-                deadMembers?.Sort();
+                deadTypes?.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
+                deadMembers?.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
 
-                IReadOnlyList<String>? dt = deadTypes;
+                IReadOnlyList<DeadReportSymbol>? dt = deadTypes;
                 dt ??= [];
 
-                IReadOnlyList<String>? dm = deadMembers;
+                IReadOnlyList<DeadReportSymbol>? dm = deadMembers;
                 dm ??= [];
 
                 assemblies.Add(new(asm.Name, dt, dm));

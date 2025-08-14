@@ -13,14 +13,14 @@ public sealed class DeadReportAssembly
     /// <summary>
     /// The set of dead types within the assembly.
     /// </summary>
-    public IReadOnlyList<string> DeadTypes { get; }
+    public IReadOnlyList<DeadReportSymbol> DeadTypes { get; }
 
     /// <summary>
     /// The set of dead type members (methods, fields, etc) within the assemnbly.
     /// </summary>
-    public IReadOnlyList<string> DeadMembers { get; }
+    public IReadOnlyList<DeadReportSymbol> DeadMembers { get; }
 
-    internal DeadReportAssembly(string assembly, IReadOnlyList<string> types, IReadOnlyList<string> members)
+    internal DeadReportAssembly(string assembly, IReadOnlyList<DeadReportSymbol> types, IReadOnlyList<DeadReportSymbol> members)
     {
         Assembly = assembly;
         DeadTypes = types;
