@@ -264,6 +264,7 @@ internal static class Program
             Out($"Total memory used: {mem}MB");
         }
 
+        Out("Generating reports...");
         return !OutputDeadSymbols() ||
             !OutputAliveSymbols() ||
             !OutputAliveByTestSymbols() ||
@@ -317,7 +318,7 @@ internal static class Program
                         JsonSerializer.Serialize(file, report, _serializationOptions);
                     }
 
-                    Out($"Output report on dead symbols to {path}");
+                    Out($"  Writing report on dead symbols to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -342,7 +343,7 @@ internal static class Program
                         JsonSerializer.Serialize(file, report, _serializationOptions);
                     }
 
-                    Out($"Output report on alive symbols to {path}");
+                    Out($"  Writing report on alive symbols to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -367,7 +368,7 @@ internal static class Program
                         JsonSerializer.Serialize(file, report, _serializationOptions);
                     }
 
-                    Out($"Output report on symbols alive by test to {path}");
+                    Out($"  Writing report on symbols alive only by test to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -392,7 +393,7 @@ internal static class Program
                         JsonSerializer.Serialize(file, report, _serializationOptions);
                     }
 
-                    Out($"Output report on needlessly public symbols to {path}");
+                    Out($"  Writing report on needlessly public symbols to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -417,7 +418,7 @@ internal static class Program
                         JsonSerializer.Serialize(file, report, _serializationOptions);
                     }
 
-                    Out($"Output unreferenced assemblies report to {path}");
+                    Out($"  Writing report on unreferenced assemblies to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -439,7 +440,7 @@ internal static class Program
                     var report = reporter.CollectUnanalyzedAssemblies().Order();
                     File.WriteAllLines(path, report);
 
-                    Out($"Output unanalyzed assemblies report to {path}");
+                    Out($"  Writing report on unanalyzed assemblies to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -464,7 +465,7 @@ internal static class Program
                         JsonSerializer.Serialize(file, report, _serializationOptions);
                     }
 
-                    Out($"Output duplicate assemblies report to {path}");
+                    Out($"  Writing report on duplicate assemblies to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -489,7 +490,7 @@ internal static class Program
                         JsonSerializer.Serialize(file, report, _serializationOptions);
                     }
 
-                    Out($"Output needless [InternalsVisibleTo] report to {path}");
+                    Out($"  Writing report on needless [InternalsVisibleTo] to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -514,7 +515,7 @@ internal static class Program
                         JsonSerializer.Serialize(file, cake, _serializationOptions);
                     }
 
-                    Out($"Output assembly layer cake to {path}");
+                    Out($"  Writing assembly layer cake to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -535,7 +536,8 @@ internal static class Program
                 {
                     var dd = reporter.CreateDependencyDiagram();
                     File.WriteAllText(path, dd);
-                    Out($"Output assembly dependency diagram to {path}");
+
+                    Out($"  Writing assembly dependency diagram to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -559,7 +561,7 @@ internal static class Program
                         reporter.Dump(file);
                     }
 
-                    Out($"Output graph dump to {path}");
+                    Out($"  Writing graph dump to {path}");
                 }
                 catch (Exception ex)
                 {

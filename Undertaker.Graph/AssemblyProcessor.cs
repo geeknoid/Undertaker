@@ -403,6 +403,27 @@ internal static class AssemblyProcessor
                 var sym = DefineSymbol(property.Setter);
                 RecordSymbolsReferencedByMethod(sym, property.Setter, cctor);
             }
+
+            // an override depends on all base properties
+            if (property.IsOverride)
+            {
+                foreach (var bt in property.DeclaringType.GetNonInterfaceBaseTypes())
+                {
+                    foreach (var bm in bt.GetProperties().Where(bm => bm.Name == property.Name))
+                    {
+                        RecordReferenceToMember(propertySym, bm);
+                    }
+                }
+            }
+
+            // a property depends on all interface properties it implements
+            foreach (var it in property.DeclaringType.GetAllBaseTypeDefinitions().Where(bt => bt.Kind == TypeKind.Interface))
+            {
+                foreach (var ip in it.GetProperties().Where(bm => bm.Name == property.Name))
+                {
+                    RecordReferenceToMember(propertySym, ip);
+                }
+            }
         }
 
         void RecordSymbolsReferencedByEvent(Symbol eventSym, IEvent evt, IMethod? cctor)
@@ -420,6 +441,27 @@ internal static class AssemblyProcessor
             {
                 var sym = DefineSymbol(evt.RemoveAccessor);
                 RecordSymbolsReferencedByMethod(sym, evt.RemoveAccessor, cctor);
+            }
+
+            // an override depends on all base events
+            if (evt.IsOverride)
+            {
+                foreach (var bt in evt.DeclaringType.GetNonInterfaceBaseTypes())
+                {
+                    foreach (var bm in bt.GetEvents().Where(bm => bm.Name == evt.Name))
+                    {
+                        RecordReferenceToMember(eventSym, bm);
+                    }
+                }
+            }
+
+            // a property depends on all interface properties it implements
+            foreach (var it in evt.DeclaringType.GetAllBaseTypeDefinitions().Where(bt => bt.Kind == TypeKind.Interface))
+            {
+                foreach (var ie in it.GetProperties().Where(bm => bm.Name == evt.Name))
+                {
+                    RecordReferenceToMember(eventSym, ie);
+                }
             }
         }
 
