@@ -38,7 +38,7 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
 
     public virtual void Define(IEntity entity)
     {
-        Hide = entity.IsCompilerGenerated() || entity.Name.Contains('<');
+        Hide = entity.IsCompilerGenerated() || Name.Contains('<');
         IsPublic = entity.EffectiveAccessibility() == Accessibility.Public;
 
         if (Assembly.IsRootAssembly)
