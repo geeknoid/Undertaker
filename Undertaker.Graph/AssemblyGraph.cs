@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using ICSharpCode.Decompiler.TypeSystem;
 using Undertaker.Graph.Reporting;
@@ -124,7 +125,6 @@ public sealed class AssemblyGraph
         foreach (var symId in UnhomedAssembly.Symbols)
         {
             var sym = SymbolTable.GetSymbol(symId);
-                
             foreach (var otherAsm in _assemblies.Values.Where(otherAsm => otherAsm.Loaded && otherAsm != UnhomedAssembly))
             {
                 var method = otherAsm.FindSymbol(this, sym.Name, SymbolKind.Method) as MethodSymbol;
@@ -145,7 +145,7 @@ public sealed class AssemblyGraph
     {
         /// For all interface types, we need to create a reference from interface members to any implementations of these members.
         log("Linking interface members to matching implementations");
-        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
+        foreach (var asm in _assemblies.Values)
         {
             foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
             {
@@ -307,6 +307,50 @@ public sealed class AssemblyGraph
     }
 
     /// <summary>
+    /// This provides the definition for system types which we might not encouter during analysis
+    /// </summary>
+    /// <remarks>
+    /// This is to track any methods that the .NET runtime might be calling on interfaces supplied by the 
+    /// assemblies under analysis.
+    /// </remarks>
+    private void HackSystemTypes()
+    {
+        foreach (var asm in _assemblies.Values.Where(asm => !asm.Loaded && asm.IsSystemAssembly))
+        {
+            var additions = new List<(TypeSymbol, string)>();
+            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
+            {
+                if (sym.Name == "System.Runtime.CompilerServices.IAsyncStateMachine")
+                {
+                    additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.MoveNext()"));
+                    additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.SetStateMachine(System.Runtime.CompilerServices.IAsyncStateMachine)"));
+                }
+
+                if (sym.Name == "System.IDisposable")
+                {
+                    additions.Add((sym, "System.IDisposable.Dispose()"));
+                }
+
+                if (sym.Name == "System.Collections.IEnumerable")
+                {
+                    additions.Add((sym, "System.Collections.IEnumerable.GetEnumerator()"));
+                }
+
+                if (sym.Name == "System.Collections.Generic.IEnumerable`1")
+                {
+                    additions.Add((sym, "System.Collections.Generic.IEnumerable`1.GetEnumerator()"));
+                }
+            }
+
+            foreach (var addition in additions)
+            {
+                var method = asm.GetSymbol(this, addition.Item2, SymbolKind.Method);
+                addition.Item1.AddMember(method);
+            }
+        }
+    }
+
+    /// <summary>
     /// Completes the graph and returns a reporter to extract meaning from the graph.
     /// </summary>
     /// <param name="log">Receives progress messages as the graph analysis is performed.</param>
@@ -315,6 +359,7 @@ public sealed class AssemblyGraph
         if (_layerCake == null)
         {
             TrimExcess();
+            HackSystemTypes();
 
             // we need to create the layer cake first, since the code below will introduce downward links in the graph which leads to cycles
             _layerCake = CreateAssemblyLayerCake();

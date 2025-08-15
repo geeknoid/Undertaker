@@ -2,6 +2,7 @@
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.ExceptionServices;
 using System.Text;
+using ICSharpCode.Decompiler.CSharp.Syntax;
 using ICSharpCode.Decompiler.Disassembler;
 using ICSharpCode.Decompiler.Metadata;
 using ICSharpCode.Decompiler.TypeSystem;
@@ -179,6 +180,7 @@ internal static class AssemblyProcessor
             {
                 foreach (var tc in tp.TypeConstraints)
                 {
+                    RecordSymbolsReferencedByAttributes(typeSym, tc.Attributes);
                     RecordReferenceToType(typeSym, tc.Type);
                 }
 
@@ -206,7 +208,7 @@ internal static class AssemblyProcessor
                 {
                     typeSym.AddInterfaceImplemented(sym);
                 }
-                else
+                else if (!(sym.Assembly.IsSystemAssembly && _ignorables.Contains(bt.ReflectionName)))
                 {
                     typeSym.AddBaseType(sym);
                 }
@@ -250,6 +252,7 @@ internal static class AssemblyProcessor
             {
                 foreach (var tc in tp.TypeConstraints)
                 {
+                    RecordSymbolsReferencedByAttributes(methodSym, tc.Attributes);
                     RecordReferenceToType(methodSym, tc.Type);
                 }
 
