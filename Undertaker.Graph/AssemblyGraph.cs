@@ -155,9 +155,10 @@ public sealed class AssemblyGraph
                     {
                         foreach (var derivedMember in derivedType.Members.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                         {
-                            if (ifaceMember.GetSignature() == derivedMember.GetSignature())
+                            if (ifaceMember.SameSignature(derivedMember))
                             {
                                 ifaceMember.RecordReferencedSymbol(derivedMember);
+                                break;
                             }
                         }
                     }
@@ -173,15 +174,14 @@ public sealed class AssemblyGraph
             {
                 foreach (var member in sym.Members.Select(SymbolTable.GetSymbol).Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsVirtualOrOverrideOrAbstract))
                 {
-                    var memberSig = member.GetSignature();
-
                     foreach (var derived in sym.DerivedTypes.Select(SymbolTable.GetSymbol).Cast<TypeSymbol>())
                     {
                         foreach (var derivedMember in derived.Members.Select(SymbolTable.GetSymbol).Where(x => x.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsOverride))
                         {
-                            if (memberSig == derivedMember.GetSignature())
+                            if (member.SameSignature(derivedMember))
                             {
                                 member.RecordReferencedSymbol(derivedMember);
+                                break;
                             }
                         }
                     }
@@ -201,9 +201,10 @@ public sealed class AssemblyGraph
                     {
                         foreach (var derivedMember in derivedType.Members.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                         {
-                            if (ifaceMember.GetSignature() == derivedMember.GetSignature())
+                            if (ifaceMember.SameSignature(derivedMember))
                             {
                                 sym.RecordReferencedSymbol(derivedMember);
+                                break;
                             }
                         }
                     }
@@ -223,9 +224,10 @@ public sealed class AssemblyGraph
                     {
                         foreach (var derivedMember in derivedType.Members.Select(SymbolTable.GetSymbol).Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                         {
-                            if (classMember.GetSignature() == derivedMember.GetSignature())
+                            if (classMember.SameSignature(derivedMember))
                             {
                                 sym.RecordReferencedSymbol(derivedMember);
+                                break;
                             }
                         }
                     }

@@ -55,14 +55,27 @@ internal sealed class MethodSymbol(Assembly assembly, string name, SymbolId id) 
         var index = Name.IndexOf('(');
         if (index < 0)
         {
-            return 0; // no parameters, just return the name
+            var lastDotIndex = Name.LastIndexOf('.');
+            return lastDotIndex < 0 ? 0 : lastDotIndex + 1;
         }
-
-        var lastDotIndex = Name.LastIndexOf('.', index);
-        return lastDotIndex < 0 ? 0 : lastDotIndex + 1;
+        else
+        {
+            var lastDotIndex = Name.LastIndexOf('.', index);
+            return lastDotIndex < 0 ? 0 : lastDotIndex + 1;
+        }
     }
 
-    public string GetSignature() => Name.Substring(FindSignatureStartIndex());
+    public bool SameSignature(MethodSymbol other)
+    {
+        var thisSig = FindSignatureStartIndex();
+        var thisSigLen = Name.Length - thisSig;
+        var otherSig = other.FindSignatureStartIndex();
+        var otherSigLen = other.Name.Length - otherSig; 
+
+        return thisSigLen == otherSigLen
+            && string.CompareOrdinal(Name, thisSig, other.Name, otherSig, thisSigLen) == 0;
+    }
+
     public override string ToString() => Name;
     public override SymbolKind Kind => SymbolKind.Method;
 }
