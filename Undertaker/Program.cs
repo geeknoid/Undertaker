@@ -124,7 +124,7 @@ internal static class Program
             args.AliveSymbols = "./alive-symbols.json";
             args.AliveByTestSymbols = "./alive-by-test-symbols.json";
             args.NeedlesslyPublicSymbols = "./needlessly-public-symbols.json";
-            args.UnreferencedAssemblies = "./unreferenced-assemblies.json";
+            args.UnreferencedAssemblies = "./unreferenced-assemblies.txt";
             args.UnanalyzedAssemblies= "./unanalyzed-assemblies.txt";
             args.DuplicateAssemblies = "./duplicate-assemblies.json";
             args.NeedlessInternalsVisibleTo = "./needless-internals-visible-to.json";
@@ -413,10 +413,7 @@ internal static class Program
                 try
                 {
                     var report = reporter.CollectUnreferencedAssemblies();
-                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
-                    {
-                        JsonSerializer.Serialize(file, report, _serializationOptions);
-                    }
+                    File.WriteAllLines(path, report);
 
                     Out($"  Writing report on unreferenced assemblies to {path}");
                 }

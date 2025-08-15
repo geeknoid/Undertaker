@@ -18,7 +18,7 @@ public sealed class AssemblyGraph
     private readonly Dictionary<string, Assembly> _assemblies = [];
     private readonly HashSet<string> _rootAssemblies = [];
     private readonly HashSet<string> _testMethodAttributes = [];
-    private bool _finalized;
+    private List<IReadOnlyList<string>>? _layerCake;
     internal SymbolTable SymbolTable { get; } = new();
     internal Assembly UnhomedAssembly { get; } = new Assembly("$$UNHOMED$$", root: false);
 
@@ -39,7 +39,7 @@ public sealed class AssemblyGraph
     /// </remarks>
     public void RecordRootAssembly(string assemblyName)
     {
-        if (_finalized)
+        if (_layerCake != null)
         {
             throw new InvalidOperationException("Cannot add root assemblies after the graph has been finalized.");
         }
@@ -49,7 +49,7 @@ public sealed class AssemblyGraph
 
     public void RecordTestMethodAttribute(string attributeName)
     {
-        if (_finalized)
+        if (_layerCake != null)
         {
             throw new InvalidOperationException("Cannot add test method attributes after the graph has been finalized.");
         }
@@ -62,7 +62,7 @@ public sealed class AssemblyGraph
     /// </summary>
     public void MergeAssembly(LoadedAssembly la)
     {
-        if (_finalized)
+        if (_layerCake != null)
         {
             throw new InvalidOperationException("Cannot merge new assemblies after the graph has been finalized.");
         }
@@ -70,7 +70,7 @@ public sealed class AssemblyGraph
         AssemblyProcessor.Merge(this, la);
 
         // every once in a while, try to reclaim wasted space so we minimize RAM usage
-        if (_assemblies.Count % 100 == 0)
+        if (_assemblies.Count % 256 == 0)
         {
             TrimExcess();
         }
@@ -235,20 +235,93 @@ public sealed class AssemblyGraph
     }
 
     /// <summary>
+    /// Creates a layer cake of assembly dependencies.
+    /// </summary>
+    /// <remarks>
+    /// Returns a layer cake of assembly dependencies. Each layer depends only on assemblies in
+    /// the layers below.
+    /// </remarks>
+    /// <returns>A list of layers, where each layer is a list of assembly names at that layer.</returns>
+    private List<IReadOnlyList<string>> CreateAssemblyLayerCake()
+    {
+        var dependentCounts = new Dictionary<string, int>();
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
+        {
+            dependentCounts[asm.Name] = 0;
+        }
+
+        var dependencies = new Dictionary<string, HashSet<string>>();
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
+        {
+            var referenced = new HashSet<string>();
+            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol))
+            {
+                foreach (var rs in sym.ReferencedSymbols.Select(SymbolTable.GetSymbol).Where(rs => rs.Assembly != asm && rs.Assembly.Loaded))
+                {
+                    if (referenced.Add(rs.Assembly.Name))
+                    {
+                        dependentCounts[rs.Assembly.Name]++;
+                    }
+                }
+            }
+
+            referenced.TrimExcess();
+            dependencies[asm.Name] = referenced;
+        }
+
+        var layers = new List<IReadOnlyList<string>>();
+        var assembliesToRemove = new List<string>();
+        while (dependentCounts.Count > 0)
+        {
+            var currentLayer = new List<string>();
+            assembliesToRemove.Clear();
+
+            // Find assemblies with no dependent
+            foreach (var asm in dependentCounts.Where(dc => dc.Value == 0).Select(dc => dc.Key))
+            {
+                currentLayer.Add(asm);
+                assembliesToRemove.Add(asm);
+            }
+
+            // Remove assemblies from the dependency map and update dependent counts
+            foreach (var assemblyName in assembliesToRemove)
+            {
+                _ = dependentCounts.Remove(assemblyName);
+                foreach (var dependency in dependencies[assemblyName])
+                {
+                    if (dependentCounts.TryGetValue(dependency, out int value))
+                    {
+                        dependentCounts[dependency] = --value;
+                    }
+                }
+
+                _ = dependencies.Remove(assemblyName);
+            }
+
+            layers.Add(currentLayer);
+        }
+
+        return layers;
+    }
+
+    /// <summary>
     /// Completes the graph and returns a reporter to extract meaning from the graph.
     /// </summary>
     /// <param name="log">Receives progress messages as the graph analysis is performed.</param>
     public Reporter Done(Action<string> log)
     {
-        if (!_finalized)
+        if (_layerCake == null)
         {
             TrimExcess();
+
+            // we need to create the layer cake first, since the code below will introduce downward links in the graph which leads to cycles
+            _layerCake = CreateAssemblyLayerCake();
+
             HandleUnhomedReferences(log);
             HookupDerivedSymbols(log);
             MarkUsedSymbols(log);
-            _finalized = true;
         }
 
-        return new Reporter(_assemblies, SymbolTable);
+        return new Reporter(_assemblies, SymbolTable, _layerCake);
     }
 }

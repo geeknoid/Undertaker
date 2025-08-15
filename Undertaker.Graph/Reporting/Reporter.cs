@@ -11,11 +11,13 @@ public sealed class Reporter
 {
     private readonly Dictionary<string, Assembly> _assemblies;
     private readonly SymbolTable _symbolTable;
+    private readonly IReadOnlyList<IReadOnlyList<string>> _layerCake;
 
-    internal Reporter(Dictionary<string, Assembly> assemblies, SymbolTable symbolTable)
+    internal Reporter(Dictionary<string, Assembly> assemblies, SymbolTable symbolTable, IReadOnlyList<IReadOnlyList<string>> layerCake)
     {
         _assemblies = assemblies;
         _symbolTable = symbolTable;
+        _layerCake = layerCake; 
     }
 
     /// <summary>
@@ -333,71 +335,8 @@ public sealed class Reporter
     /// Returns a layer cake of assembly dependencies. Each layer depends only on assemblies in
     /// the layers below.
     /// </remarks>
-    /// <returns>A list of layers, where each layer is a list of assembly names.</returns>
-    public IReadOnlyList<IReadOnlyList<string>> CreateAssemblyLayerCake()
-    {
-        // Step 1: Build a dependency map for each assembly
-        var dependencies = new Dictionary<string, HashSet<string>>();
-        foreach (var asm in _assemblies.Values)
-        {
-            var referenced = new HashSet<string>();
-            foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol))
-            {
-                foreach (var rs in sym.ReferencedSymbols.Select(_symbolTable.GetSymbol).Where(rs => rs.Assembly != asm))
-                {
-                    _ = referenced.Add(rs.Assembly.Name);
-                }
-            }
-
-            dependencies.Add(asm.Name, referenced);
-        }
-
-        // Step 2: Initialize dependency counts for each assembly
-        var dependencyCount = _assemblies.Values.ToDictionary(a => a.Name, a => 0);
-        foreach (var asm in _assemblies.Values)
-        {
-            foreach (var dependency in dependencies[asm.Name].Where(dependency => _assemblies.ContainsKey(dependency)))
-            {
-                dependencyCount[dependency]++;
-            }
-        }
-
-        // Step 3: Create layers
-        var layers = new List<List<string>>();
-        while (dependencyCount.Any(dc => dc.Value == 0))
-        {
-            var currentLayer = new List<string>();
-            var assembliesToRemove = new List<string>();
-
-            // Find assemblies with no dependencies
-            foreach (var asm in dependencyCount.Where(dc => dc.Value == 0).Select(dc => dc.Key))
-            {
-                if (_assemblies[asm].Loaded)
-                {
-                    currentLayer.Add(asm);
-                }
-
-                assembliesToRemove.Add(asm);
-            }
-
-            // Remove assemblies from the dependency map and update dependency counts
-            foreach (var assemblyName in assembliesToRemove)
-            {
-                _ = dependencyCount.Remove(assemblyName);
-                foreach (var dependency in dependencies[assemblyName])
-                {
-                    if (dependencyCount.TryGetValue(dependency, out int value))
-                    {
-                        dependencyCount[dependency] = --value;
-                    }
-                }
-            }
-
-            layers.Add(currentLayer);
-        }
-
-        return layers;
-    }
+    /// <returns>A list of layers, where each layer is a list of assembly names at that layer.</returns>
+    public IReadOnlyList<IReadOnlyList<string>> CreateAssemblyLayerCake() => _layerCake;
 
     /// <summary>
     /// Creates a dependency diagram in Mermaid format showing the relationships between assemblies.
