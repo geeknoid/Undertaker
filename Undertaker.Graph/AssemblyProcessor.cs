@@ -408,6 +408,12 @@ internal static class AssemblyProcessor
                 RecordSymbolsReferencedByMethod(sym, property.Setter, cctor);
             }
 
+            foreach (var pp in property.Parameters)
+            {
+                RecordReferenceToType(propertySym, pp.Type);
+                RecordSymbolsReferencedByAttributes(propertySym, pp.GetAttributes());
+            }
+
             // an override depends on all base properties
             if (property.IsOverride)
             {
@@ -459,7 +465,7 @@ internal static class AssemblyProcessor
                 }
             }
 
-            // a property depends on all interface properties it implements
+            // an event depends on all interface events it implements
             foreach (var it in evt.DeclaringType.GetAllBaseTypeDefinitions().Where(bt => bt.Kind == TypeKind.Interface))
             {
                 foreach (var ie in it.GetProperties().Where(bm => bm.Name == evt.Name))

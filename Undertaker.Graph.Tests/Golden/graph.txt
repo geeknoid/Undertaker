@@ -81,7 +81,7 @@ ASSEMBLY TestExe.dll [LOADED, !ROOT, !SYSTEM]
       TestExe.Program+<>c.<>9
       TestExe.Program+<>c.<>9__0_0
       TestExe.Program+<>c.<>9__0_1
-  TestExe.Program+<>c..cctor() [METHOD, ALIVE, !HIDE, !PINNED, !ROOT]
+  TestExe.Program+<>c..cctor() [METHOD, ALIVE, HIDE, !PINNED, !ROOT]
     DIRECTLY REFERENCES
       TestExe.Program+<>c
       TestExe.Program
@@ -94,7 +94,7 @@ ASSEMBLY TestExe.dll [LOADED, !ROOT, !SYSTEM]
       TestExe.Program+<>c.<>9
       TestExe.Program+<>c.<>9__0_0
       TestExe.Program+<>c.<>9__0_1
-  TestExe.Program+<>c..ctor() [METHOD, ALIVE, !HIDE, !PINNED, !ROOT]
+  TestExe.Program+<>c..ctor() [METHOD, ALIVE, HIDE, !PINNED, !ROOT]
     DIRECTLY REFERENCES
       TestExe.Program+<>c
       TestExe.Program
@@ -262,7 +262,7 @@ ASSEMBLY TestLibrary.dll [LOADED, !ROOT, !SYSTEM]
       TestLibrary.AliveClassAndAliveMembers.AliveEvent
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
-  TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty [MISC, ALIVE, !HIDE, !PINNED, !ROOT]
+  TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty [PROPERTY, ALIVE, !HIDE, !PINNED, !ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassAndAliveMembers
     DIRECTLY REFERENCED BY
@@ -288,7 +288,7 @@ ASSEMBLY TestLibrary.dll [LOADED, !ROOT, !SYSTEM]
       TestLibrary.GenericTypeArgument
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
-  TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty [MISC, ALIVE, !HIDE, !PINNED, !ROOT]
+  TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty [PROPERTY, ALIVE, !HIDE, !PINNED, !ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassAndAliveMembers
     DIRECTLY REFERENCED BY
@@ -315,6 +315,7 @@ ASSEMBLY TestLibrary.dll [LOADED, !ROOT, !SYSTEM]
   TestLibrary.AliveClassAndAliveMembers.Item [MISC, ALIVE, !HIDE, !PINNED, !ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassAndAliveMembers
+      System.Int32
     DIRECTLY REFERENCED BY
       TestLibrary.AliveClassAndAliveMembers.get_Item(System.Int32)
       TestLibrary.AliveClassAndAliveMembers.set_Item(System.Int32, System.Int32)
@@ -411,7 +412,7 @@ ASSEMBLY TestLibrary.dll [LOADED, !ROOT, !SYSTEM]
       TestLibrary.AliveClassButDeadMembers
       System.EventHandler
       TestLibrary.AliveClassButDeadMembers.DeadEvent
-  TestLibrary.AliveClassButDeadMembers.DeadComplexProperty [MISC, DEAD, !HIDE, !PINNED, !ROOT]
+  TestLibrary.AliveClassButDeadMembers.DeadComplexProperty [PROPERTY, DEAD, !HIDE, !PINNED, !ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassButDeadMembers
     DIRECTLY REFERENCED BY
@@ -430,7 +431,7 @@ ASSEMBLY TestLibrary.dll [LOADED, !ROOT, !SYSTEM]
   TestLibrary.AliveClassButDeadMembers.DeadMethod() [METHOD, DEAD, !HIDE, !PINNED, !ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassButDeadMembers
-  TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty [MISC, DEAD, !HIDE, !PINNED, !ROOT]
+  TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty [PROPERTY, DEAD, !HIDE, !PINNED, !ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassButDeadMembers
     DIRECTLY REFERENCED BY
@@ -457,6 +458,7 @@ ASSEMBLY TestLibrary.dll [LOADED, !ROOT, !SYSTEM]
   TestLibrary.AliveClassButDeadMembers.Item [MISC, DEAD, !HIDE, !PINNED, !ROOT]
     DIRECTLY REFERENCES
       TestLibrary.AliveClassButDeadMembers
+      System.Int32
     DIRECTLY REFERENCED BY
       TestLibrary.AliveClassButDeadMembers.get_Item(System.Int32)
       TestLibrary.AliveClassButDeadMembers.set_Item(System.Int32, System.Int32)
@@ -532,10 +534,6 @@ ASSEMBLY TestLibrary.dll [LOADED, !ROOT, !SYSTEM]
       System.IConvertible
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
-  TestLibrary.AliveEnum..ctor() [METHOD, ALIVE, !HIDE, !PINNED, !ROOT]
-    DIRECTLY REFERENCED BY
-      System.Enum
-  TestLibrary.AliveEnum.value__ [FIELD, DEAD, !HIDE, !PINNED, !ROOT]
   TestLibrary.AliveStruct [TYPE, ALIVE, !HIDE, !PINNED, !ROOT]
     DIRECTLY REFERENCES
       System.Runtime.InteropServices.StructLayoutAttribute
@@ -615,12 +613,10 @@ ASSEMBLY TestLibrary.dll [LOADED, !ROOT, !SYSTEM]
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
       TestLibrary.MyException..ctor()
-  TestLibrary.MyException..ctor() [METHOD, ALIVE, !HIDE, !PINNED, !ROOT]
+  TestLibrary.MyException..ctor() [METHOD, DEAD, !HIDE, !PINNED, !ROOT]
     DIRECTLY REFERENCES
       TestLibrary.MyException
       System.Exception..ctor()
-      System.Exception
-    DIRECTLY REFERENCED BY
       System.Exception
   TestLibrary.TestAttribute [TYPE, ALIVE, !HIDE, !PINNED, !ROOT]
     DIRECTLY REFERENCES
@@ -657,7 +653,7 @@ ASSEMBLY TestLibrary.dll [LOADED, !ROOT, !SYSTEM]
       System.Runtime.CompilerServices.CompilerGeneratedAttribute
       TestLibrary.TestAttribute.Name
       TestLibrary.TestAttribute.<Name>k__BackingField
-  TestLibrary.TestAttribute.Name [MISC, DEAD, !HIDE, !PINNED, !ROOT]
+  TestLibrary.TestAttribute.Name [PROPERTY, DEAD, !HIDE, !PINNED, !ROOT]
     DIRECTLY REFERENCES
       TestLibrary.TestAttribute
     DIRECTLY REFERENCED BY

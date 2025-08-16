@@ -127,8 +127,7 @@
         {
           "Name": "TestLibrary.MyException",
           "ReferencedBy": [
-            "TestExe.Program.Main()",
-            "TestLibrary.MyException..ctor()"
+            "TestExe.Program.Main()"
           ]
         },
         {
@@ -263,18 +262,6 @@
           "Name": "TestLibrary.AliveDelegate..ctor(System.Object, nint)",
           "ReferencedBy": [
             "TestExe.Program.Main()"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveEnum..ctor()",
-          "ReferencedBy": [
-            "System.Enum"
-          ]
-        },
-        {
-          "Name": "TestLibrary.MyException..ctor()",
-          "ReferencedBy": [
-            "System.Exception"
           ]
         }
       ]

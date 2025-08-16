@@ -3,40 +3,136 @@
     {
       "Assembly": "TestLibrary",
       "DeadTypes": [
-        "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType",
-        "TestLibrary.DeadClass",
-        "TestLibrary.DeadDelegate",
-        "TestLibrary.DeadEnum",
-        "TestLibrary.DeadStruct"
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType",
+          "Kind": "Class"
+        },
+        {
+          "Name": "TestLibrary.DeadClass",
+          "Kind": "Class"
+        },
+        {
+          "Name": "TestLibrary.DeadDelegate",
+          "Kind": "Delegate"
+        },
+        {
+          "Name": "TestLibrary.DeadEnum",
+          "Kind": "Enum"
+        },
+        {
+          "Name": "TestLibrary.DeadStruct",
+          "Kind": "Struct"
+        }
       ],
       "DeadMembers": [
-        "TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()",
-        "TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()",
-        "TestLibrary.AliveClassAndAliveMembers.get_Item(System.Int32)",
-        "TestLibrary.AliveClassAndAliveMembers.remove_AliveEvent(System.EventHandler)",
-        "TestLibrary.AliveClassButDeadMembers._value",
-        "TestLibrary.AliveClassButDeadMembers..ctor()",
-        "TestLibrary.AliveClassButDeadMembers.add_DeadEvent(System.EventHandler)",
-        "TestLibrary.AliveClassButDeadMembers.DeadComplexProperty",
-        "TestLibrary.AliveClassButDeadMembers.DeadEvent",
-        "TestLibrary.AliveClassButDeadMembers.DeadField",
-        "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
-        "TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty",
-        "TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()",
-        "TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty()",
-        "TestLibrary.AliveClassButDeadMembers.get_Item(System.Int32)",
-        "TestLibrary.AliveClassButDeadMembers.Item",
-        "TestLibrary.AliveClassButDeadMembers.remove_DeadEvent(System.EventHandler)",
-        "TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(System.Int32)",
-        "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(System.Int32)",
-        "TestLibrary.AliveClassButDeadMembers.set_Item(System.Int32, System.Int32)",
-        "TestLibrary.AliveDelegate.Invoke()",
-        "TestLibrary.AliveEnum.value__",
-        "TestLibrary.AliveStruct..ctor()",
-        "TestLibrary.GenericTypeArgument..ctor()",
-        "TestLibrary.TestAttribute..ctor(System.String)",
-        "TestLibrary.TestAttribute.get_Name()",
-        "TestLibrary.TestAttribute.Name"
+        {
+          "Name": "TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveClassAndAliveMembers.get_Item(System.Int32)",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveClassAndAliveMembers.remove_AliveEvent(System.EventHandler)",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers..ctor()",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.DeadComplexProperty",
+          "Kind": "Property"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.DeadEvent",
+          "Kind": "Event"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.DeadField",
+          "Kind": "Field"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty",
+          "Kind": "Property"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.Item",
+          "Kind": "Misc"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers._value",
+          "Kind": "Field"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.add_DeadEvent(System.EventHandler)",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty()",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.get_Item(System.Int32)",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.remove_DeadEvent(System.EventHandler)",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(System.Int32)",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(System.Int32)",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.set_Item(System.Int32, System.Int32)",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveDelegate.Invoke()",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveStruct..ctor()",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.GenericTypeArgument..ctor()",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.MyException..ctor()",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.TestAttribute..ctor(System.String)",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.TestAttribute.Name",
+          "Kind": "Property"
+        },
+        {
+          "Name": "TestLibrary.TestAttribute.get_Name()",
+          "Kind": "Method"
+        }
       ]
     }
   ]

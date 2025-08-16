@@ -6,5 +6,6 @@ internal enum SymbolKind : byte
     Method,
     Field,
     Event,
+    Property,
     Misc,
 }

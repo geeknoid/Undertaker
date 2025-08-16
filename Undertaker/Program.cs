@@ -225,6 +225,8 @@ internal static class Program
         var tasks = new HashSet<Task<LoadedAssembly>>(MaxConcurrentAssemblyLoads);
         var map = new Dictionary<Task<LoadedAssembly>, FileInfo>(MaxConcurrentAssemblyLoads);
 
+        Out("Loading assemblies...");
+
         foreach (var file in args.AssemblyFolder!.EnumerateFiles("*", SearchOption.AllDirectories))
         {
             if (!(file.Name.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) || file.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)))
@@ -241,7 +243,7 @@ internal static class Program
 
             var task = Task.Run(() =>
             {
-                Out($"Loading assembly {file.FullName}");
+                Out($"  Loading assembly {file.FullName}");
                 return new LoadedAssembly(file.FullName);
             });
 
@@ -281,6 +283,7 @@ internal static class Program
         }
 
         Out("Generating reports...");
+
         return !OutputDeadSymbols() ||
             !OutputAliveSymbols() ||
             !OutputAliveByTestSymbols() ||
@@ -328,6 +331,8 @@ internal static class Program
                 var path = Path.GetFullPath(args.DeadSymbols);
                 try
                 {
+                    Out($"  Writing report on dead symbols to {path}");
+
                     var report = reporter.CollectDeadSymbols();
 
                     if (args.CSV)
@@ -351,8 +356,6 @@ internal static class Program
                         using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
                         JsonSerializer.Serialize(file, report, _serializationOptions);
                     }
-
-                    Out($"  Writing report on dead symbols to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -371,13 +374,11 @@ internal static class Program
                 var path = Path.GetFullPath(args.AliveSymbols);
                 try
                 {
-                    var report = reporter.CollectAliveSymbols();
-                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
-                    {
-                        JsonSerializer.Serialize(file, report, _serializationOptions);
-                    }
-
                     Out($"  Writing report on alive symbols to {path}");
+
+                    var report = reporter.CollectAliveSymbols();
+                    using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
+                    JsonSerializer.Serialize(file, report, _serializationOptions);
                 }
                 catch (Exception ex)
                 {
@@ -396,13 +397,11 @@ internal static class Program
                 var path = Path.GetFullPath(args.AliveByTestSymbols);
                 try
                 {
-                    var report = reporter.CollectAliveByTestSymbols();
-                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
-                    {
-                        JsonSerializer.Serialize(file, report, _serializationOptions);
-                    }
-
                     Out($"  Writing report on symbols alive only by test to {path}");
+
+                    var report = reporter.CollectAliveByTestSymbols();
+                    using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
+                    JsonSerializer.Serialize(file, report, _serializationOptions);
                 }
                 catch (Exception ex)
                 {
@@ -421,6 +420,8 @@ internal static class Program
                 var path = Path.GetFullPath(args.NeedlesslyPublicSymbols);
                 try
                 {
+                    Out($"  Writing report on needlessly public symbols to {path}");
+
                     var report = reporter.CollectNeedlesslyPublicSymbols();
 
                     if (args.CSV)
@@ -444,8 +445,6 @@ internal static class Program
                         using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
                         JsonSerializer.Serialize(file, report, _serializationOptions);
                     }
-
-                    Out($"  Writing report on needlessly public symbols to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -464,10 +463,10 @@ internal static class Program
                 var path = Path.GetFullPath(args.UnreferencedAssemblies);
                 try
                 {
+                    Out($"  Writing report on unreferenced assemblies to {path}");
+
                     var report = reporter.CollectUnreferencedAssemblies();
                     File.WriteAllLines(path, report);
-
-                    Out($"  Writing report on unreferenced assemblies to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -486,10 +485,10 @@ internal static class Program
                 var path = Path.GetFullPath(args.UnanalyzedAssemblies);
                 try
                 {
+                    Out($"  Writing report on unanalyzed assemblies to {path}");
+
                     var report = reporter.CollectUnanalyzedAssemblies().Order();
                     File.WriteAllLines(path, report);
-
-                    Out($"  Writing report on unanalyzed assemblies to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -508,6 +507,8 @@ internal static class Program
                 var path = Path.GetFullPath(args.DuplicateAssemblies);
                 try
                 {
+                    Out($"  Writing report on duplicate assemblies to {path}");
+
                     var report = reporter.CollectDuplicateAssemblies().Order();
 
                     if (args.CSV)
@@ -527,8 +528,6 @@ internal static class Program
                         using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
                         JsonSerializer.Serialize(file, report, _serializationOptions);
                     }
-
-                    Out($"  Writing report on duplicate assemblies to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -547,6 +546,8 @@ internal static class Program
                 var path = Path.GetFullPath(args.NeedlessInternalsVisibleTo);
                 try
                 {
+                    Out($"  Writing report on needless [InternalsVisibleTo] to {path}");
+
                     var report = reporter.CollectNeedlessInternalsVisibleTo();
 
                     if (args.CSV)
@@ -565,8 +566,6 @@ internal static class Program
                         using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
                         JsonSerializer.Serialize(file, report, _serializationOptions);
                     }
-
-                    Out($"  Writing report on needless [InternalsVisibleTo] to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -585,13 +584,12 @@ internal static class Program
                 var path = Path.GetFullPath(args.AssemblyLayerCake);
                 try
                 {
-                    var cake = reporter.CreateAssemblyLayerCake();
-                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
-                    {
-                        JsonSerializer.Serialize(file, cake, _serializationOptions);
-                    }
 
                     Out($"  Writing assembly layer cake to {path}");
+
+                    var cake = reporter.CreateAssemblyLayerCake();
+                    using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
+                    JsonSerializer.Serialize(file, cake, _serializationOptions);
                 }
                 catch (Exception ex)
                 {
@@ -610,10 +608,10 @@ internal static class Program
                 var path = Path.GetFullPath(args.DependencyDiagram);
                 try
                 {
+                    Out($"  Writing assembly dependency diagram to {path}");
+
                     var dd = reporter.CreateDependencyDiagram();
                     File.WriteAllText(path, dd);
-
-                    Out($"  Writing assembly dependency diagram to {path}");
                 }
                 catch (Exception ex)
                 {
@@ -632,12 +630,10 @@ internal static class Program
                 var path = Path.GetFullPath(args.GraphDump);
                 try
                 {
-                    using (var file = File.CreateText(path))
-                    {
-                        reporter.Dump(file);
-                    }
-
                     Out($"  Writing graph dump to {path}");
+
+                    using var file = File.CreateText(path);
+                    reporter.Dump(file);
                 }
                 catch (Exception ex)
                 {

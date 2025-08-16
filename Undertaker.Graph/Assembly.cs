@@ -45,10 +45,8 @@ internal sealed class Assembly(string name, bool root)
             sym.Define(entity);
             return sym;
         }
-        else
-        {
-            return graph.SymbolTable.GetSymbol(id);
-        }
+
+        return graph.SymbolTable.GetSymbol(id);
     }
 
     public Symbol GetSymbol(AssemblyGraph graph, string name, SymbolKind kind)
@@ -64,10 +62,8 @@ internal sealed class Assembly(string name, bool root)
             // note, we're not calling sym.Define here
             return sym;
         }
-        else
-        {
-            return graph.SymbolTable.GetSymbol(id);
-        }
+
+        return graph.SymbolTable.GetSymbol(id);
     }
 
     public Symbol? FindSymbol(AssemblyGraph graph, string name, SymbolKind symbolKind)
@@ -87,9 +83,7 @@ internal sealed class Assembly(string name, bool root)
     }
 
     public void RecordInternalsVisibleTo(Assembly other) => _ = _internalsVisibleTo.Add(other);
-
     public override string ToString() => Name;
-
     public void AddDuplicate(string path, Version version) => _duplicates.Add(new DuplicateAssembly(path, version));
 
     public void TrimExcess()
@@ -140,6 +134,7 @@ internal sealed class Assembly(string name, bool root)
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.TypeDefinition => SymbolKind.Type,
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.Field => SymbolKind.Field,
             ICSharpCode.Decompiler.TypeSystem.SymbolKind.Event => SymbolKind.Event,
+            ICSharpCode.Decompiler.TypeSystem.SymbolKind.Property => SymbolKind.Property,
             _ => SymbolKind.Misc,
         };
     }

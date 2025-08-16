@@ -22,6 +22,7 @@ internal sealed class SymbolTable
             SymbolKind.Type => new TypeSymbol(container, name, id),
             SymbolKind.Field => new FieldSymbol(container, name, id),
             SymbolKind.Event => new EventSymbol(container, name, id),
+            SymbolKind.Property => new PropertySymbol(container, name, id),
             _ => new MiscSymbol(container, name, id)
         };
 

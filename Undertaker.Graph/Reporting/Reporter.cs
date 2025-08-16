@@ -40,18 +40,8 @@ public sealed class Reporter
                 {
                     foreach (var member in sym.Members.Select(_symbolTable.GetSymbol).Where(member => !member.Marked && !member.Hide && member.Kind != SymbolKind.Type))
                     {
-                        var kind = "Method";
-                        if (member is FieldSymbol)
-                        {
-                            kind = "Field";
-                        }
-                        else if (member is EventSymbol)
-                        {
-                            kind = "Event";
-                        }
-
                         deadMembers ??= [];
-                        deadMembers.Add(new DeadReportSymbol(member.Name, kind));
+                        deadMembers.Add(new DeadReportSymbol(member.Name, member.Kind.ToString()));
                     }
                 }
                 else

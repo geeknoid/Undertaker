@@ -1,0 +1,13 @@
+﻿using ICSharpCode.Decompiler.TypeSystem;
+
+namespace Undertaker.Graph;
+
+internal sealed class PropertySymbol(Assembly assembly, string name, SymbolId id) : Symbol(assembly, name, id)
+{
+    public override void Define(IEntity entity)
+    {
+        base.Define(entity);
+    }
+
+    public override SymbolKind Kind => SymbolKind.Property;
+}
