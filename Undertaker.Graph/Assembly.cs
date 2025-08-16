@@ -9,13 +9,19 @@ internal sealed class Assembly(string name, bool root)
 {
     public string Name { get; } = name;
     public bool IsRootAssembly { get; } = root;
-    public bool IsSystemAssembly { get; } = name.StartsWith("System.", StringComparison.Ordinal) || name.StartsWith("Microsoft.Extensions.", StringComparison.Ordinal) || name == "mscorlib" || name == "System";
-    public bool Loaded { get; set; }
+    public bool IsSystemAssembly { get; } =
+        name.StartsWith("System.", StringComparison.Ordinal)
+        || name.StartsWith("Microsoft.Extensions.", StringComparison.Ordinal)
+        || name.StartsWith("Microsoft.AspNetCore.", StringComparison.Ordinal)
+        || name == "mscorlib"
+        || name == "System";
 
+    public bool Loaded { get; set; }
     public IReadOnlyCollection<SymbolId> Symbols => _symbols.Values;
     public IReadOnlyCollection<DuplicateAssembly> Duplicates => _duplicates;
     public IReadOnlyCollection<Assembly> InternalsVisibleTo => _internalsVisibleTo;
     public Version? Version { get; set; }
+    public string? Path { get; set; }
 
     private readonly Dictionary<Key, SymbolId> _symbols = [];
     private readonly HashSet<Assembly> _internalsVisibleTo = [];

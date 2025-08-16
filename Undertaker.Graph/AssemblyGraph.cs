@@ -20,6 +20,7 @@ public sealed class AssemblyGraph
     private readonly HashSet<string> _rootAssemblies = [];
     private readonly HashSet<string> _testMethodAttributes = [];
     private List<IReadOnlyList<string>>? _layerCake;
+    private string? _dependencyDiagram;
     internal SymbolTable SymbolTable { get; } = new();
     internal Assembly UnhomedAssembly { get; } = new Assembly("$$UNHOMED$$", root: false);
 
@@ -237,6 +238,50 @@ public sealed class AssemblyGraph
     }
 
     /// <summary>
+    /// This provides the definition for system types which we might not encouter during analysis
+    /// </summary>
+    /// <remarks>
+    /// This is to track any methods that the .NET runtime might be calling on interfaces supplied by the 
+    /// assemblies under analysis.
+    /// </remarks>
+    private void HackSystemTypes()
+    {
+        foreach (var asm in _assemblies.Values.Where(asm => !asm.Loaded && asm.IsSystemAssembly))
+        {
+            var additions = new List<(TypeSymbol, string)>();
+            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
+            {
+                if (sym.Name == "System.Runtime.CompilerServices.IAsyncStateMachine")
+                {
+                    additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.MoveNext()"));
+                    additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.SetStateMachine(System.Runtime.CompilerServices.IAsyncStateMachine)"));
+                }
+
+                if (sym.Name == "System.IDisposable")
+                {
+                    additions.Add((sym, "System.IDisposable.Dispose()"));
+                }
+
+                if (sym.Name == "System.Collections.IEnumerable")
+                {
+                    additions.Add((sym, "System.Collections.IEnumerable.GetEnumerator()"));
+                }
+
+                if (sym.Name == "System.Collections.Generic.IEnumerable`1")
+                {
+                    additions.Add((sym, "System.Collections.Generic.IEnumerable`1.GetEnumerator()"));
+                }
+            }
+
+            foreach (var addition in additions)
+            {
+                var method = asm.GetSymbol(this, addition.Item2, SymbolKind.Method);
+                addition.Item1.AddMember(method);
+            }
+        }
+    }
+
+    /// <summary>
     /// Creates a layer cake of assembly dependencies.
     /// </summary>
     /// <remarks>
@@ -307,47 +352,30 @@ public sealed class AssemblyGraph
     }
 
     /// <summary>
-    /// This provides the definition for system types which we might not encouter during analysis
+    /// Creates a dependency diagram in Mermaid format showing the relationships between assemblies.
     /// </summary>
-    /// <remarks>
-    /// This is to track any methods that the .NET runtime might be calling on interfaces supplied by the 
-    /// assemblies under analysis.
-    /// </remarks>
-    private void HackSystemTypes()
+    private string CreateDependencyDiagram()
     {
-        foreach (var asm in _assemblies.Values.Where(asm => !asm.Loaded && asm.IsSystemAssembly))
+        var sb = new StringBuilder()
+            .AppendLine("stateDiagram-v2");
+
+        var done = new HashSet<string>();
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded).OrderBy(a => a.Name))
         {
-            var additions = new List<(TypeSymbol, string)>();
-            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
+            done.Clear();
+            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).OrderBy(sym => sym.Name))
             {
-                if (sym.Name == "System.Runtime.CompilerServices.IAsyncStateMachine")
+                foreach (var rs in sym.ReferencedSymbols.Select(SymbolTable.GetSymbol).Where(rs => rs.Assembly != asm && rs.Assembly.Loaded).OrderBy(rs => rs.Name))
                 {
-                    additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.MoveNext()"));
-                    additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.SetStateMachine(System.Runtime.CompilerServices.IAsyncStateMachine)"));
+                    if (done.Add(rs.Assembly.Name))
+                    {
+                        _ = sb.AppendLine(CultureInfo.InvariantCulture, $"    {asm.Name.Replace('-', '_')} --> {rs.Assembly.Name.Replace('-', '_')}");
+                    }
                 }
-
-                if (sym.Name == "System.IDisposable")
-                {
-                    additions.Add((sym, "System.IDisposable.Dispose()"));
-                }
-
-                if (sym.Name == "System.Collections.IEnumerable")
-                {
-                    additions.Add((sym, "System.Collections.IEnumerable.GetEnumerator()"));
-                }
-
-                if (sym.Name == "System.Collections.Generic.IEnumerable`1")
-                {
-                    additions.Add((sym, "System.Collections.Generic.IEnumerable`1.GetEnumerator()"));
-                }
-            }
-
-            foreach (var addition in additions)
-            {
-                var method = asm.GetSymbol(this, addition.Item2, SymbolKind.Method);
-                addition.Item1.AddMember(method);
             }
         }
+
+        return sb.ToString();
     }
 
     /// <summary>
@@ -361,14 +389,15 @@ public sealed class AssemblyGraph
             TrimExcess();
             HackSystemTypes();
 
-            // we need to create the layer cake first, since the code below will introduce downward links in the graph which leads to cycles
+            // we need to do these first, since the code below will introduce downward links in the graph which leads to cycles
             _layerCake = CreateAssemblyLayerCake();
+            _dependencyDiagram = CreateDependencyDiagram();
 
             HandleUnhomedReferences(log);
             HookupDerivedSymbols(log);
             MarkUsedSymbols(log);
         }
 
-        return new Reporter(_assemblies, SymbolTable, _layerCake);
+        return new Reporter(_assemblies, SymbolTable, _layerCake, _dependencyDiagram!);
     }
 }

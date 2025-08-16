@@ -12,12 +12,14 @@ public sealed class Reporter
     private readonly Dictionary<string, Assembly> _assemblies;
     private readonly SymbolTable _symbolTable;
     private readonly IReadOnlyList<IReadOnlyList<string>> _layerCake;
+    private readonly string _dependencyDiagram;
 
-    internal Reporter(Dictionary<string, Assembly> assemblies, SymbolTable symbolTable, IReadOnlyList<IReadOnlyList<string>> layerCake)
+    internal Reporter(Dictionary<string, Assembly> assemblies, SymbolTable symbolTable, IReadOnlyList<IReadOnlyList<string>> layerCake, string dependencyDiagram)
     {
         _assemblies = assemblies;
         _symbolTable = symbolTable;
         _layerCake = layerCake; 
+        _dependencyDiagram = dependencyDiagram;
     }
 
     /// <summary>
@@ -263,7 +265,8 @@ public sealed class Reporter
     /// </summary>
     public IReadOnlyList<string> CollectUnanalyzedAssemblies()
     {
-        return [.. _assemblies.Values.Where(asm => !asm.Loaded).Select(asm => asm.Name)];
+        // we don't include assemblies which were just referenced as a result of being the target of an InternalsVisibleTo attribute
+        return [.. _assemblies.Values.Where(asm => !asm.Loaded && asm.Symbols.Count > 0 && !asm.IsSystemAssembly).Select(asm => asm.Name)];
     }
 
     /// <summary>
@@ -274,7 +277,7 @@ public sealed class Reporter
         var result = new List<DuplicateAssemblyReport>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && asm.Duplicates.Count > 0))
         {
-            result.Add(new DuplicateAssemblyReport(asm.Name, asm.Version!, asm.Duplicates));
+            result.Add(new DuplicateAssemblyReport(asm.Name, asm.Version!, asm.Path!, asm.Duplicates));
         }
 
         return result;

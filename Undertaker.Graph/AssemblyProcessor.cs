@@ -146,6 +146,7 @@ internal static class AssemblyProcessor
 
         asm.Loaded = true;
         asm.Version = decomp.TypeSystem.MainModule.AssemblyVersion;
+        asm.Path = la.Path;
 
         Symbol DefineSymbol(IEntity entity) => DefineSymbolIn(entity, asm);
 

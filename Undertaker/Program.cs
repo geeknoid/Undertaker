@@ -29,6 +29,7 @@ internal static class Program
         public bool ContinueOnLoadErrors { get; set; }
         public bool Verbose { get; set; }
         public bool DumpMemory { get; set; }
+        public bool CSV { get; set; }
     }
 
     public static Task<int> Main(string[] args)
@@ -75,7 +76,7 @@ internal static class Program
 
             new Option<string>(
                 ["-nivt", "--needless-internals-visible-to"],
-                "Path of the report to produce on needless uses of [InternalsVisibleTo]"),
+                "Path of the JSON report to produce on needless uses of [InternalsVisibleTo]"),
 
             new Option<string>(
                 ["-alc", "--assembly-layer-cake"],
@@ -96,6 +97,10 @@ internal static class Program
             new Option<bool>(
                 ["-v", "--verbose"],
                 "Output progress reports"),
+
+            new Option<bool>(
+                ["-csv"],
+                "Switch some output files from JSON to CSV format"),
         };
 
         rootCommand.Handler = CommandHandler.Create<UndertakerArgs>(ExecuteAsync);
@@ -120,14 +125,25 @@ internal static class Program
         {
             Out("No explicit output requested, generating default outputs");
 
-            args.DeadSymbols = "./dead-symbols.json";
+            if (args.CSV)
+            {
+                args.DeadSymbols = "./dead-symbols.csv";
+                args.NeedlessInternalsVisibleTo = "./needless-internals-visible-to.csv";
+                args.DuplicateAssemblies = "./duplicate-assemblies.csv";
+                args.NeedlesslyPublicSymbols = "./needlessly-public-symbols.csv";
+            }
+            else
+            {
+                args.DeadSymbols = "./dead-symbols.json";
+                args.NeedlessInternalsVisibleTo = "./needless-internals-visible-to.json";
+                args.DuplicateAssemblies = "./duplicate-assemblies.json";
+                args.NeedlesslyPublicSymbols = "./needlessly-public-symbols.json";
+            }
+
             args.AliveSymbols = "./alive-symbols.json";
             args.AliveByTestSymbols = "./alive-by-test-symbols.json";
-            args.NeedlesslyPublicSymbols = "./needlessly-public-symbols.json";
             args.UnreferencedAssemblies = "./unreferenced-assemblies.txt";
             args.UnanalyzedAssemblies= "./unanalyzed-assemblies.txt";
-            args.DuplicateAssemblies = "./duplicate-assemblies.json";
-            args.NeedlessInternalsVisibleTo = "./needless-internals-visible-to.json";
             args.AssemblyLayerCake = "./assembly-layer-cake.json";
             args.DependencyDiagram = "./dependency-diagram.mmd";
         }
@@ -313,8 +329,26 @@ internal static class Program
                 try
                 {
                     var report = reporter.CollectDeadSymbols();
-                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+
+                    if (args.CSV)
                     {
+                        using var writer = new StreamWriter(path);
+                        foreach (var asm in report.Assemblies)
+                        {
+                            foreach (var sym in asm.DeadMembers)
+                            {
+                                writer.WriteLine($"{asm.Assembly},\"{sym.Name}\",{sym.Kind}");
+                            }
+
+                            foreach (var sym in asm.DeadTypes)
+                            {
+                                writer.WriteLine($"{asm.Assembly},\"{sym.Name}\",{sym.Kind}");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
                         JsonSerializer.Serialize(file, report, _serializationOptions);
                     }
 
@@ -388,8 +422,26 @@ internal static class Program
                 try
                 {
                     var report = reporter.CollectNeedlesslyPublicSymbols();
-                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+
+                    if (args.CSV)
                     {
+                        using var writer = new StreamWriter(path);
+                        foreach (var asm in report.Assemblies)
+                        {
+                            foreach (var sym in asm.NeedlesslyPublicMembers)
+                            {
+                                writer.WriteLine($"{asm},\"{sym}\"");
+                            }
+
+                            foreach (var sym in asm.NeedlesslyPublicTypes)
+                            {
+                                writer.WriteLine($"{asm},\"{sym}\"");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
                         JsonSerializer.Serialize(file, report, _serializationOptions);
                     }
 
@@ -457,8 +509,22 @@ internal static class Program
                 try
                 {
                     var report = reporter.CollectDuplicateAssemblies().Order();
-                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+
+                    if (args.CSV)
                     {
+                        using var writer = new StreamWriter(path);
+                        foreach (var asm in report)
+                        {
+                            writer.WriteLine($"{asm.Assembly},{asm.Version},{asm.Path}");
+                            foreach (var other in asm.Duplicates)
+                            {
+                                writer.WriteLine($"{asm.Assembly},{other.Version},{other.Path}");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
                         JsonSerializer.Serialize(file, report, _serializationOptions);
                     }
 
@@ -482,8 +548,21 @@ internal static class Program
                 try
                 {
                     var report = reporter.CollectNeedlessInternalsVisibleTo();
-                    using (var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+
+                    if (args.CSV)
                     {
+                        using var writer = new StreamWriter(path);
+                        foreach (var asm in report)
+                        {
+                            foreach (var other in asm.OtherAssemblies)
+                            {
+                                writer.WriteLine($"{asm.Assembly},{other}");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
                         JsonSerializer.Serialize(file, report, _serializationOptions);
                     }
 

@@ -19,16 +19,22 @@ public class DuplicateAssemblyReport : IComparable<DuplicateAssemblyReport>
     public Version Version { get; }
 
     /// <summary>
+    /// Path of the assembly.
+    /// </summary>
+    public string Path { get; }
+
+    /// <summary>
     /// The set of other assembly files & version which were not loaded
     /// ies which have access to the internal symbols of the
     /// assembly, but don't need this access.
     /// </summary>
     public IEnumerable<DuplicateAssembly> Duplicates { get; }
 
-    internal DuplicateAssemblyReport(string assemblyName, Version version, IEnumerable<DuplicateAssembly> duplicates)
+    internal DuplicateAssemblyReport(string assemblyName, Version version, string path, IEnumerable<DuplicateAssembly> duplicates)
     {
         Assembly = assemblyName;
         Version = version;
+        Path = path;
         Duplicates = duplicates;
     }
 
