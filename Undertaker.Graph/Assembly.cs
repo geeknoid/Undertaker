@@ -43,6 +43,12 @@ internal sealed class Assembly(string name, bool root)
 
             var sym = graph.SymbolTable.GetSymbol(id);
             sym.Define(entity);
+
+            if (graph.IsReflectionSymbol(Name, sym.Name))
+            {
+                sym.Pin();
+            }
+
             return sym;
         }
 

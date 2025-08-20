@@ -19,6 +19,7 @@ public sealed class AssemblyGraph
     private readonly Dictionary<string, Assembly> _assemblies = [];
     private readonly HashSet<string> _rootAssemblies = [];
     private readonly HashSet<string> _testMethodAttributes = [];
+    private readonly Dictionary<string, HashSet<string>> _reflectionSymbols = [];
     private List<IReadOnlyList<string>>? _layerCake;
     private string? _dependencyDiagram;
     internal SymbolTable SymbolTable { get; } = new();
@@ -47,6 +48,25 @@ public sealed class AssemblyGraph
         }
 
         _ = _rootAssemblies.Add(assemblyName);
+    }
+
+    /// <summary>
+    /// Indicates a particular symbol should be treated as though it is accessed via reflection.
+    /// </summary>
+    public void RecordReflectionSymbol(string assemblyName, string symbolName)
+    {
+        if (_layerCake != null)
+        {
+            throw new InvalidOperationException("Cannot add root assemblies after the graph has been finalized.");
+        }
+
+        if (!_reflectionSymbols.TryGetValue(assemblyName, out var symbols))
+        {
+            symbols = [];
+            _reflectionSymbols[assemblyName] = symbols;
+        }
+
+        _ = symbols.Add(symbolName);
     }
 
     public void RecordTestMethodAttribute(string attributeName)
@@ -100,6 +120,7 @@ public sealed class AssemblyGraph
     }
 
     internal bool IsTestMethodAttribute(string attributeName) => _testMethodAttributes.Contains(attributeName);
+    internal bool IsReflectionSymbol(string assemblyName, string symbolName) => _reflectionSymbols.TryGetValue(assemblyName, out var symbols) && symbols.Contains(symbolName);
 
     private void MarkUsedSymbols(Action<string> log)
     {

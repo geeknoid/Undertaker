@@ -24,21 +24,29 @@ Arguments:
   <assembly-folder>  Path to a folder containing all the assemblies to work with.
 
 Options:
-  -ra, --root-assemblies <root-assemblies>                                Path to a text file listing assemblies to be treated as roots, one assembly name per line
-                                                                          (with or without a .dll extension)
-  -tma, --test-method-attributes <test-method-attributes>                 Path to a text file listing all the attributes that can mark a method as a test, one per line
+  -ra, --root-assemblies <root-assemblies>                                Path to a text file listing assemblies to be treated as roots, one
+                                                                          assembly name per line (with or without a .dll extension)
+  -rs, --reflection-symbols <reflection-symbols>                          Path to a text file listing symbols accessed through reflection, with
+                                                                          each line in the form of `assembly-name:fully-qualified-symbol-name`
+  -tma, --test-method-attributes <test-method-attributes>                 Path to a text file listing all the attributes that can mark a method as
+                                                                          a test, one per line
   -ds, --dead-symbols <dead-symbols>                                      Path of the report to produce on dead symbols
   -as, --alive-symbols <alive-symbols>                                    Path of the report to produce on alive symbols
   -abts, --alive-by-test-symbols <alive-by-test-symbols>                  Path of the report to produce symbols kept alive only by test methods
-  -nps, --needlessly-public-symbols <needlessly-public-symbols>           Path of the report to produce on public symbols which could be made internal
+  -nps, --needlessly-public-symbols <needlessly-public-symbols>           Path of the report to produce on public symbols which could be made
+                                                                          internal
   -ua, --unreferenced-assemblies <unreferenced-assemblies>                Path of the report to produce on completely unreferenced assemblies
-  -uaa, --unanalyzed-assemblies <unanalyzed-assemblies>                   Path of the report to produce on assemblies which were referenced but not analyzed
-  -da, --duplicate-assemblies <duplicate-assemblies>                      Path of the report to produce on assemblies which were found multiple times as input
-  -nivt, --needless-internals-visible-to <needless-internals-visible-to>  Path of the JSON report to produce on needless uses of [InternalsVisibleTo]
+  -uaa, --unanalyzed-assemblies <unanalyzed-assemblies>                   Path of the report to produce on assemblies which were referenced but
+                                                                          not analyzed
+  -da, --duplicate-assemblies <duplicate-assemblies>                      Path of the report to produce on assemblies which were found multiple
+                                                                          times as input
+  -nivt, --needless-internals-visible-to <needless-internals-visible-to>  Path of the JSON report to produce on needless uses of
+                                                                          [InternalsVisibleTo]
   -alc, --assembly-layer-cake <assembly-layer-cake>                       Path of the assembly layer cake to produce
   -dd, --dependency-diagram <dependency-diagram>                          Path of the Mermaid-based assembly dependency diagram to produce
   -gd, --graph-dump <graph-dump>                                          Path of the graph dump file to produce
-  -cle, --continue-on-load-errors                                         Proceed to the analysis and output phases even if some assemblies didn't load
+  -cle, --continue-on-load-errors                                         Proceed to the analysis and output phases even if some assemblies didn't
+                                                                          load
   -v, --verbose                                                           Output progress reports
   -csv                                                                    Switch some output files from JSON to CSV format
   --version                                                               Show version information
@@ -52,7 +60,10 @@ Options:
 * `--root-assemblies` lets you specify the set of root assemblies. This is a text file
   containing the names of assemblies, one per line.
 
-* `--test-method-attributes` lets you specify the set of attributes that mark a method as a test. This is a text file
+* `--reflection-symbols` lets you specify a text file containing a list of symbols that are accessed
+  through reflection. Each line in the file should be in the form of `assembly-name:fully-qualified-symbol-name`.
+
+* * `--test-method-attributes` lets you specify the set of attributes that mark a method as a test. This is a text file
   containing the fully qualified names of the attributes, one per line. If this is not supplied, a default set of
   well-known names is used.
 
@@ -161,10 +172,9 @@ Undertaker tries really hard not to produce any false positives (i.e. claiming c
 may get fooled by uses of reflection:
 
 * Dynamically-loaded assemblies
-* Individual members only accessed via reflection
+* Individual members only accessed via reflection (see the `--reflection-symbols` option to help with this)
 
-These two uses of reflection, along with not listing all root assemblies, can lead to false
-positives.
+These two uses of reflection, along with not listing all root assemblies, can lead to false positives.
 
 ## Ideas
 

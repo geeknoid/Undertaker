@@ -138,7 +138,7 @@ internal static class AssemblyProcessor
 
             if (!moreThanConstants && gotConstants)
             {
-                // since we can tell whether constants are used or not, when we find types that only define constants, let's pin them
+                // since we can't tell whether constants are used or not, when we find types that only define constants, let's pin them
                 // so they appear alive (to avoid false positives)
                 typeSym.Pin();
             }

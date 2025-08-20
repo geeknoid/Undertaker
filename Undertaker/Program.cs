@@ -14,6 +14,7 @@ internal static class Program
     {
         public DirectoryInfo? AssemblyFolder { get; set; }
         public FileInfo? RootAssemblies { get; set; }
+        public FileInfo? ReflectionSymbols { get; set; }
         public FileInfo? TestMethodAttributes { get; set; }
         public string? DeadSymbols { get; set; }
         public string? AliveSymbols { get; set; }
@@ -41,6 +42,10 @@ internal static class Program
             new Option<FileInfo>(
                 ["-ra", "--root-assemblies"],
                 "Path to a text file listing assemblies to be treated as roots, one assembly name per line (with or without a .dll extension)"),
+
+            new Option<FileInfo>(
+                ["-rs", "--reflection-symbols"],
+                "Path to a text file listing symbols accessed through reflection, with each line in the form of `assembly-name:fully-qualified-symbol-name`"),
 
             new Option<FileInfo>(
                 ["-tma", "--test-method-attributes"],
@@ -178,6 +183,53 @@ internal static class Program
             catch (Exception ex)
             {
                 Error($"Unable to read root assembly file {args.RootAssemblies.FullName}: {ex.Message}");
+                return 1;
+            }
+        }
+
+        if (args.ReflectionSymbols != null)
+        {
+            Out($"Loading reflection symbol file {args.ReflectionSymbols.FullName}");
+
+            try
+            {
+                var lineNumber = 0;
+                var lines = File.ReadAllLines(args.ReflectionSymbols.FullName);
+                foreach (var line in lines)
+                {
+                    lineNumber++;
+
+                    var l = line.Trim();
+                    if (l == String.Empty)
+                    {
+                        continue;
+                    }
+
+                    var s = l.Split(':', 2);
+                    if (s.Length != 2)
+                    {
+                        Error($"Line {lineNumber} in reflection symbol file {args.ReflectionSymbols.FullName} is not formatted correctly");
+                        continue;
+                    }
+
+                    var assemblyName = s[0].Trim();
+                    var symbolName = s[1].Trim();
+
+                    if (assemblyName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                    {
+                        assemblyName = assemblyName.Substring(0, assemblyName.Length - 4);
+                    }
+                    else if (assemblyName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                    {
+                        assemblyName = assemblyName.Substring(0, assemblyName.Length - 4);
+                    }
+
+                    graph.RecordReflectionSymbol(assemblyName, symbolName);
+                }
+            }
+            catch (Exception ex)
+            {
+                Error($"Unable to read reflection symbol file {args.ReflectionSymbols.FullName}: {ex.Message}");
                 return 1;
             }
         }
