@@ -1,8 +1,6 @@
 ﻿using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
-using System.Runtime.ExceptionServices;
 using System.Text;
-using ICSharpCode.Decompiler.CSharp.Syntax;
 using ICSharpCode.Decompiler.Disassembler;
 using ICSharpCode.Decompiler.Metadata;
 using ICSharpCode.Decompiler.TypeSystem;

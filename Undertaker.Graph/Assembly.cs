@@ -36,6 +36,7 @@ internal sealed class Assembly(string name, bool root)
     public Symbol GetSymbol(AssemblyGraph graph, IEntity entity)
     {
         var key = new Key { Name = GetEntitySymbolName(entity), Kind = GetEntitySymbolKind(entity) };
+
         if (!_symbols.TryGetValue(key, out var id))
         {
             id = graph.SymbolTable.AddSymbol(this, key.Name, key.Kind);
@@ -43,12 +44,6 @@ internal sealed class Assembly(string name, bool root)
 
             var sym = graph.SymbolTable.GetSymbol(id);
             sym.Define(entity);
-
-            if (graph.IsReflectionSymbol(Name, sym.Name))
-            {
-                sym.Pin();
-            }
-
             return sym;
         }
 
@@ -103,6 +98,16 @@ internal sealed class Assembly(string name, bool root)
     {
         if (entity is IMethod method)
         {
+            if (method.ReducedFrom != null)
+            {
+                method = method.ReducedFrom;
+            }
+
+            if (method.MemberDefinition is IMethod def)
+            {
+                method = def;
+            }
+
             var sb = new StringBuilder()
                 .Append(entity.ReflectionName)
                 .Append('(');
