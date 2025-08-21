@@ -75,12 +75,12 @@ Options:
   should be written. This report contains a list of all the symbols that are defined in the
   assemblies and are referenced by other symbols.
 
-* `--alive-by-test-symbols` lets you specify the path to the file where the report on symbols alive due
+* `--alive-by-test-symbols` lets you specify the path to the file where the report on symbols alive only due
   to being used from test methods should be written.
 
 * `--needlessly-public-symbols` lets you specify the path to the file where the report on needlessly
   public symbols should be written. This report contains a list of all the symbols that are
-  defined as public but are never referenced by any other assembly and so could be made internal.
+  defined as public but are never referenced by any other assembly and so could be made internal or private.
 
 * `--unreferenced-assemblies` lets you specify the path to the file where the report on unreferenced
   assemblies should be written. This report contains a list of all the assemblies that were loaded as input
@@ -88,9 +88,9 @@ Options:
  
 * `--unanalyzed-assemblies` lets you specify the path to the file where the report on unanalyzed
   assemblies should be written. This report contains a list of all the assemblies that were referenced by
-  an analyzed assembly, but where not themselves analyzed. This will commonly include core .NET libraries
-  (System.* and Microsoft.Extensions.*). Look in this list to see if you're missing some assemblies which 
-  should we part of the set you want to be analyzed.
+  an analyzed assembly, but were not themselves analyzed (the list doesn't include core .NET libraries
+  e.g. System.* and Microsoft.Extensions.*). Look in this list to see if you're missing some assemblies which 
+  should be part of the set you want to be analyzed but somehow didn't get included.
  
 * `--needless-internals-visible-to` lets you specify the path to the file where the report
   on needless uses of [InternalsVisibleTo] should be written.
