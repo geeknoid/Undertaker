@@ -33,6 +33,9 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
     // set by Pin to force something to be alive
     public bool Pinned { get; private set; }
 
+    // set by SetReflectionTarget
+    public bool ReflectionTarget { get; private set; }
+
     private readonly HashSet<SymbolId> _referencers = [];
     private readonly HashSet<SymbolId> _referencedSymbols = [];
 
@@ -86,6 +89,7 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
     }
 
     public void Pin() => Pinned = true;
+    public void SetReflectionTarget() => ReflectionTarget = true;
 
     public override string ToString() => Name;
 

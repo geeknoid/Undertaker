@@ -129,7 +129,7 @@ public sealed class AssemblyGraph
         {
             foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol))
             {
-                if (sym.Root || sym.Pinned)
+                if (sym.Root || sym.Pinned || sym.ReflectionTarget)
                 {
                     sym.Mark(this);
                 }
@@ -252,6 +252,25 @@ public sealed class AssemblyGraph
                                 break;
                             }
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    private void PropageteReflectionTarget(Action<string> log)
+    {
+        log("Propagating reflection targets from types to members");
+
+        foreach (var asm in _assemblies.Values)
+        {
+            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
+            {
+                if (sym.ReflectionTarget)
+                {
+                    foreach (var member in sym.Members.Select(SymbolTable.GetSymbol))
+                    {
+                        member.SetReflectionTarget();
                     }
                 }
             }
@@ -416,6 +435,7 @@ public sealed class AssemblyGraph
 
             HandleUnhomedReferences(log);
             HookupDerivedSymbols(log);
+            PropageteReflectionTarget(log);
             MarkUsedSymbols(log);
         }
 

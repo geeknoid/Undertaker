@@ -386,6 +386,7 @@ public sealed class Reporter
                 output.Write(sym.Marked ? ", ALIVE" : ", DEAD");
                 output.Write(sym.Hide ? ", HIDE" : ", !HIDE");
                 output.Write(sym.Pinned ? ", PINNED" : ", !PINNED");
+                output.Write(sym.ReflectionTarget ? ", REFLECTION_TARGET" : ", !REFLECTION_TARGET");
                 output.WriteLine(sym.Root ? ", ROOT]" : ", !ROOT]");
 
                 if (sym.ReferencedSymbols.Count > 0)
