@@ -328,8 +328,27 @@ internal static class AssemblyProcessor
                                 var token = blobReader.ReadInt32();
                                 var handle = (EntityHandle)MetadataTokens.Handle(token);
                                 var m = metadataModule.ResolveMethod(handle, default);
+
                                 RecordReferenceToMember(methodSym, m);
                                 RecordReferenceToType(methodSym, m.DeclaringType);
+
+                                var count = 0;
+                                foreach (var ta in m.TypeArguments)
+                                {
+                                    bool reflectionTarget = false;
+                                    foreach (var attr in m.TypeParameters[count].GetAttributes())
+                                    {
+                                        if (attr.AttributeType.ReflectionName == "System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute")
+                                        {
+                                            reflectionTarget = true;
+                                            break;
+                                        }
+                                    }
+
+                                    RecordReferenceToType(methodSym, ta, reflectionTarget);
+                                    count++;
+                                }
+
                                 break;
                             }
 
@@ -516,7 +535,7 @@ internal static class AssemblyProcessor
             }
         }
 
-        void RecordReferenceToType(Symbol fromSym, IType toType)
+        void RecordReferenceToType(Symbol fromSym, IType toType, bool reflectionTarget = false)
         {
             var t = toType;
             while (t != null)
@@ -548,6 +567,12 @@ internal static class AssemblyProcessor
                     }
 
                     fromSym.RecordReferencedSymbol(toSym);
+
+                    if (reflectionTarget)
+                    {
+                        toSym.SetReflectionTarget();
+                        reflectionTarget = false;
+                    }
                 }
 
                 foreach (var ta in t.TypeArguments)
