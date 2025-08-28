@@ -95,6 +95,12 @@ internal static class AssemblyProcessor
 
                         break;
                     }
+
+                    if (graph.IsReflectionMarkerAttribute(a.AttributeType.ReflectionName))
+                    {
+                        sym.SetReflectionTarget();
+                        break;
+                    }
                 }
 
                 RecordSymbolsReferencedByMethod(sym, method, cctor);

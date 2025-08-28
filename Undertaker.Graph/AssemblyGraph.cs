@@ -19,6 +19,7 @@ public sealed class AssemblyGraph
     private readonly Dictionary<string, Assembly> _assemblies = [];
     private readonly HashSet<string> _rootAssemblies = [];
     private readonly HashSet<string> _testMethodAttributes = [];
+    private readonly HashSet<string> _reflectionMarkerAttributes = [];
     private readonly Dictionary<string, HashSet<string>> _reflectionSymbols = [];
     private List<IReadOnlyList<string>>? _layerCake;
     private string? _dependencyDiagram;
@@ -79,6 +80,16 @@ public sealed class AssemblyGraph
         _ = _testMethodAttributes.Add(attributeName);
     }
 
+    public void RecordReflectionMarkerAttribute(string attributeName)
+    {
+        if (_layerCake != null)
+        {
+            throw new InvalidOperationException("Cannot add reflection marker attributes after the graph has been finalized.");
+        }
+
+        _ = _reflectionMarkerAttributes.Add(attributeName);
+    }
+
     /// <summary>
     /// Merge a new asssembly into the graph.
     /// </summary>
@@ -120,6 +131,7 @@ public sealed class AssemblyGraph
     }
 
     internal bool IsTestMethodAttribute(string attributeName) => _testMethodAttributes.Contains(attributeName);
+    internal bool IsReflectionMarkerAttribute(string attributeName) => _reflectionMarkerAttributes.Contains(attributeName);
     internal bool IsReflectionSymbol(string assemblyName, string symbolName) => _reflectionSymbols.TryGetValue(assemblyName, out var symbols) && symbols.Contains(symbolName);
 
     private void MarkUsedSymbols(Action<string> log)

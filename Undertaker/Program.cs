@@ -16,6 +16,7 @@ internal static class Program
         public FileInfo? RootAssemblies { get; set; }
         public FileInfo? ReflectionSymbols { get; set; }
         public FileInfo? TestMethodAttributes { get; set; }
+        public FileInfo? ReflectionMarkerAttributes { get; set; }
         public string? DeadSymbols { get; set; }
         public string? AliveSymbols { get; set; }
         public string? AliveByTestSymbols { get; set; }
@@ -50,6 +51,10 @@ internal static class Program
             new Option<FileInfo>(
                 ["-tma", "--test-method-attributes"],
                 "Path to a text file listing all the attributes that can mark a method as a test, one per line"),
+
+            new Option<FileInfo>(
+                ["-rma", "--reflection-marker-attributes"],
+                "Path to a text file listing all the attributes that can mark a method as being used from reflection, one per line"),
 
             new Option<string>(
                 ["-ds", "--dead-symbols"],
@@ -267,6 +272,53 @@ internal static class Program
             graph.RecordTestMethodAttribute("NUnit.Framework.TestAttribute");
             graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute");
             graph.RecordTestMethodAttribute("MSTest.TestFramework.TestMethodAttribute");
+        }
+
+        if (args.ReflectionMarkerAttributes != null)
+        {
+            Out($"Loading reflection marker attribute file {args.ReflectionMarkerAttributes.FullName}");
+
+            try
+            {
+                var lines = File.ReadAllLines(args.ReflectionMarkerAttributes.FullName);
+                foreach (var line in lines)
+                {
+                    var l = line.Trim();
+                    if (l == String.Empty)
+                    {
+                        continue;
+                    }
+
+                    graph.RecordReflectionMarkerAttribute(l);
+                }
+            }
+            catch (Exception ex)
+            {
+                Error($"Unable to read reflection marker attribute file {args.ReflectionMarkerAttributes.FullName}: {ex.Message}");
+                return 1;
+            }
+        }
+        else
+        {
+            Out("Using default reflection marker attributes");
+
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpGetAttribute");
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpPostAttribute");
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpDeleteAttribute");
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpPutAttribute");
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpPatchAttribute");
+
+            graph.RecordReflectionMarkerAttribute("System.Web.Mvc.HttpGetAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Web.Mvc.HttpPostAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Web.Mvc.HttpDeleteAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Web.Mvc.HttpPutAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Web.Mvc.HttpPatchAttribute");
+
+            graph.RecordReflectionMarkerAttribute("System.Web.Http.HttpGetAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Web.Http.HttpPostAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Web.Http.HttpDeleteAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Web.Http.HttpPutAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Web.Http.HttpPatchAttribute");
         }
 
         // load the assemblies
