@@ -30,12 +30,14 @@ internal static class Program
         {
 
         }
-        catch (MyException ex)
+        catch (MyCaughtException ex)
         {
             Console.WriteLine(ex.ToString());
         }
 
         Console.WriteLine(AliveClassAndAliveMembers.AliveConst);
         Console.WriteLine(new AliveClassAndAliveMembers.AliveNestedType());
+
+        throw new MyThrownException();
     }
 }

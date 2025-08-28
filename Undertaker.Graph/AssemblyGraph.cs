@@ -308,18 +308,15 @@ public sealed class AssemblyGraph
                     additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.MoveNext()"));
                     additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.SetStateMachine(System.Runtime.CompilerServices.IAsyncStateMachine)"));
                 }
-
-                if (sym.Name == "System.IDisposable")
+                else if (sym.Name == "System.IDisposable")
                 {
                     additions.Add((sym, "System.IDisposable.Dispose()"));
                 }
-
-                if (sym.Name == "System.Collections.IEnumerable")
+                else if (sym.Name == "System.Collections.IEnumerable")
                 {
                     additions.Add((sym, "System.Collections.IEnumerable.GetEnumerator()"));
                 }
-
-                if (sym.Name == "System.Collections.Generic.IEnumerable`1")
+                else if (sym.Name == "System.Collections.Generic.IEnumerable`1")
                 {
                     additions.Add((sym, "System.Collections.Generic.IEnumerable`1.GetEnumerator()"));
                 }

@@ -118,7 +118,7 @@
           "Kind": "Method"
         },
         {
-          "Name": "TestLibrary.MyException..ctor()",
+          "Name": "TestLibrary.MyCaughtException..ctor()",
           "Kind": "Method"
         },
         {

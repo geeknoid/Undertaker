@@ -56,7 +56,11 @@ public class AliveClassAndAliveMembers
     public const int AliveConst = 42;
 }
 
-public class MyException : Exception
+public class MyCaughtException : Exception
+{
+}
+
+public class MyThrownException : Exception
 {
 }
 

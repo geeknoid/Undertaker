@@ -45,7 +45,7 @@
         "TestLibrary.DeadDelegate.Invoke()",
         "TestLibrary.DeadStruct..ctor()",
         "TestLibrary.GenericTypeArgument..ctor()",
-        "TestLibrary.MyException..ctor()",
+        "TestLibrary.MyCaughtException..ctor()",
         "TestLibrary.TestAttribute..ctor(System.String)",
         "TestLibrary.TestAttribute.get_Name()",
         "TestLibrary.TestAttribute.Name"

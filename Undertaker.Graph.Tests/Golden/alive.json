@@ -125,9 +125,16 @@
           ]
         },
         {
-          "Name": "TestLibrary.MyException",
+          "Name": "TestLibrary.MyCaughtException",
           "ReferencedBy": [
             "TestExe.Program.Main()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.MyThrownException",
+          "ReferencedBy": [
+            "TestExe.Program.Main()",
+            "TestLibrary.MyThrownException..ctor()"
           ]
         },
         {
@@ -260,6 +267,12 @@
         },
         {
           "Name": "TestLibrary.AliveDelegate..ctor(System.Object, nint)",
+          "ReferencedBy": [
+            "TestExe.Program.Main()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.MyThrownException..ctor()",
           "ReferencedBy": [
             "TestExe.Program.Main()"
           ]
