@@ -189,7 +189,7 @@ public sealed class AssemblyGraph
                     {
                         foreach (var derivedMember in derivedType.Members.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                         {
-                            if (ifaceMember.SameSignature(derivedMember))
+                            if (ifaceMember.SimilarSignature(derivedMember))
                             {
                                 ifaceMember.RecordReferencedSymbol(derivedMember);
                                 break;
@@ -212,7 +212,7 @@ public sealed class AssemblyGraph
                     {
                         foreach (var derivedMember in derived.Members.Select(SymbolTable.GetSymbol).Where(x => x.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsOverride))
                         {
-                            if (member.SameSignature(derivedMember))
+                            if (member.SimilarSignature(derivedMember))
                             {
                                 member.RecordReferencedSymbol(derivedMember);
                                 break;
@@ -235,7 +235,7 @@ public sealed class AssemblyGraph
                     {
                         foreach (var derivedMember in derivedType.Members.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                         {
-                            if (ifaceMember.SameSignature(derivedMember))
+                            if (ifaceMember.SimilarSignature(derivedMember))
                             {
                                 sym.RecordReferencedSymbol(derivedMember);
                                 break;
@@ -258,7 +258,7 @@ public sealed class AssemblyGraph
                     {
                         foreach (var derivedMember in derivedType.Members.Select(SymbolTable.GetSymbol).Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                         {
-                            if (classMember.SameSignature(derivedMember))
+                            if (classMember.SimilarSignature(derivedMember))
                             {
                                 sym.RecordReferencedSymbol(derivedMember);
                                 break;

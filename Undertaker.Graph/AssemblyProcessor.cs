@@ -286,10 +286,8 @@ internal static class AssemblyProcessor
                 {
                     foreach (var bm in bt.GetMethods().Where(bm => bm.Name == method.Name && bm.Parameters.Count == method.Parameters.Count))
                     {
-                        if (methodSym.Name == Assembly.GetEntitySymbolName(bm))
-                        {
-                            RecordReferenceToMember(methodSym, bm);
-                        }
+                        // very coarse matching, only looking at method name and parameter count and not parameter types (it gets too complicated given generics)
+                        RecordReferenceToMember(methodSym, bm);
                     }
                 }
             }
@@ -299,10 +297,8 @@ internal static class AssemblyProcessor
             {
                 foreach (var im in it.GetMethods().Where(bm => bm.Name == method.Name && bm.Parameters.Count == method.Parameters.Count))
                 {
-                    if (methodSym.Name == Assembly.GetEntitySymbolName(im))
-                    {
-                        RecordReferenceToMember(methodSym, im);
-                    }
+                    // very coarse matching, only looking at method name and parameter count and not parameter types (it gets too complicated given generics)
+                    RecordReferenceToMember(methodSym, im);
                 }
             }
 
