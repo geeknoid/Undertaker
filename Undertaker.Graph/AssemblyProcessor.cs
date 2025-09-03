@@ -74,12 +74,8 @@ internal static class AssemblyProcessor
                 }
             }
 
-            bool moreThanConstants = false;
-            bool gotConstants = false;
             foreach (var method in type.Methods)
             {
-                moreThanConstants = true;
-
                 var sym = (MethodSymbol)DefineSymbol(method);
                 foreach (var a in method.GetAttributes())
                 {
@@ -109,8 +105,6 @@ internal static class AssemblyProcessor
 
             foreach (var property in type.Properties)
             {
-                moreThanConstants = true;
-
                 var sym = DefineSymbol(property);
                 RecordSymbolsReferencedByProperty(sym, property, cctor);
                 typeSym.AddMember(sym);
@@ -118,8 +112,6 @@ internal static class AssemblyProcessor
 
             foreach (var evt in type.Events)
             {
-                moreThanConstants = true;
-
                 var sym = DefineSymbol(evt);
                 RecordSymbolsReferencedByEvent(sym, evt, cctor);
                 typeSym.AddMember(sym);
@@ -129,22 +121,18 @@ internal static class AssemblyProcessor
             {
                 if (field.IsConst)
                 {
+                    if (field.EffectiveAccessibility() == Accessibility.Public)
+                    {
+                        typeSym.SetDeclaresPublicConstants();
+                    }
+
                     // we don't handle const values, so pretend they don't exist
-                    gotConstants = true;
                     continue;
                 }
 
-                moreThanConstants = true;
                 var sym = DefineSymbol(field);
                 RecordSymbolsReferencedByField(sym, field, cctor);
                 typeSym.AddMember(sym);
-            }
-
-            if (!moreThanConstants && gotConstants)
-            {
-                // since we can't tell whether constants are used or not, when we find types that only define constants, let's pin them
-                // so they appear alive (to avoid false positives)
-                typeSym.Pin();
             }
         }
 

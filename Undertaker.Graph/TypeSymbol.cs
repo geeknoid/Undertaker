@@ -10,6 +10,7 @@ internal sealed class TypeSymbol(Assembly assembly, string name, SymbolId id) : 
     public IReadOnlyCollection<SymbolId> InterfacesImplemented => _interfacesImplemented;
     public IReadOnlyCollection<SymbolId> BaseTypes => _baseTypes;
     public IReadOnlyCollection<SymbolId> DerivedTypes => _derivedTypes;
+    public bool DeclaresPublicConstants { get; private set; }
 
     private readonly HashSet<SymbolId> _members = [];
     private SmallList<SymbolId> _interfacesImplemented = [];
@@ -46,6 +47,11 @@ internal sealed class TypeSymbol(Assembly assembly, string name, SymbolId id) : 
         baseType._derivedTypes.Add(Id);
     }
 
+    public void SetDeclaresPublicConstants()
+    {
+        DeclaresPublicConstants = true;
+    } 
+    
     public override void TrimExcess()
     {
         _members.TrimExcess();
