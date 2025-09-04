@@ -141,7 +141,7 @@ public sealed class AssemblyGraph
         {
             foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol))
             {
-                if (sym.Root || sym.Pinned || sym.ReflectionTarget)
+                if (sym.Root || sym.ReflectionTarget)
                 {
                     sym.Mark(this);
                 }
@@ -292,14 +292,11 @@ public sealed class AssemblyGraph
 
         foreach (var asm in _assemblies.Values)
         {
-            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(type => type.DeclaresPublicConstants))
+            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(type => type.DeclaresPublicConstants && !type.Marked))
             {
-                if (!sym.Marked)
-                {
-                    // a class is dead but has public constants, so we pin it to avoid false positives
-                    // (since we generally can't tell when code is accessing constants by looking at IL)
-                    sym.Pin();
-                }
+                // a class is dead but has public constants, so we pin it to avoid false positives
+                // (since we generally can't tell when code is accessing constants by looking at IL)
+                sym.Mark(this);
             }
         }
     }
