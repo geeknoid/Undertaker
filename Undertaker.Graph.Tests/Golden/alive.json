@@ -113,6 +113,15 @@
           ]
         },
         {
+          "Name": "TestLibrary.AliveRecordClass",
+          "ReferencedBy": [
+            "TestExe.Program.Main()",
+            "TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)",
+            "TestLibrary.AliveRecordClass.\u003CId\u003Ek__BackingField",
+            "TestLibrary.AliveRecordClass.\u003CName\u003Ek__BackingField"
+          ]
+        },
+        {
           "Name": "TestLibrary.AliveStruct",
           "ReferencedBy": [
             "TestExe.Program.Main()"
@@ -269,6 +278,24 @@
           "Name": "TestLibrary.AliveDelegate..ctor(System.Object, nint)",
           "ReferencedBy": [
             "TestExe.Program.Main()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)",
+          "ReferencedBy": [
+            "TestExe.Program.Main()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.\u003CId\u003Ek__BackingField",
+          "ReferencedBy": [
+            "TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.\u003CName\u003Ek__BackingField",
+          "ReferencedBy": [
+            "TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)"
           ]
         },
         {

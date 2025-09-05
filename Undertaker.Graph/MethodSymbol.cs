@@ -1,4 +1,6 @@
-﻿using ICSharpCode.Decompiler.TypeSystem;
+﻿using ICSharpCode.Decompiler;
+using ICSharpCode.Decompiler.CSharp.Syntax;
+using ICSharpCode.Decompiler.TypeSystem;
 
 namespace Undertaker.Graph;
 
@@ -18,8 +20,9 @@ internal sealed class MethodSymbol(Assembly assembly, string name, SymbolId id) 
 
         base.Define(entity);
 
-        if (m.AccessorOwner != null)
+        if (m.AccessorOwner != null && !m.AccessorOwner.IsCompilerGenerated())
         {
+           
             Hide = false;  // always expose accessors in a first class way
         }
         else if (m.IsConstructor)

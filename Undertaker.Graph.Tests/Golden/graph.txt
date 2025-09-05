@@ -48,6 +48,8 @@ ASSEMBLY TestExe.dll [LOADED, !ROOT, !SYSTEM]
       TestExe.Program+<>c.<Main>b__0_0()
       TestLibrary.AliveDelegate..ctor(System.Object, nint)
       TestLibrary.AliveDelegate
+      TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)
+      TestLibrary.AliveRecordClass
       TestLibrary.AliveClassAndAliveMembers..ctor()
       TestLibrary.AliveClassAndAliveMembers
       TestLibrary.AliveClassAndAliveMembers.AliveMethod()
@@ -536,6 +538,235 @@ ASSEMBLY TestLibrary.dll [LOADED, !ROOT, !SYSTEM]
       System.IConvertible
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
+  TestLibrary.AliveRecordClass [TYPE, ALIVE, !HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      System.IEquatable`1
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+      TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)
+      TestLibrary.AliveRecordClass.ToString()
+      TestLibrary.AliveRecordClass.PrintMembers(System.Text.StringBuilder)
+      TestLibrary.AliveRecordClass.op_Inequality(TestLibrary.AliveRecordClass, TestLibrary.AliveRecordClass)
+      TestLibrary.AliveRecordClass.op_Equality(TestLibrary.AliveRecordClass, TestLibrary.AliveRecordClass)
+      TestLibrary.AliveRecordClass.GetHashCode()
+      TestLibrary.AliveRecordClass.Equals(System.Object)
+      TestLibrary.AliveRecordClass.Equals(TestLibrary.AliveRecordClass)
+      TestLibrary.AliveRecordClass.<Clone>$()
+      TestLibrary.AliveRecordClass..ctor(TestLibrary.AliveRecordClass)
+      TestLibrary.AliveRecordClass.Deconstruct(System.Int32&, System.String&)
+      TestLibrary.AliveRecordClass.EqualityContract
+      TestLibrary.AliveRecordClass.get_EqualityContract()
+      TestLibrary.AliveRecordClass.Id
+      TestLibrary.AliveRecordClass.get_Id()
+      TestLibrary.AliveRecordClass.set_Id(System.Int32)
+      TestLibrary.AliveRecordClass.Name
+      TestLibrary.AliveRecordClass.get_Name()
+      TestLibrary.AliveRecordClass.set_Name(System.String)
+      TestLibrary.AliveRecordClass.<Id>k__BackingField
+      TestLibrary.AliveRecordClass.<Name>k__BackingField
+  TestLibrary.AliveRecordClass..ctor(System.Int32, System.String) [METHOD, ALIVE, !HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.Int32
+      System.String
+      TestLibrary.AliveRecordClass.<Id>k__BackingField
+      TestLibrary.AliveRecordClass.<Name>k__BackingField
+      System.Object..ctor()
+    DIRECTLY REFERENCED BY
+      TestExe.Program.Main()
+  TestLibrary.AliveRecordClass..ctor(TestLibrary.AliveRecordClass) [METHOD, DEAD, HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      System.Object..ctor()
+      TestLibrary.AliveRecordClass.<Id>k__BackingField
+      TestLibrary.AliveRecordClass.<Name>k__BackingField
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveRecordClass.<Clone>$()
+  TestLibrary.AliveRecordClass.<Clone>$() [METHOD, DEAD, HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveRecordClass..ctor(TestLibrary.AliveRecordClass)
+  TestLibrary.AliveRecordClass.<Id>k__BackingField [FIELD, ALIVE, HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.Int32
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      System.Diagnostics.DebuggerBrowsableAttribute
+      System.Diagnostics.DebuggerBrowsableState
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)
+      TestLibrary.AliveRecordClass.GetHashCode()
+      TestLibrary.AliveRecordClass.Equals(TestLibrary.AliveRecordClass)
+      TestLibrary.AliveRecordClass..ctor(TestLibrary.AliveRecordClass)
+      TestLibrary.AliveRecordClass.get_Id()
+      TestLibrary.AliveRecordClass.set_Id(System.Int32)
+  TestLibrary.AliveRecordClass.<Name>k__BackingField [FIELD, ALIVE, HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.String
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      System.Diagnostics.DebuggerBrowsableAttribute
+      System.Diagnostics.DebuggerBrowsableState
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)
+      TestLibrary.AliveRecordClass.GetHashCode()
+      TestLibrary.AliveRecordClass.Equals(TestLibrary.AliveRecordClass)
+      TestLibrary.AliveRecordClass..ctor(TestLibrary.AliveRecordClass)
+      TestLibrary.AliveRecordClass.get_Name()
+      TestLibrary.AliveRecordClass.set_Name(System.String)
+  TestLibrary.AliveRecordClass.Deconstruct(System.Int32&, System.String&) [METHOD, DEAD, HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveRecordClass.get_Id()
+      TestLibrary.AliveRecordClass.get_Name()
+  TestLibrary.AliveRecordClass.EqualityContract [PROPERTY, DEAD, HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveRecordClass.get_EqualityContract()
+  TestLibrary.AliveRecordClass.Equals(System.Object) [METHOD, DEAD, HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.Boolean
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      System.Object.Equals(System.Object)
+      TestLibrary.AliveRecordClass.Equals(TestLibrary.AliveRecordClass)
+      System.IEquatable`1.Equals(`0)
+  TestLibrary.AliveRecordClass.Equals(TestLibrary.AliveRecordClass) [METHOD, DEAD, HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.Boolean
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      System.Object.Equals(System.Object)
+      System.IEquatable`1.Equals(`0)
+      TestLibrary.AliveRecordClass.get_EqualityContract()
+      System.Type.op_Equality(System.Type, System.Type)
+      System.Type
+      System.Collections.Generic.EqualityComparer`1.get_Default()
+      System.Collections.Generic.EqualityComparer`1
+      System.Int32
+      TestLibrary.AliveRecordClass.<Id>k__BackingField
+      System.Collections.Generic.EqualityComparer`1.Equals(`0, `0)
+      System.String
+      TestLibrary.AliveRecordClass.<Name>k__BackingField
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveRecordClass.op_Equality(TestLibrary.AliveRecordClass, TestLibrary.AliveRecordClass)
+      TestLibrary.AliveRecordClass.Equals(System.Object)
+  TestLibrary.AliveRecordClass.get_EqualityContract() [METHOD, DEAD, HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.Type
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveRecordClass.EqualityContract
+      System.Type.GetTypeFromHandle(System.RuntimeTypeHandle)
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveRecordClass.GetHashCode()
+      TestLibrary.AliveRecordClass.Equals(TestLibrary.AliveRecordClass)
+  TestLibrary.AliveRecordClass.get_Id() [METHOD, DEAD, !HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.Int32
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveRecordClass.Id
+      TestLibrary.AliveRecordClass.<Id>k__BackingField
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveRecordClass.PrintMembers(System.Text.StringBuilder)
+      TestLibrary.AliveRecordClass.Deconstruct(System.Int32&, System.String&)
+  TestLibrary.AliveRecordClass.get_Name() [METHOD, DEAD, !HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.String
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveRecordClass.Name
+      TestLibrary.AliveRecordClass.<Name>k__BackingField
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveRecordClass.PrintMembers(System.Text.StringBuilder)
+      TestLibrary.AliveRecordClass.Deconstruct(System.Int32&, System.String&)
+  TestLibrary.AliveRecordClass.GetHashCode() [METHOD, DEAD, HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.Int32
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      System.Object.GetHashCode()
+      System.Collections.Generic.EqualityComparer`1.get_Default()
+      System.Collections.Generic.EqualityComparer`1
+      System.Type
+      TestLibrary.AliveRecordClass.get_EqualityContract()
+      System.Collections.Generic.EqualityComparer`1.GetHashCode(`0)
+      TestLibrary.AliveRecordClass.<Id>k__BackingField
+      System.String
+      TestLibrary.AliveRecordClass.<Name>k__BackingField
+  TestLibrary.AliveRecordClass.Id [PROPERTY, DEAD, !HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveRecordClass.get_Id()
+      TestLibrary.AliveRecordClass.set_Id(System.Int32)
+  TestLibrary.AliveRecordClass.Name [PROPERTY, DEAD, !HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveRecordClass.get_Name()
+      TestLibrary.AliveRecordClass.set_Name(System.String)
+  TestLibrary.AliveRecordClass.op_Equality(TestLibrary.AliveRecordClass, TestLibrary.AliveRecordClass) [METHOD, DEAD, HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.Boolean
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveRecordClass.Equals(TestLibrary.AliveRecordClass)
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveRecordClass.op_Inequality(TestLibrary.AliveRecordClass, TestLibrary.AliveRecordClass)
+  TestLibrary.AliveRecordClass.op_Inequality(TestLibrary.AliveRecordClass, TestLibrary.AliveRecordClass) [METHOD, DEAD, HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.Boolean
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveRecordClass.op_Equality(TestLibrary.AliveRecordClass, TestLibrary.AliveRecordClass)
+  TestLibrary.AliveRecordClass.PrintMembers(System.Text.StringBuilder) [METHOD, DEAD, HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.Text.StringBuilder
+      System.Boolean
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      System.Runtime.CompilerServices.RuntimeHelpers.EnsureSufficientExecutionStack()
+      System.Runtime.CompilerServices.RuntimeHelpers
+      System.Text.StringBuilder.Append(System.String)
+      TestLibrary.AliveRecordClass.get_Id()
+      System.Int32
+      System.Object.ToString()
+      TestLibrary.AliveRecordClass.get_Name()
+      System.Text.StringBuilder.Append(System.Object)
+    DIRECTLY REFERENCED BY
+      TestLibrary.AliveRecordClass.ToString()
+  TestLibrary.AliveRecordClass.set_Id(System.Int32) [METHOD, DEAD, !HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.Int32
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveRecordClass.Id
+      TestLibrary.AliveRecordClass.<Id>k__BackingField
+  TestLibrary.AliveRecordClass.set_Name(System.String) [METHOD, DEAD, !HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.String
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestLibrary.AliveRecordClass.Name
+      TestLibrary.AliveRecordClass.<Name>k__BackingField
+  TestLibrary.AliveRecordClass.ToString() [METHOD, DEAD, HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
+    DIRECTLY REFERENCES
+      TestLibrary.AliveRecordClass
+      System.String
+      System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      System.Object.ToString()
+      System.Text.StringBuilder..ctor()
+      System.Text.StringBuilder
+      System.Text.StringBuilder.Append(System.String)
+      TestLibrary.AliveRecordClass.PrintMembers(System.Text.StringBuilder)
+      System.Text.StringBuilder.Append(System.Char)
   TestLibrary.AliveStruct [TYPE, ALIVE, !HIDE, !PINNED, !REFLECTION_TARGET, !ROOT]
     DIRECTLY REFERENCES
       System.Runtime.InteropServices.StructLayoutAttribute

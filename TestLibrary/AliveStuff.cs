@@ -9,6 +9,8 @@ public struct AliveStruct
 
 }
 
+public record class AliveRecordClass(int Id, string Name);
+
 public enum AliveEnum
 {
     Red,

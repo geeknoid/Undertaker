@@ -18,6 +18,8 @@ internal static class Program
         AliveDelegate d = () => { };
 #pragma warning restore IDE0039 // Use local function
 
+        var r = new AliveRecordClass(1, "Test");
+
         var e = new AliveClassAndAliveMembers();
         e.AliveMethod();
         e.AliveSimpleProperty = 42;

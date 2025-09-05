@@ -110,6 +110,30 @@
           "Kind": "Method"
         },
         {
+          "Name": "TestLibrary.AliveRecordClass.Id",
+          "Kind": "Property"
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.Name",
+          "Kind": "Property"
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.get_Id()",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.get_Name()",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.set_Id(System.Int32)",
+          "Kind": "Method"
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.set_Name(System.String)",
+          "Kind": "Method"
+        },
+        {
           "Name": "TestLibrary.AliveStruct..ctor()",
           "Kind": "Method"
         },
