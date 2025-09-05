@@ -309,6 +309,8 @@ internal static class Program
             graph.RecordReflectionMarkerAttribute("System.Web.Http.HttpDeleteAttribute");
             graph.RecordReflectionMarkerAttribute("System.Web.Http.HttpPutAttribute");
             graph.RecordReflectionMarkerAttribute("System.Web.Http.HttpPatchAttribute");
+
+            graph.RecordReflectionMarkerAttribute("System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute");
         }
 
         // load the assemblies

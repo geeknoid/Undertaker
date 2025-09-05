@@ -121,9 +121,9 @@ internal static class AssemblyProcessor
             {
                 if (field.IsConst)
                 {
-                    if (field.EffectiveAccessibility() == Accessibility.Public)
+                    if (field.EffectiveAccessibility() != Accessibility.Private)
                     {
-                        typeSym.SetDeclaresPublicConstants();
+                        typeSym.SetDeclaresConstants();
                     }
 
                     // we don't handle const values, so pretend they don't exist
