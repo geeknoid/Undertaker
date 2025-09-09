@@ -36,7 +36,7 @@ public class Tests
         reporter.Dump(sw);
         var graphDump = sw.ToString();
 
-#if true
+#if false
         // write the golden files
         File.WriteAllText("../../../Golden/dead.json", deadReport);
         File.WriteAllText("../../../Golden/alive.json", aliveReport);

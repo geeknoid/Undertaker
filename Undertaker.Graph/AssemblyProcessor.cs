@@ -108,6 +108,15 @@ internal static class AssemblyProcessor
                 var sym = DefineSymbol(property);
                 RecordSymbolsReferencedByProperty(sym, property, cctor);
                 typeSym.AddMember(sym);
+
+                foreach (var a in type.GetAttributes())
+                {
+                    if (graph.IsReflectionMarkerAttribute(a.AttributeType.ReflectionName))
+                    {
+                        sym.SetReflectionTarget();
+                        break;
+                    }
+                }
             }
 
             foreach (var evt in type.Events)
@@ -115,6 +124,15 @@ internal static class AssemblyProcessor
                 var sym = DefineSymbol(evt);
                 RecordSymbolsReferencedByEvent(sym, evt, cctor);
                 typeSym.AddMember(sym);
+
+                foreach (var a in type.GetAttributes())
+                {
+                    if (graph.IsReflectionMarkerAttribute(a.AttributeType.ReflectionName))
+                    {
+                        typeSym.SetReflectionTarget();
+                        break;
+                    }
+                }
             }
 
             foreach (var field in type.Fields)
@@ -133,6 +151,15 @@ internal static class AssemblyProcessor
                 var sym = DefineSymbol(field);
                 RecordSymbolsReferencedByField(sym, field, cctor);
                 typeSym.AddMember(sym);
+
+                foreach (var a in type.GetAttributes())
+                {
+                    if (graph.IsReflectionMarkerAttribute(a.AttributeType.ReflectionName))
+                    {
+                        typeSym.SetReflectionTarget();
+                        break;
+                    }
+                }
             }
         }
 
@@ -186,6 +213,15 @@ internal static class AssemblyProcessor
             }
 
             RecordSymbolsReferencedByAttributes(typeSym, type.GetAttributes());
+
+            foreach (var a in type.GetAttributes())
+            {
+                if (graph.IsReflectionMarkerAttribute(a.AttributeType.ReflectionName))
+                {
+                    typeSym.SetReflectionTarget();
+                    break;
+                }
+            }
 
             foreach (var bt in type.GetAllBaseTypeDefinitions())
             {
