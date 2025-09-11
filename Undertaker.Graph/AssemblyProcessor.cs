@@ -49,6 +49,7 @@ internal static class AssemblyProcessor
             if (type.Kind == TypeKind.Enum)
             {
                 // we don't handle enum values, so pretend they don't exist
+                typeSym.SetDeclaresConstants();
                 continue;
             }
 
@@ -139,7 +140,7 @@ internal static class AssemblyProcessor
             {
                 if (field.IsConst)
                 {
-                    if (field.EffectiveAccessibility() != Accessibility.Private)
+                    if (field.Accessibility != Accessibility.Private)
                     {
                         typeSym.SetDeclaresConstants();
                     }

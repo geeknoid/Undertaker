@@ -295,7 +295,7 @@ public sealed class AssemblyGraph
         {
             foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(type => type.DeclaresConstants && !type.Marked))
             {
-                // a class is dead but has public constants, so we pin it to avoid false positives
+                // a class is dead but has public constants, so we mark it to avoid false positives
                 // (since we generally can't tell when code is accessing constants by looking at IL)
                 sym.Mark(this);
             }

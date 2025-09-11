@@ -27,6 +27,7 @@ internal static class Program
         public string? DependencyDiagram { get; set; }
         public string? UnanalyzedAssemblies { get; set; }
         public string? DuplicateAssemblies { get; set; }
+        public string? UnreferencedSymbols { get; set; }
         public string? GraphDump { get; set; }
         public bool ContinueOnLoadErrors { get; set; }
         public bool Verbose { get; set; }
@@ -89,6 +90,11 @@ internal static class Program
                 "Path of the report to produce on assemblies which were found multiple times as input"),
 
             new Option<string>(
+                ["-urs", "--unreferenced-symbols"],
+                "Directory path where to emit the per-assembly reports on completely unreferenced symbols"),
+
+
+            new Option<string>(
                 ["-alc", "--assembly-layer-cake"],
                 "Path of the assembly layer cake to produce"),
 
@@ -129,6 +135,7 @@ internal static class Program
             && args.UnreferencedAssemblies == null
             && args.UnanalyzedAssemblies == null
             && args.DuplicateAssemblies == null
+            && args.UnreferencedSymbols == null
             && args.NeedlessInternalsVisibleTo == null
             && args.AssemblyLayerCake == null
             && args.DependencyDiagram == null)
@@ -141,6 +148,7 @@ internal static class Program
             args.NeedlesslyPublicSymbols = "./needlessly-public-symbols";
             args.AliveSymbols = "./alive-symbols";
             args.AliveByTestSymbols = "./alive-by-test-symbols";
+            args.UnreferencedSymbols = "./unreferenced-symbols";
 
             args.UnreferencedAssemblies = "./unreferenced-assemblies.txt";
             args.UnanalyzedAssemblies= "./unanalyzed-assemblies.txt";
@@ -387,6 +395,7 @@ internal static class Program
             !OutputUnreferencedAssemblies() ||
             !OutputUnanalyzedAssemblies() ||
             !OutputDuplicateAssemblies() ||
+            !OutputUnreferencedSymbols() ||
             !OutputNeedlessInternalsVisibleTo() ||
             !OutputAssemblyLayerCake() ||
             !OutputDependencyDiagram() ||
@@ -468,6 +477,61 @@ internal static class Program
                 catch (Exception ex)
                 {
                     Error($"Unable to create output directory for dead symbols report at {path}: {ex.Message}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        bool OutputUnreferencedSymbols()
+        {
+            if (args.UnreferencedSymbols != null)
+            {
+                var path = Path.GetFullPath(args.UnreferencedSymbols);
+                Out($"  Writing reports on unreferenced symbols to {path}");
+
+                try
+                {
+                    var di = Directory.CreateDirectory(path);
+
+                    var report = reporter.CollectUnreferencedSymbols();
+                    foreach (var asm in report.Assemblies)
+                    {
+                        var filePath = Path.Combine(di.FullName, asm.Assembly);
+                        filePath = args.CSV ? filePath + ".csv" : filePath + ".json";
+
+                        try
+                        {
+                            if (args.CSV)
+                            {
+                                using var writer = new StreamWriter(filePath);
+                                foreach (var sym in asm.DeadMembers)
+                                {
+                                    writer.WriteLine($"\"{sym.Name}\",{sym.Kind}");
+                                }
+
+                                foreach (var sym in asm.DeadTypes)
+                                {
+                                    writer.WriteLine($"\"{sym.Name}\",{sym.Kind}");
+                                }
+                            }
+                            else
+                            {
+                                using var file = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
+                                JsonSerializer.Serialize(file, asm, _serializationOptions);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Error($"Unable to write report on unreferenced symbols to {filePath}: {ex.Message}");
+                            return false;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Error($"Unable to create output directory for unreferenced symbols report at {path}: {ex.Message}");
                     return false;
                 }
             }

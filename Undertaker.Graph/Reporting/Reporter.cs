@@ -71,6 +71,59 @@ public sealed class Reporter
     }
 
     /// <summary>
+    /// Gets information about the unreferenced symbols in the graph.
+    /// </summary>
+    /// <remarks>Unreferenced symbols are ones which aren't referenced by any other symbol in the graph.</remarks>
+    public DeadReport CollectUnreferencedSymbols()
+    {
+        var assemblies = new List<DeadReportAssembly>();
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && !asm.IsSystemAssembly))
+        {
+            List<DeadReportSymbol>? deadTypes = null;
+            List<DeadReportSymbol>? deadMembers = null;
+
+            foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide).Cast<TypeSymbol>())
+            {
+                if (sym.Referencers.Count > 0 || sym.Marked)
+                {
+                    foreach (var member in sym.Members.Select(_symbolTable.GetSymbol).Where(member => member.Referencers.Count == 0 && member.Kind != SymbolKind.Type && !member.Marked))
+                    {
+                        deadMembers ??= [];
+                        deadMembers.Add(new DeadReportSymbol(member.Name, member.Kind.ToString()));
+                    }
+                }
+                else
+                {
+                    if (sym.Name.Contains("WorkcycleDelayInProcessing", StringComparison.Ordinal))
+                    {
+                        System.Diagnostics.Debugger.Break();
+                    }
+
+                    deadTypes ??= [];
+                    deadTypes.Add(new DeadReportSymbol(sym.Name, sym.TypeKind.ToString()));
+                }
+            }
+
+            if (deadTypes != null || deadMembers != null)
+            {
+                deadTypes?.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
+                deadMembers?.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
+
+                IReadOnlyList<DeadReportSymbol>? dt = deadTypes;
+                dt ??= [];
+
+                IReadOnlyList<DeadReportSymbol>? dm = deadMembers;
+                dm ??= [];
+
+                assemblies.Add(new(asm.Name, dt, dm));
+            }
+        }
+
+        assemblies.Sort((x, y) => string.CompareOrdinal(x.Assembly, y.Assembly));
+        return new(assemblies);
+    }
+
+    /// <summary>
     /// Gets information about the alive symbols in the graph.
     /// </summary>
     /// <remarks>Alive symbols are ones which are reachable from the various roots known to the graph.</remarks>
