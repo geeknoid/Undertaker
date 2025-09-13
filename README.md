@@ -68,12 +68,14 @@ Options:
 
 * `--reflection-symbols` lets you specify a text file containing a list of symbols that are accessed
   through reflection. Each line in the file should be in the form of `assembly-name:fully-qualified-symbol-name`.
+  If you can modify your source code, instead of using this approach, we recommend instead applying the
+  [DynamicallyAccessedMembers] attribute in your code to indicate specific symbols are used by reflection.
 
-* * `--test-method-attributes` lets you specify the set of attributes that mark a method as a test. This is a text file
+* `--test-method-attributes` lets you specify the set of attributes that mark a method as a test. This is a text file
   containing the fully qualified names of the attributes, one per line. If this is not supplied, a default set of
   well-known names is used.
 
-* * `--reflection-marker-attributes` lets you specify the set of attributes that mark a method as a being used by reflection. This is a text file
+* `--reflection-marker-attributes` lets you specify the set of attributes that mark a method as a being used by reflection. This is a text file
   containing the fully qualified names of the attributes, one per line. If this is not supplied, a default set of
   well-known names is used.
 
@@ -184,13 +186,28 @@ Undertaker does a pretty good job at finding most of the dead code in a code bas
 
 ## False Positives
 
-Undertaker tries really hard not to produce any false positives (i.e. claiming code is dead when it really isn't). But ultimately, the tool
-may get fooled by uses of reflection:
+In case Undertaker seems to be reporting code as being dead while you know it isn't dead, there are a few things to do that can hopefully
+improve the situation:
 
-* Dynamically-loaded assemblies
-* Individual members only accessed via reflection (see the `--reflection-symbols` option to help with this)
+* **Data Completeness**. Make sure you give the tool the full transitive set of assemblies your code depends on. If you miss some of these,
+  you will get some false positives.
 
-These two uses of reflection, along with not listing all root assemblies, can lead to false positives.
+* **Dead Symbol Graphs**. Undertaker reports graphs of dead symbol. If you have functions A calls B calls C, it might look as though C is in use
+  (since B is calling it) but the whole graph of A+B+C is dead and can be fully deleted. So individual symbols might not be dead, but taken
+  as a graph many related symbols can be overall dead.
+
+* **Unreferenced Symbols**. Undertaker reports unreferenced symbols as distinct from dead symbols. In the A+B+C case above, only A would be
+  reported as an unreferenced symbol. Unreferenced symbols can generally be deleted in isolation, one by one. Whereas dead symbols may need
+  to be deleted as a whole in order to remove full graphs of dependencies.
+
+* **Reflection**. Undertaker gets confused by reflection. If you have symbols that are accessed through reflection, you can apply the attribute
+  [DynamicallyAccessedMembers] to the class/method to indicate it it accessed via reflection, and then Undertaker will recognize treat it as in-use.
+
+* **Public APIs**. If you have public APIs that are intended to be used by customers, you should call those out by creating a file listing the names
+  of those assemblies and using the --root-assemblies option to give this file to Undertaker.
+
+* **Test-Only APIs**. If you have APIs that are only used by tests, include the test assemblies in the set of assemblies being analyzed.
+Undertaker will then consider those symbols alive and will list them in a distinct "alive because of tests" report.
 
 ## Ideas
 
