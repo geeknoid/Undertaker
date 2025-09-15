@@ -313,32 +313,57 @@ public sealed class AssemblyGraph
     {
         foreach (var asm in _assemblies.Values.Where(asm => !asm.Loaded && asm.IsSystemAssembly))
         {
-            var additions = new List<(TypeSymbol, string)>();
+            var method_additions = new List<(TypeSymbol, string)>();
+            var property_additions = new List<(TypeSymbol, string)>();
             foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
             {
                 if (sym.Name == "System.Runtime.CompilerServices.IAsyncStateMachine")
                 {
-                    additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.MoveNext()"));
-                    additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.SetStateMachine(System.Runtime.CompilerServices.IAsyncStateMachine)"));
+                    method_additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.MoveNext()"));
+                    method_additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.SetStateMachine(System.Runtime.CompilerServices.IAsyncStateMachine)"));
                 }
                 else if (sym.Name == "System.IDisposable")
                 {
-                    additions.Add((sym, "System.IDisposable.Dispose()"));
+                    method_additions.Add((sym, "System.IDisposable.Dispose()"));
                 }
                 else if (sym.Name == "System.Collections.IEnumerable")
                 {
-                    additions.Add((sym, "System.Collections.IEnumerable.GetEnumerator()"));
+                    method_additions.Add((sym, "System.Collections.IEnumerable.GetEnumerator()"));
                 }
                 else if (sym.Name == "System.Collections.Generic.IEnumerable`1")
                 {
-                    additions.Add((sym, "System.Collections.Generic.IEnumerable`1.GetEnumerator()"));
+                    method_additions.Add((sym, "System.Collections.Generic.IEnumerable`1.GetEnumerator()"));
+                }
+                else if (sym.Name == "System.Collections.ICollection")
+                {
+                    method_additions.Add((sym, "System.Collections.ICollection.CopyTo(System.Array,System.Int32)"));
+                    method_additions.Add((sym, "System.Collections.ICollection.get_count()"));
+                    property_additions.Add((sym, "System.Collections.ICollection.count"));
+                }
+                else if (sym.Name == "System.Collections.Generic.ICollection`1")
+                {
+                    method_additions.Add((sym, "System.Collections.ICollection.CopyTo(System.Array,System.Int32)"));
+                    method_additions.Add((sym, "System.Collections.ICollection.get_count()"));
+                    property_additions.Add((sym, "System.Collections.ICollection.count"));
+                }
+                else if (sym.Name == "System.Object")
+                {
+                    method_additions.Add((sym, "System.Object.ToString()"));
+                    method_additions.Add((sym, "System.Object.GetHashCode()"));
+                    method_additions.Add((sym, "System.Object.Equals(System.Object)"));
                 }
             }
 
-            foreach (var addition in additions)
+            foreach (var addition in method_additions)
             {
                 var method = asm.GetSymbol(this, addition.Item2, SymbolKind.Method);
                 addition.Item1.AddMember(method);
+            }
+
+            foreach (var addition in property_additions)
+            {
+                var property = asm.GetSymbol(this, addition.Item2, SymbolKind.Property);
+                addition.Item1.AddMember(property);
             }
         }
     }
