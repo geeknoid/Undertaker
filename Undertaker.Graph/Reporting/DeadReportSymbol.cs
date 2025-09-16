@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using ICSharpCode.Decompiler.TypeSystem;
+using System.Text.Json.Serialization;
 
 namespace Undertaker.Graph.Reporting;
 
@@ -17,9 +18,15 @@ public sealed class DeadReportSymbol
     /// </summary>
     public string Kind { get; }
 
-    internal DeadReportSymbol(string symbol, string kind)
+    /// <summary>
+    /// Accessibility of the symbol.
+    /// </summary>
+    public Accessibility Access { get; }
+
+    internal DeadReportSymbol(string symbol, string kind, Accessibility accessibility)
     {
         Name = symbol;
         Kind = kind;
+        Access = accessibility;
     }
 }
