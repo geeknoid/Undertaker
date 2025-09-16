@@ -190,7 +190,8 @@ In case Undertaker seems to be reporting code as being dead while you know it is
 improve the situation:
 
 * **Data Completeness**. Make sure you give the tool the full transitive set of assemblies your code depends on. If you miss some of these,
-  you will get some false positives.
+  you will get some false positives. You can use `dotnet publish` in self-contained mode to create a folder with your code and all of its
+* dependencies included: `dotnet publish --self-contained true`.
 
 * **Dead Symbol Graphs**. Undertaker reports graphs of dead symbol. If you have functions A calls B calls C, it might look as though C is in use
   (since B is calling it) but the whole graph of A+B+C is dead and can be fully deleted. So individual symbols might not be dead, but taken
