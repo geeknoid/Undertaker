@@ -306,23 +306,28 @@ internal static class Program
         {
             Out("Using default reflection marker attributes");
 
-            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpGetAttribute");
-            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpPostAttribute");
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.AcceptsVerbsAttribute");
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.ApiControllerAttribute");
             graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpDeleteAttribute");
-            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpPutAttribute");
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpGetAttribute");
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpHeadAttribute");
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpOptionsAttribute");
             graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpPatchAttribute");
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpPostAttribute");
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpPutAttribute");
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.RouteAttribute");
 
-            graph.RecordReflectionMarkerAttribute("System.Web.Mvc.HttpGetAttribute");
-            graph.RecordReflectionMarkerAttribute("System.Web.Mvc.HttpPostAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Web.Mvc.AcceptVerbsAttribute");
             graph.RecordReflectionMarkerAttribute("System.Web.Mvc.HttpDeleteAttribute");
-            graph.RecordReflectionMarkerAttribute("System.Web.Mvc.HttpPutAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Web.Mvc.HttpGetAttribute");
             graph.RecordReflectionMarkerAttribute("System.Web.Mvc.HttpPatchAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Web.Mvc.HttpPostAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Web.Mvc.HttpPutAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Web.Mvc.RouteAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Web.Mvc.RoutePrefixAttribute");
 
-            graph.RecordReflectionMarkerAttribute("System.Web.Http.HttpGetAttribute");
-            graph.RecordReflectionMarkerAttribute("System.Web.Http.HttpPostAttribute");
-            graph.RecordReflectionMarkerAttribute("System.Web.Http.HttpDeleteAttribute");
-            graph.RecordReflectionMarkerAttribute("System.Web.Http.HttpPutAttribute");
-            graph.RecordReflectionMarkerAttribute("System.Web.Http.HttpPatchAttribute");
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNet.OData.Routing.ODataRouteAttribute");
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNet.OData.Routing.ODataRoutePrefixAttribute");
 
             graph.RecordReflectionMarkerAttribute("System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute");
         }
