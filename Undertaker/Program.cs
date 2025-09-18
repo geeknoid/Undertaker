@@ -1,14 +1,20 @@
 ﻿using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Undertaker.Graph;
+using Undertaker.Graph.Reporting;
 
 namespace Undertaker;
 
 internal static class Program
 {
     private const int MaxConcurrentAssemblyLoads = 32;
-    private static readonly JsonSerializerOptions _serializationOptions = new() { WriteIndented = true };
+    private static readonly JsonSerializerOptions _serializationOptions = new() 
+    { 
+        WriteIndented = true,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
     private sealed class UndertakerArgs
     {

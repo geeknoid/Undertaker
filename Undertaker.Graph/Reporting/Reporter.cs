@@ -41,13 +41,13 @@ public sealed class Reporter
                     foreach (var member in sym.Members.Select(_symbolTable.GetSymbol).Where(member => !member.Marked && !member.Hide && member.Kind != SymbolKind.Type))
                     {
                         deadMembers ??= [];
-                        deadMembers.Add(new DeadReportSymbol(member.Name, member.Kind.ToString()));
+                        deadMembers.Add(new DeadReportSymbol(member.Name, member.Kind.ToString(), member.Access));
                     }
                 }
                 else
                 {
                     deadTypes ??= [];
-                    deadTypes.Add(new DeadReportSymbol(sym.Name, sym.TypeKind.ToString()));
+                    deadTypes.Add(new DeadReportSymbol(sym.Name, sym.TypeKind.ToString(), sym.Access));
                 }
             }
 
@@ -89,7 +89,7 @@ public sealed class Reporter
                     foreach (var member in sym.Members.Select(_symbolTable.GetSymbol).Where(member => member.Referencers.Count == 0 && member.Kind != SymbolKind.Type && !member.Marked))
                     {
                         deadMembers ??= [];
-                        deadMembers.Add(new DeadReportSymbol(member.Name, member.Kind.ToString()));
+                        deadMembers.Add(new DeadReportSymbol(member.Name, member.Kind.ToString(), member.Access));
                     }
                 }
                 else
@@ -100,7 +100,7 @@ public sealed class Reporter
                     }
 
                     deadTypes ??= [];
-                    deadTypes.Add(new DeadReportSymbol(sym.Name, sym.TypeKind.ToString()));
+                    deadTypes.Add(new DeadReportSymbol(sym.Name, sym.TypeKind.ToString(), sym.Access));
                 }
             }
 

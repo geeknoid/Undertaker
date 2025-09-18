@@ -19,6 +19,9 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
     public bool Hide { get; protected set; }
     public bool IsPublic { get; private set; }
 
+    // Accessibility of the symbol.
+    public Accessibility Access { get; private set; }
+
     // set by RecordReferencedSymbol
     public IReadOnlyCollection<SymbolId> Referencers => _referencers;
     public IReadOnlyCollection<SymbolId> ReferencedSymbols => _referencedSymbols;
@@ -39,7 +42,8 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
     public virtual void Define(IEntity entity)
     {
         Hide = entity.IsCompilerGenerated() || Name.Contains('<');
-        IsPublic = entity.EffectiveAccessibility() == Accessibility.Public;
+        Access = entity.EffectiveAccessibility();
+        IsPublic = Access == Accessibility.Public;
 
         if (Assembly.IsRootAssembly)
         {
