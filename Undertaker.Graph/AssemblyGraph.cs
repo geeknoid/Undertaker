@@ -424,6 +424,13 @@ public sealed class AssemblyGraph
                 assembliesToRemove.Add(asm);
             }
 
+            if (currentLayer.Count == 0)
+            {
+                // uh ho, we have a cycle, so give up
+                layers.Add(["CIRCULAR REFERENCES DETECTED, ABORTING"]);
+                break;
+            }
+
             // Remove assemblies from the dependency map and update dependent counts
             foreach (var assemblyName in assembliesToRemove)
             {
