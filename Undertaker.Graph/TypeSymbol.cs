@@ -5,13 +5,13 @@ namespace Undertaker.Graph;
 
 internal sealed class TypeSymbol(Assembly assembly, string name, SymbolId id) : Symbol(assembly, name, id)
 {
-    public TypeKind TypeKind { get; set; }
     public IReadOnlyCollection<SymbolId> Members => _members;
     public IReadOnlyCollection<SymbolId> InterfacesImplemented => _interfacesImplemented;
     public IReadOnlyCollection<SymbolId> BaseTypes => _baseTypes;
     public IReadOnlyCollection<SymbolId> DerivedTypes => _derivedTypes;
-    public bool DeclaresConstants { get; private set; }
 
+    public TypeKind TypeKind { get; set; }
+    public bool DeclaresConstants { get; private set; }
     private readonly HashSet<SymbolId> _members = [];
     private SmallList<SymbolId> _interfacesImplemented = [];
     private SmallList<SymbolId> _baseTypes = [];

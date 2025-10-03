@@ -317,36 +317,42 @@ public sealed class AssemblyGraph
             var property_additions = new List<(TypeSymbol, string)>();
             foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
             {
-                if (sym.Name == "System.Runtime.CompilerServices.IAsyncStateMachine")
+                var name = sym.Name;
+                if (!name.StartsWith("System.", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                if (name == "System.Runtime.CompilerServices.IAsyncStateMachine")
                 {
                     method_additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.MoveNext()"));
                     method_additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.SetStateMachine(System.Runtime.CompilerServices.IAsyncStateMachine)"));
                 }
-                else if (sym.Name == "System.IDisposable")
+                else if (name == "System.IDisposable")
                 {
                     method_additions.Add((sym, "System.IDisposable.Dispose()"));
                 }
-                else if (sym.Name == "System.Collections.IEnumerable")
+                else if (name == "System.Collections.IEnumerable")
                 {
                     method_additions.Add((sym, "System.Collections.IEnumerable.GetEnumerator()"));
                 }
-                else if (sym.Name == "System.Collections.Generic.IEnumerable`1")
+                else if (name == "System.Collections.Generic.IEnumerable`1")
                 {
                     method_additions.Add((sym, "System.Collections.Generic.IEnumerable`1.GetEnumerator()"));
                 }
-                else if (sym.Name == "System.Collections.ICollection")
+                else if (name == "System.Collections.ICollection")
                 {
                     method_additions.Add((sym, "System.Collections.ICollection.CopyTo(System.Array,System.Int32)"));
                     method_additions.Add((sym, "System.Collections.ICollection.get_count()"));
                     property_additions.Add((sym, "System.Collections.ICollection.count"));
                 }
-                else if (sym.Name == "System.Collections.Generic.ICollection`1")
+                else if (name == "System.Collections.Generic.ICollection`1")
                 {
                     method_additions.Add((sym, "System.Collections.ICollection.CopyTo(System.Array,System.Int32)"));
                     method_additions.Add((sym, "System.Collections.ICollection.get_count()"));
                     property_additions.Add((sym, "System.Collections.ICollection.count"));
                 }
-                else if (sym.Name == "System.Object")
+                else if (name == "System.Object")
                 {
                     method_additions.Add((sym, "System.Object.ToString()"));
                     method_additions.Add((sym, "System.Object.GetHashCode()"));

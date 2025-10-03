@@ -99,7 +99,6 @@ internal static class Program
                 ["-urs", "--unreferenced-symbols"],
                 "Directory path where to emit the per-assembly reports on completely unreferenced symbols"),
 
-
             new Option<string>(
                 ["-alc", "--assembly-layer-cake"],
                 "Path of the assembly layer cake to produce"),

@@ -43,5 +43,7 @@ internal sealed class SymbolTable
         {
             sym.TrimExcess();
         }
+
+        _symbols.TrimExcess();
     }
 }
