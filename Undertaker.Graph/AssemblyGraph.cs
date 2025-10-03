@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using ICSharpCode.Decompiler.TypeSystem;
+using Undertaker.Graph.Misc;
 using Undertaker.Graph.Reporting;
 
 namespace Undertaker.Graph;
@@ -318,7 +319,7 @@ public sealed class AssemblyGraph
             foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
             {
                 var name = sym.Name;
-                if (!name.StartsWith("System.", StringComparison.Ordinal))
+                if (!name.StartsWith("System."))
                 {
                     continue;
                 }

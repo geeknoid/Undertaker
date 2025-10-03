@@ -1,8 +1,6 @@
-﻿using System.Reflection.Metadata;
-using System.Text;
-using ICSharpCode.Decompiler;
+﻿using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.TypeSystem;
-using Undertaker.Graph.Collections;
+using Undertaker.Graph.Misc;
 
 namespace Undertaker.Graph;
 
@@ -10,7 +8,7 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
 {
     // set on construction
     public Assembly Assembly { get; private set;  } = assembly;
-    public string Name { get; } = name;
+    public SkinnyString Name { get; } = new SkinnyString(name);
     public SymbolId Id { get; } = id;
 
     public abstract SymbolKind Kind { get; }
@@ -91,7 +89,7 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
 
     public void SetReflectionTarget() => ReflectionTarget = true;
 
-    public override string ToString() => Name;
+    public override string ToString() => Name.ToString();
 
     public virtual void TrimExcess()
     {

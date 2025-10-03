@@ -1,4 +1,4 @@
-﻿namespace Undertaker.Graph;
+﻿namespace Undertaker.Graph.Misc;
 
 internal readonly struct SymbolId(int index) : IComparable<SymbolId>
 {
@@ -12,7 +12,7 @@ internal sealed class SymbolTable
 {
     private readonly List<Symbol> _symbols = [];
 
-    public SymbolId AddSymbol(Assembly container, string name, SymbolKind symbolKind)
+    public SymbolId CreateSymbol(Assembly container, string name, SymbolKind symbolKind)
     {
         var id = new SymbolId(_symbols.Count);
 

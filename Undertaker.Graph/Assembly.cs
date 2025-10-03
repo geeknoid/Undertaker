@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using ICSharpCode.Decompiler.TypeSystem;
 using Undertaker.Graph.Collections;
+using Undertaker.Graph.Misc;
 using Undertaker.Graph.Reporting;
 
 namespace Undertaker.Graph;
@@ -29,17 +30,17 @@ internal sealed class Assembly(string name, bool root)
 
     private struct Key
     {
-        public string Name;
+        public SkinnyString Name;
         public SymbolKind Kind;
     }
 
     public Symbol GetSymbol(AssemblyGraph graph, IEntity entity)
     {
-        var key = new Key { Name = GetEntitySymbolName(entity), Kind = GetEntitySymbolKind(entity) };
+        var key = new Key { Name = new(GetEntitySymbolName(entity)), Kind = GetEntitySymbolKind(entity) };
 
         if (!_symbols.TryGetValue(key, out var id))
         {
-            id = graph.SymbolTable.AddSymbol(this, key.Name, key.Kind);
+            id = graph.SymbolTable.CreateSymbol(this, key.Name, key.Kind);
             _symbols.Add(key, id);
 
             var sym = graph.SymbolTable.GetSymbol(id);
@@ -58,10 +59,10 @@ internal sealed class Assembly(string name, bool root)
 
     public Symbol GetSymbol(AssemblyGraph graph, string name, SymbolKind kind)
     {
-        var key = new Key { Name = name, Kind = kind };
+        var key = new Key { Name = new(name), Kind = kind };
         if (!_symbols.TryGetValue(key, out var id))
         {
-            id = graph.SymbolTable.AddSymbol(this, key.Name, key.Kind);
+            id = graph.SymbolTable.CreateSymbol(this, key.Name, key.Kind);
             _symbols.Add(key, id);
 
             var sym = graph.SymbolTable.GetSymbol(id);
@@ -75,7 +76,7 @@ internal sealed class Assembly(string name, bool root)
 
     public Symbol? FindSymbol(AssemblyGraph graph, string name, SymbolKind symbolKind)
     {
-        var key = new Key { Name = name, Kind = symbolKind };
+        var key = new Key { Name = new(name), Kind = symbolKind };
         return !_symbols.TryGetValue(key, out var id) ? null : graph.SymbolTable.GetSymbol(id);
     }
 

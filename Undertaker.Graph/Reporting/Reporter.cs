@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
+using Undertaker.Graph.Misc;
 
 namespace Undertaker.Graph.Reporting;
 
@@ -94,11 +95,6 @@ public sealed class Reporter
                 }
                 else
                 {
-                    if (sym.Name.Contains("WorkcycleDelayInProcessing", StringComparison.Ordinal))
-                    {
-                        System.Diagnostics.Debugger.Break();
-                    }
-
                     deadTypes ??= [];
                     deadTypes.Add(new DeadReportSymbol(sym.Name, sym.TypeKind.ToString(), sym.Access));
                 }

@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Undertaker.Graph.Misc;
 
 namespace Undertaker.Graph.Reporting;
 
@@ -10,13 +11,13 @@ public sealed class AliveReportSymbol
     /// <summary>
     /// The name of the symbol.
     /// </summary>
-    public string Name { get; }
+    public SkinnyString Name { get; }
 
     /// <summary>
     /// The name of the other symbols that have a dependence on this symbol.
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public IReadOnlyList<string>? ReferencedBy { get; }
+    public IReadOnlyList<SkinnyString>? ReferencedBy { get; }
 
     /// <summary>
     /// Gets a value indicating whether the symbol is considered a root.
@@ -24,7 +25,7 @@ public sealed class AliveReportSymbol
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public bool Root { get; }
 
-    internal AliveReportSymbol(string symbol, IReadOnlyList<string> dependents, bool root)
+    internal AliveReportSymbol(SkinnyString symbol, IReadOnlyList<SkinnyString> dependents, bool root)
     {
         Name = symbol;
 

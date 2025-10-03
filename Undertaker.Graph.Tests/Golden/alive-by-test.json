@@ -4,35 +4,35 @@
       "Assembly": "TestLibrary",
       "AliveTypes": [
         {
-          "Name": "TestLibrary.AliveByTestClas",
+          "Name": {},
           "ReferencedBy": [
-            "TestLibrary.AliveByTestClas.MyTestMethod()"
+            {}
           ]
         },
         {
-          "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
+          "Name": {},
           "ReferencedBy": [
-            "TestLibrary.AliveByTestClas.MyTestMethod()"
+            {}
           ]
         }
       ],
       "AliveMembers": [
         {
-          "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
+          "Name": {},
           "ReferencedBy": [
-            "TestLibrary.AliveByTestClas.MyTestMethod()"
+            {}
           ]
         },
         {
-          "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
+          "Name": {},
           "ReferencedBy": [
-            "TestLibrary.AliveByTestClas.MyTestMethod()"
+            {}
           ]
         },
         {
-          "Name": "TestLibrary.AliveByTestClas..ctor()",
+          "Name": {},
           "ReferencedBy": [
-            "TestLibrary.AliveByTestClas.MyTestMethod()"
+            {}
           ]
         }
       ]

@@ -1,5 +1,6 @@
 ﻿using ICSharpCode.Decompiler.TypeSystem;
 using Undertaker.Graph.Collections;
+using Undertaker.Graph.Misc;
 
 namespace Undertaker.Graph;
 
