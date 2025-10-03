@@ -5,157 +5,190 @@
       "DeadTypes": [
         {
           "Name": "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType",
-          "Kind": "Class"
+          "Kind": "Class",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.DeadClass",
-          "Kind": "Class"
+          "Kind": "Class",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.DeadDelegate",
-          "Kind": "Delegate"
-        },
-        {
-          "Name": "TestLibrary.DeadEnum",
-          "Kind": "Enum"
+          "Kind": "Delegate",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.DeadStruct",
-          "Kind": "Struct"
+          "Kind": "Struct",
+          "Access": 6
         }
       ],
       "DeadMembers": [
         {
           "Name": "TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassAndAliveMembers.get_Item(System.Int32)",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassAndAliveMembers.remove_AliveEvent(System.EventHandler)",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers..ctor()",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.DeadComplexProperty",
-          "Kind": "Property"
+          "Kind": "Property",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.DeadEvent",
-          "Kind": "Event"
+          "Kind": "Event",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.DeadField",
-          "Kind": "Field"
+          "Kind": "Field",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty",
-          "Kind": "Property"
+          "Kind": "Property",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.Item",
-          "Kind": "Misc"
+          "Kind": "Misc",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers._value",
-          "Kind": "Field"
+          "Kind": "Field",
+          "Access": 1
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.add_DeadEvent(System.EventHandler)",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty()",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.get_Item(System.Int32)",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.remove_DeadEvent(System.EventHandler)",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(System.Int32)",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(System.Int32)",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.set_Item(System.Int32, System.Int32)",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveDelegate.Invoke()",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveRecordClass.Id",
-          "Kind": "Property"
+          "Kind": "Property",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveRecordClass.Name",
-          "Kind": "Property"
+          "Kind": "Property",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveRecordClass.get_Id()",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveRecordClass.get_Name()",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveRecordClass.set_Id(System.Int32)",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveRecordClass.set_Name(System.String)",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.AliveStruct..ctor()",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.GenericTypeArgument..ctor()",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.MyCaughtException..ctor()",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.TestAttribute..ctor(System.String)",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.TestAttribute.Name",
-          "Kind": "Property"
+          "Kind": "Property",
+          "Access": 6
         },
         {
           "Name": "TestLibrary.TestAttribute.get_Name()",
-          "Kind": "Method"
+          "Kind": "Method",
+          "Access": 6
         }
       ]
     }

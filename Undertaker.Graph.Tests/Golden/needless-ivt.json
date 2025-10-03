@@ -1,0 +1,8 @@
+[
+  {
+    "Assembly": "TestLibrary",
+    "OtherAssemblies": [
+      "TestExe"
+    ]
+  }
+]

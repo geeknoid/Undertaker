@@ -128,6 +128,9 @@
           ]
         },
         {
+          "Name": "TestLibrary.DeadEnum"
+        },
+        {
           "Name": "TestLibrary.GenericTypeArgument",
           "ReferencedBy": [
             "TestLibrary.AliveClassAndAliveMembers.AliveMethod()"
