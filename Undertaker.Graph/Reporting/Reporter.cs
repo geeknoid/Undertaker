@@ -407,10 +407,13 @@ public sealed class Reporter
         return sb.ToString();
     }
 
-    public void Dump(TextWriter output)
+    public void Dump(string path)
     {
-        foreach (var asm in _assemblies.Values.OrderBy(a => a.Name))
+        foreach (var asm in _assemblies.Values)
         {
+            var p = Path.Combine(path, asm.Name) + ".txt";
+            using var output = File.CreateText(p);
+
             output.Write("ASSEMBLY ");
             output.Write(asm.Name);
             output.Write(".dll");
@@ -457,6 +460,8 @@ public sealed class Reporter
                     }
                 }
             }
+
+            output.Close();
         }
     }
 }

@@ -24,39 +24,35 @@ Arguments:
   <assembly-folder>  Path to a folder containing all the assemblies to work with.
 
 Options:
-  -ra, --root-assemblies <root-assemblies>                                Path to a text file listing assemblies to be treated as roots, one
-                                                                          assembly name per line (with or without a .dll extension)
-  -rs, --reflection-symbols <reflection-symbols>                          Path to a text file listing symbols accessed through reflection, with
-                                                                          each line in the form of `assembly-name:fully-qualified-symbol-name`
-  -tma, --test-method-attributes <test-method-attributes>                 Path to a text file listing all the attributes that can mark a method as
-                                                                          a test, one per line
-  -rma, --reflection-marker-attributes <reflection-marker-attributes>     Path to a text file listing all the attributes that can mark a method as
-                                                                          being used from reflection, one per line
+  -ra, --root-assemblies <root-assemblies>                                Path to a text file listing assemblies to be treated as roots, one assembly name per
+                                                                          line (with or without a .dll extension)
+  -rs, --reflection-symbols <reflection-symbols>                          Path to a text file listing symbols accessed through reflection, with each line in
+                                                                          the form of `assembly-name:fully-qualified-symbol-name`
+  -tma, --test-method-attributes <test-method-attributes>                 Path to a text file listing all the attributes that can mark a method as a test, one
+                                                                          per line
+  -rma, --reflection-marker-attributes <reflection-marker-attributes>     Path to a text file listing all the attributes that can mark a method as being used
+                                                                          from reflection, one per line
   -ds, --dead-symbols <dead-symbols>                                      Directory path where to emit the per-assembly reports on dead symbols
   -as, --alive-symbols <alive-symbols>                                    Directory path where to emit the per-assembly reports on alive symbols
-  -abts, --alive-by-test-symbols <alive-by-test-symbols>                  Directory path where to emit the per-assembly reports on symbols kept
-                                                                          alive only by test methods
-  -nps, --needlessly-public-symbols <needlessly-public-symbols>           Directory path where to emit the per-assembly reports on public symbols
-                                                                          which could be made internal
-  -nivt, --needless-internals-visible-to <needless-internals-visible-to>  Directory path where to emit the per-assembly reports on needless uses
-                                                                          of [InternalsVisibleTo]
+  -abts, --alive-by-test-symbols <alive-by-test-symbols>                  Directory path where to emit the per-assembly reports on symbols kept alive only by
+                                                                          test methods
+  -nps, --needlessly-public-symbols <needlessly-public-symbols>           Directory path where to emit the per-assembly reports on public symbols which could
+                                                                          be made internal
+  -nivt, --needless-internals-visible-to <needless-internals-visible-to>  Directory path where to emit the per-assembly reports on needless uses of
+                                                                          [InternalsVisibleTo]
   -ua, --unreferenced-assemblies <unreferenced-assemblies>                Path of the report to produce on completely unreferenced assemblies
-  -uaa, --unanalyzed-assemblies <unanalyzed-assemblies>                   Path of the report to produce on assemblies which were referenced but
-                                                                          not analyzed
-  -da, --duplicate-assemblies <duplicate-assemblies>                      Path of the report to produce on assemblies which were found multiple
-                                                                          times as input
-  -urs, --unreferenced-symbols <unreferenced-symbols>                     Directory path where to emit the per-assembly reports on completely
-                                                                          unreferenced symbols
+  -uaa, --unanalyzed-assemblies <unanalyzed-assemblies>                   Path of the report to produce on assemblies which were referenced but not analyzed
+  -da, --duplicate-assemblies <duplicate-assemblies>                      Path of the report to produce on assemblies which were found multiple times as input
+  -urs, --unreferenced-symbols <unreferenced-symbols>                     Directory path where to emit the per-assembly reports on completely unreferenced
+                                                                          symbols
   -alc, --assembly-layer-cake <assembly-layer-cake>                       Path of the assembly layer cake to produce
   -dd, --dependency-diagram <dependency-diagram>                          Path of the Mermaid-based assembly dependency diagram to produce
-  -gd, --graph-dump <graph-dump>                                          Path of the graph dump file to produce
-  -cle, --continue-on-load-errors                                         Proceed to the analysis and output phases even if some assemblies didn't
-                                                                          load
+  -gd, --graph-dumps <graph-dumps>                                        Directory path for the graph dump files to produce
+  -cle, --continue-on-load-errors                                         Proceed to the analysis and output phases even if some assemblies didn't load
   -v, --verbose                                                           Output progress reports
   -csv                                                                    Switch some output files from JSON to CSV format
   --version                                                               Show version information
   -?, -h, --help                                                          Show help and usage information
-
 ```
 
 * `<assembly-folder>` is the path to a folder containing all the assemblies to work with. The tool will
@@ -120,9 +116,9 @@ Options:
   Mermaid format should be written. This diagram shows the dependencies between the assemblies in a
   visual format, making it easier to understand the relationships between them.
 
-* `--graph-dump` lets you specify the path to the file where the internal graph dump should be written.
-  This is a text file containing the graph of all the symbols and their references. This is useful for
-  debugging and understanding the internal workings of the tool.
+* `--graph-dumps` lets you specify the directory path where the internal graph dumps should be written.
+  These are text files, one per processed assembly, containing the graph of all the symbols and their references.
+  This is useful for debugging and understanding the internal workings of this tool.
 
 * `--continue-on-load-errors` lets you specify that the program should continue to run even if some assemblies
   fail to load.

@@ -34,7 +34,7 @@ internal static class Program
         public string? UnanalyzedAssemblies { get; set; }
         public string? DuplicateAssemblies { get; set; }
         public string? UnreferencedSymbols { get; set; }
-        public string? GraphDump { get; set; }
+        public string? GraphDumps { get; set; }
         public bool ContinueOnLoadErrors { get; set; }
         public bool Verbose { get; set; }
         public bool DumpMemory { get; set; }
@@ -108,8 +108,8 @@ internal static class Program
                 "Path of the Mermaid-based assembly dependency diagram to produce"),
 
             new Option<string>(
-                ["-gd", "--graph-dump"],
-                "Path of the graph dump file to produce"),
+                ["-gd", "--graph-dumps"],
+                "Directory path for the graph dump files to produce"),
 
             new Option<bool>(
                 ["-cle", "--continue-on-load-errors"],
@@ -409,7 +409,7 @@ internal static class Program
             !OutputNeedlessInternalsVisibleTo() ||
             !OutputAssemblyLayerCake() ||
             !OutputDependencyDiagram() ||
-            !OutputGraphDump()
+            !OutputGraphDumps()
             ? 1
             : 0;
 
@@ -856,21 +856,30 @@ internal static class Program
             return true;
         }
 
-        bool OutputGraphDump()
+        bool OutputGraphDumps()
         {
-            if (args.GraphDump != null)
+            if (args.GraphDumps != null)
             {
-                var path = Path.GetFullPath(args.GraphDump);
-                Out($"  Writing graph dump to {path}");
+                var path = Path.GetFullPath(args.GraphDumps);
+                Out($"  Writing graph dumps to {path}");
 
                 try
                 {
-                    using var file = File.CreateText(path);
-                    reporter.Dump(file);
+                    var di = Directory.CreateDirectory(path);
+
+                    try
+                    {
+                        reporter.Dump(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        Error($"Unable to write graph dump to {path}: {ex.Message}");
+                        return false;
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Error($"Unable to write graph dump to {path}: {ex.Message}");
+                    Error($"Unable to create output directory for graph dumps at {path}: {ex.Message}");
                     return false;
                 }
             }

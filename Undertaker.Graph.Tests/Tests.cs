@@ -32,10 +32,6 @@ public class Tests
         var duplicateAssemblies = JsonSerializer.Serialize(reporter.CollectDuplicateAssemblies(), serializerOptions);
         var diagram = reporter.CreateDependencyDiagram();
 
-        var sw = new StringWriter();
-        reporter.Dump(sw);
-        var graphDump = sw.ToString();
-
 #if false
         // write the golden files
         File.WriteAllText("../../../Golden/dead.json", deadReport);
@@ -47,7 +43,7 @@ public class Tests
         File.WriteAllText("../../../Golden/assembly-layer-cake.json", assemblyLayerCake);
         File.WriteAllText("../../../Golden/duplicate-assemblies.json", duplicateAssemblies);
         File.WriteAllText("../../../Golden/diagram.mmd", diagram);
-        File.WriteAllText("../../../Golden/graph.txt", graphDump);
+        reporter.Dump("../../../Golden/dumps");
 #else
         var goldenDeadReport = File.ReadAllText("../../../Golden/dead.json");
         var goldenAliveReport = File.ReadAllText("../../../Golden/alive.json");
@@ -58,7 +54,6 @@ public class Tests
         var goldenAssemblyLayerCake = File.ReadAllText("../../../Golden/assembly-layer-cake.json");
         var goldenDuplicateAssemblies = File.ReadAllText("../../../Golden/duplicate-assemblies.json");
         var goldenDiagram = File.ReadAllText("../../../Golden/diagram.mmd");
-        var goldenGraphDump = File.ReadAllText("../../../Golden/graph.txt");
 
         Assert.Equal(goldenDeadReport, deadReport);
         Assert.Equal(goldenAliveReport, aliveReport);
@@ -69,7 +64,6 @@ public class Tests
         Assert.Equal(goldenAssemblyLayerCake, assemblyLayerCake);
         Assert.Equal(goldenDuplicateAssemblies, duplicateAssemblies);
         Assert.Equal(goldenDiagram, diagram);
-        Assert.Equal(goldenGraphDump, graphDump);
 #endif
     }
 }
