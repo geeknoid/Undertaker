@@ -1,12 +1,14 @@
 ﻿using System.Buffers;
 using System.IO.Hashing;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Undertaker.Graph.Misc;
 
 /// <summary>
 /// Like a System.String, but stores UTF-8 bytes internally to save memory.        
 /// </summary>
+[JsonConverter(typeof(SkinnyStringConverter))]
 public readonly struct SkinnyString(string str) : IEquatable<SkinnyString>, IEquatable<String>, IComparable<SkinnyString>, IComparable<String>
 {
     private readonly byte[] _data = Encoding.UTF8.GetBytes(str);

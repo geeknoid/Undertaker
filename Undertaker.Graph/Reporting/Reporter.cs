@@ -411,7 +411,8 @@ public sealed class Reporter
     {
         foreach (var asm in _assemblies.Values)
         {
-            var p = Path.Combine(path, asm.Name) + ".txt";
+            var p = Path.Combine(path, asm.Name.Trim()) + ".txt";
+
             using var output = File.CreateText(p);
 
             output.Write("ASSEMBLY ");

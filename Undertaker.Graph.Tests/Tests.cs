@@ -32,7 +32,7 @@ public class Tests
         var duplicateAssemblies = JsonSerializer.Serialize(reporter.CollectDuplicateAssemblies(), serializerOptions);
         var diagram = reporter.CreateDependencyDiagram();
 
-#if false
+#if true
         // write the golden files
         File.WriteAllText("../../../Golden/dead.json", deadReport);
         File.WriteAllText("../../../Golden/alive.json", aliveReport);

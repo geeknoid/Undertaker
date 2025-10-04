@@ -4,36 +4,36 @@
       "Assembly": "TestExe",
       "AliveTypes": [
         {
-          "Name": {},
+          "Name": "TestExe.Program",
           "ReferencedBy": [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
+            "TestExe.Program\u002B\u003C\u003Ec",
+            "TestExe.Program\u002B\u003C\u003Ec..cctor()",
+            "TestExe.Program\u002B\u003C\u003Ec..ctor()",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003C\u003E9",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003C\u003E9__0_0",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003C\u003E9__0_1",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003CMain\u003Eb__0_0()",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003CMain\u003Eb__0_1(System.Object, System.EventArgs)",
+            "TestExe.Program.Main()"
           ]
         }
       ],
       "AliveMembers": [
         {
-          "Name": {},
+          "Name": "TestExe.Program\u002B\u003C\u003Ec",
           "ReferencedBy": [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
+            "TestExe.Program\u002B\u003C\u003Ec..cctor()",
+            "TestExe.Program\u002B\u003C\u003Ec..ctor()",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003C\u003E9",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003C\u003E9__0_0",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003C\u003E9__0_1",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003CMain\u003Eb__0_0()",
+            "TestExe.Program\u002B\u003C\u003Ec.\u003CMain\u003Eb__0_1(System.Object, System.EventArgs)",
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestExe.Program.Main()",
           "Root": true
         }
       ]
@@ -42,269 +42,269 @@
       "Assembly": "TestLibrary",
       "AliveTypes": [
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveByTestClas",
           "ReferencedBy": [
-            {},
-            {},
-            {},
-            {}
+            "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
+            "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
+            "TestLibrary.AliveByTestClas..ctor()",
+            "TestLibrary.AliveByTestClas.MyTestMethod()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
           "ReferencedBy": [
-            {},
-            {}
+            "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
+            "TestLibrary.AliveByTestClas.MyTestMethod()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClass",
           "ReferencedBy": [
-            {},
-            {}
+            "TestExe.Program.Main()",
+            "TestLibrary.AliveClass..ctor()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers",
           "ReferencedBy": [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
+            "TestExe.Program.Main()",
+            "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType",
+            "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType..ctor()",
+            "TestLibrary.AliveClassAndAliveMembers..ctor()",
+            "TestLibrary.AliveClassAndAliveMembers.\u003CAliveSimpleProperty\u003Ek__BackingField",
+            "TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty",
+            "TestLibrary.AliveClassAndAliveMembers.AliveEvent",
+            "TestLibrary.AliveClassAndAliveMembers.AliveField",
+            "TestLibrary.AliveClassAndAliveMembers.AliveMethod()",
+            "TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty",
+            "TestLibrary.AliveClassAndAliveMembers.Item",
+            "TestLibrary.AliveClassAndAliveMembers._value",
+            "TestLibrary.AliveClassAndAliveMembers.add_AliveEvent(System.EventHandler)",
+            "TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(System.Int32)",
+            "TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(System.Int32)",
+            "TestLibrary.AliveClassAndAliveMembers.set_Item(System.Int32, System.Int32)"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType",
           "ReferencedBy": [
-            {},
-            {}
+            "TestExe.Program.Main()",
+            "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType..ctor()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassButDeadMembers",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveDelegate",
           "ReferencedBy": [
-            {},
-            {},
-            {}
+            "TestExe.Program\u002B\u003C\u003Ec.\u003C\u003E9__0_0",
+            "TestExe.Program.Main()",
+            "TestLibrary.AliveDelegate..ctor(System.Object, nint)"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveEnum",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveRecordClass",
           "ReferencedBy": [
-            {},
-            {},
-            {},
-            {}
+            "TestExe.Program.Main()",
+            "TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)",
+            "TestLibrary.AliveRecordClass.\u003CId\u003Ek__BackingField",
+            "TestLibrary.AliveRecordClass.\u003CName\u003Ek__BackingField"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveStruct",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {}
+          "Name": "TestLibrary.DeadEnum"
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.GenericTypeArgument",
           "ReferencedBy": [
-            {}
+            "TestLibrary.AliveClassAndAliveMembers.AliveMethod()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.MyCaughtException",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.MyThrownException",
           "ReferencedBy": [
-            {},
-            {}
+            "TestExe.Program.Main()",
+            "TestLibrary.MyThrownException..ctor()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.TestAttribute",
           "ReferencedBy": [
-            {}
+            "TestLibrary.GenericTypeArgument"
           ]
         }
       ],
       "AliveMembers": [
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
           "ReferencedBy": [
-            {},
-            {}
+            "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
+            "TestLibrary.AliveByTestClas.MyTestMethod()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
           "ReferencedBy": [
-            {}
+            "TestLibrary.AliveByTestClas.MyTestMethod()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveByTestClas..ctor()",
           "ReferencedBy": [
-            {}
+            "TestLibrary.AliveByTestClas.MyTestMethod()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveByTestClas.MyTestMethod()",
           "Root": true
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClass..ctor()",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType",
           "ReferencedBy": [
-            {},
-            {}
+            "TestExe.Program.Main()",
+            "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType..ctor()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType..ctor()",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers..ctor()",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers.\u003CAliveSimpleProperty\u003Ek__BackingField",
           "ReferencedBy": [
-            {}
+            "TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(System.Int32)"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers.AliveComplexProperty",
           "ReferencedBy": [
-            {}
+            "TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(System.Int32)"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers.AliveEvent",
           "ReferencedBy": [
-            {}
+            "TestLibrary.AliveClassAndAliveMembers.add_AliveEvent(System.EventHandler)"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers.AliveField",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers.AliveMethod()",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty",
           "ReferencedBy": [
-            {}
+            "TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(System.Int32)"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers.Item",
           "ReferencedBy": [
-            {}
+            "TestLibrary.AliveClassAndAliveMembers.set_Item(System.Int32, System.Int32)"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers._value",
           "ReferencedBy": [
-            {}
+            "TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(System.Int32)"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers.add_AliveEvent(System.EventHandler)",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(System.Int32)",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(System.Int32)",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveClassAndAliveMembers.set_Item(System.Int32, System.Int32)",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveDelegate..ctor(System.Object, nint)",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveRecordClass.\u003CId\u003Ek__BackingField",
           "ReferencedBy": [
-            {}
+            "TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.AliveRecordClass.\u003CName\u003Ek__BackingField",
           "ReferencedBy": [
-            {}
+            "TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)"
           ]
         },
         {
-          "Name": {},
+          "Name": "TestLibrary.MyThrownException..ctor()",
           "ReferencedBy": [
-            {}
+            "TestExe.Program.Main()"
           ]
         }
       ]

@@ -873,7 +873,7 @@ internal static class Program
                     }
                     catch (Exception ex)
                     {
-                        Error($"Unable to write graph dump to {path}: {ex.Message}");
+                        Error($"Unable to write graph dumps to {path}: {ex.Message}");
                         return false;
                     }
                 }
