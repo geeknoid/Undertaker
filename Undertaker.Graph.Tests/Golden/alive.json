@@ -61,7 +61,8 @@
           "Name": "TestLibrary.AliveClass",
           "ReferencedBy": [
             "TestExe.Program.Main()",
-            "TestLibrary.AliveClass..ctor()"
+            "TestLibrary.AliveClass..ctor()",
+            "TestLibrary.AliveClass.TestLibrary.AliveInterface.Func()"
           ]
         },
         {
@@ -110,6 +111,14 @@
           "Name": "TestLibrary.AliveEnum",
           "ReferencedBy": [
             "TestExe.Program.Main()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveInterface",
+          "ReferencedBy": [
+            "TestExe.Program.Main()",
+            "TestLibrary.AliveClass",
+            "TestLibrary.AliveInterface.Func()"
           ]
         },
         {
@@ -184,6 +193,12 @@
           "Name": "TestLibrary.AliveClass..ctor()",
           "ReferencedBy": [
             "TestExe.Program.Main()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveClass.TestLibrary.AliveInterface.Func()",
+          "ReferencedBy": [
+            "TestLibrary.AliveInterface.Func()"
           ]
         },
         {
@@ -279,6 +294,12 @@
         },
         {
           "Name": "TestLibrary.AliveDelegate..ctor(System.Object, nint)",
+          "ReferencedBy": [
+            "TestExe.Program.Main()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveInterface.Func()",
           "ReferencedBy": [
             "TestExe.Program.Main()"
           ]

@@ -1,7 +1,10 @@
 ﻿namespace TestLibrary;
 
-public class AliveClass
+public class AliveClass : AliveInterface
 {
+    void AliveInterface.Func()
+    {
+    }
 }
 
 public struct AliveStruct
@@ -80,4 +83,9 @@ public class TestAttribute : Attribute
         Name = name;
     }
     public string Name { get; }
+}
+
+public interface AliveInterface
+{
+    void Func();
 }

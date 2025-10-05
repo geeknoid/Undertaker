@@ -12,24 +12,17 @@ namespace Undertaker.Graph.Misc;
 public readonly struct SkinnyString(string str) : IEquatable<SkinnyString>, IEquatable<String>, IComparable<SkinnyString>, IComparable<String>
 {
     private readonly byte[] _data = Encoding.UTF8.GetBytes(str);
-    public override int GetHashCode()
-    {
-        return (int)XxHash64.HashToUInt64(_data);
-    }
 
+    /// <summary>
+    /// Length in bytes, not characters.
+    /// </summary>
+    public int Length => _data.Length;
+
+    public override int GetHashCode() => (int)XxHash64.HashToUInt64(_data);
     public override bool Equals(object? obj) => obj is SkinnyString other && _data.SequenceEqual(other._data);
-
     public override string ToString() => Encoding.UTF8.GetString(_data);
-
-    bool IEquatable<SkinnyString>.Equals(SkinnyString other)
-    {
-        return _data.AsSpan().SequenceEqual(other._data);
-    }
-
-    int IComparable<SkinnyString>.CompareTo(SkinnyString other)
-    {
-        return _data.AsSpan().SequenceCompareTo(other._data);
-    }
+    bool IEquatable<SkinnyString>.Equals(SkinnyString other) => _data.AsSpan().SequenceEqual(other._data);
+    int IComparable<SkinnyString>.CompareTo(SkinnyString other) => _data.AsSpan().SequenceCompareTo(other._data);
 
     bool IEquatable<string>.Equals(string? other)
     {
@@ -215,10 +208,7 @@ public readonly struct SkinnyString(string str) : IEquatable<SkinnyString>, IEqu
         return 0; // Equal
     }
 
-    public bool Contains(char ch)
-    {
-        return IndexOf(ch) >= 0;
-    }
+    public bool Contains(char ch) => IndexOf(ch) >= 0;
 
     public bool Contains(string value)
     {
@@ -374,11 +364,7 @@ public readonly struct SkinnyString(string str) : IEquatable<SkinnyString>, IEqu
         return lastFoundCharIndex;
     }
 
-
-    public bool StartsWith(string value)
-    {
-        return StartsWith(_data, value);
-    }
+    public bool StartsWith(string value) => StartsWith(_data, value);
 
     private static bool StartsWith(ReadOnlySpan<byte> utf8Text, string value)
     { 

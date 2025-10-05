@@ -37,6 +37,9 @@ internal static class Program
             Console.WriteLine(ex.ToString());
         }
 
+        AliveInterface f = a;
+        f.Func();
+
         Console.WriteLine(AliveClassAndAliveMembers.AliveConst);
         Console.WriteLine(new AliveClassAndAliveMembers.AliveNestedType());
 

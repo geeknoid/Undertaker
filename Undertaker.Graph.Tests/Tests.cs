@@ -26,19 +26,19 @@ public class Tests
         var aliveReport = JsonSerializer.Serialize(reporter.CollectAliveSymbols(), serializerOptions);
         var aliveByTestReport = JsonSerializer.Serialize(reporter.CollectAliveByTestSymbols(), serializerOptions);
         var needlesslyPublicReport = JsonSerializer.Serialize(reporter.CollectNeedlesslyPublicSymbols(), serializerOptions);
-        var unreferencedReport = JsonSerializer.Serialize(reporter.CollectUnreferencedAssemblies(), serializerOptions);
+        var unreferencedAssembliesReport = JsonSerializer.Serialize(reporter.CollectUnreferencedAssemblies(), serializerOptions);
         var needlessIVTReport = JsonSerializer.Serialize(reporter.CollectNeedlessInternalsVisibleTo(), serializerOptions);
         var assemblyLayerCake = JsonSerializer.Serialize(reporter.CreateAssemblyLayerCake(), serializerOptions);
         var duplicateAssemblies = JsonSerializer.Serialize(reporter.CollectDuplicateAssemblies(), serializerOptions);
         var diagram = reporter.CreateDependencyDiagram();
 
-#if true
+#if false
         // write the golden files
         File.WriteAllText("../../../Golden/dead.json", deadReport);
         File.WriteAllText("../../../Golden/alive.json", aliveReport);
         File.WriteAllText("../../../Golden/alive-by-test.json", aliveByTestReport);
         File.WriteAllText("../../../Golden/needlessly-public.json", needlesslyPublicReport);
-        File.WriteAllText("../../../Golden/unreferenced.json", unreferencedReport);
+        File.WriteAllText("../../../Golden/unreferenced-assemblies.json", unreferencedReport);
         File.WriteAllText("../../../Golden/needless-ivt.json", needlessIVTReport);
         File.WriteAllText("../../../Golden/assembly-layer-cake.json", assemblyLayerCake);
         File.WriteAllText("../../../Golden/duplicate-assemblies.json", duplicateAssemblies);
@@ -49,7 +49,7 @@ public class Tests
         var goldenAliveReport = File.ReadAllText("../../../Golden/alive.json");
         var goldenAliveByTestReport = File.ReadAllText("../../../Golden/alive-by-test.json");
         var goldenNeedlesslyPublicReport = File.ReadAllText("../../../Golden/needlessly-public.json");
-        var goldenUnreferencedReport = File.ReadAllText("../../../Golden/unreferenced.json");
+        var goldenUnreferencedReport = File.ReadAllText("../../../Golden/unreferenced-assemblies.json");
         var goldenNeedlessIVTReport = File.ReadAllText("../../../Golden/needless-ivt.json");
         var goldenAssemblyLayerCake = File.ReadAllText("../../../Golden/assembly-layer-cake.json");
         var goldenDuplicateAssemblies = File.ReadAllText("../../../Golden/duplicate-assemblies.json");
@@ -59,7 +59,7 @@ public class Tests
         Assert.Equal(goldenAliveReport, aliveReport);
         Assert.Equal(goldenAliveByTestReport, aliveByTestReport);
         Assert.Equal(goldenNeedlesslyPublicReport, needlesslyPublicReport);
-        Assert.Equal(goldenUnreferencedReport, unreferencedReport);
+        Assert.Equal(goldenUnreferencedReport, unreferencedAssembliesReport);
         Assert.Equal(goldenNeedlessIVTReport, needlessIVTReport);
         Assert.Equal(goldenAssemblyLayerCake, assemblyLayerCake);
         Assert.Equal(goldenDuplicateAssemblies, duplicateAssemblies);

@@ -1,5 +1,4 @@
 ﻿using ICSharpCode.Decompiler;
-using ICSharpCode.Decompiler.CSharp.Syntax;
 using ICSharpCode.Decompiler.TypeSystem;
 using Undertaker.Graph.Misc;
 
@@ -10,7 +9,6 @@ internal sealed class MethodSymbol(Assembly assembly, string name, SymbolId id) 
     public bool IsVirtualOrOverrideOrAbstract { get; private set; }
     public bool IsOverride { get; private set; }
     public bool IsTestMethod { get; private set; }
-    private int _parameterCount;
 
     public override void Define(IEntity entity)
     {
@@ -44,7 +42,6 @@ internal sealed class MethodSymbol(Assembly assembly, string name, SymbolId id) 
 
         IsVirtualOrOverrideOrAbstract = m.IsVirtual || m.IsOverride || m.IsAbstract;
         IsOverride = m.IsOverride;
-        _parameterCount = m.Parameters.Count;
     }
 
     public void MarkAsTestMethod()
@@ -53,7 +50,7 @@ internal sealed class MethodSymbol(Assembly assembly, string name, SymbolId id) 
         Root = true;
     }
 
-    private (int index, int count) FindName()
+    private int FindSignature()
     {
         // find the first ( in the name string
         // from there, backup to find the previous . or the begining of the string
@@ -62,31 +59,26 @@ internal sealed class MethodSymbol(Assembly assembly, string name, SymbolId id) 
         {
             var lastDotIndex = Name.LastIndexOf('.');
             var start = (lastDotIndex < 0 ? 0 : lastDotIndex + 1);
-            return (start, index - start);
+            return start;
         }
         else
         {
             var lastDotIndex = Name.LastIndexOf('.', index);
             var start = lastDotIndex < 0 ? 0 : lastDotIndex + 1;
-            return (start, index - start);
+            return start;
         }
     }
 
     /// <summary>
     /// See if this method has a similar signature to another method.
     /// </summary>
-    /// <remarks>
-    /// "Similar" means the same name and parameter count.
-    /// </remarks>
-    public bool SimilarSignature(MethodSymbol other)
+    public bool SameSignature(MethodSymbol other)
     {
-        if (_parameterCount != other._parameterCount)
-        {
-            return false;
-        }
+        var thisIndex = FindSignature();
+        var otherIndex = other.FindSignature();
 
-        var (thisIndex, thisCount) = FindName();
-        var (otherIndex, otherCount) = other.FindName();
+        var thisCount = Name.Length - thisIndex;
+        var otherCount = other.Name.Length - otherIndex;
 
         return thisCount == otherCount
             && string.CompareOrdinal(Name, thisIndex, other.Name, otherIndex, thisCount) == 0;
