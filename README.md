@@ -7,7 +7,7 @@ This tool is designed to help discover dead code, along with various other legac
 Use:
 
 ```bash
-dotnet tool install undertaker
+dotnet tool install undertaker --global
 ```
 
 ## How It Works
