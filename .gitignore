@@ -235,3 +235,4 @@ FakesAssemblies/
 *.plg
 
 *launchSettings.json
+*api_key.txt

@@ -1,6 +1,14 @@
 # Undertaker
 
-This tool is designed to help discover dead code within a set of compiled .NET assemblies.
+This tool is designed to help discover dead code, along with various other legacy artifacts, within a set of compiled .NET assemblies.
+
+## Installing
+
+Use:
+
+```bash
+dotnet tool install undertaker
+```
 
 ## How It Works
 

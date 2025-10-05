@@ -13,14 +13,19 @@
     <ToolCommandName>undertaker</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <PackageId>Undertaker</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Martin Taillefer</Authors>
     <Title>Undertaker</Title>
     <Description>Helps you find dead code and other legacy artifacts across a .NET codebase</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/geeknoid/undertaker</RepositoryUrl>
     <PackageTags>dead code;legacy code;code analysis;code cleanup;dotnet tool</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 
   <ItemGroup>
   	<PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1" />
