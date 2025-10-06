@@ -55,11 +55,8 @@ ASSEMBLY TestLibrary.dll [LOADED, !ROOT, !SYSTEM]
       System.Console.WriteLine(System.Object)
       System.Console
   TestLibrary.AliveClass [TYPE, ALIVE, !HIDE, !REFLECTION_TARGET, !ROOT]
-    DIRECTLY REFERENCES
-      TestLibrary.AliveInterface
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
-      TestLibrary.AliveClass.TestLibrary.AliveInterface.Func()
       TestLibrary.AliveClass..ctor()
   TestLibrary.AliveClass..ctor() [METHOD, ALIVE, !HIDE, !REFLECTION_TARGET, !ROOT]
     DIRECTLY REFERENCES
@@ -67,11 +64,6 @@ ASSEMBLY TestLibrary.dll [LOADED, !ROOT, !SYSTEM]
       System.Object..ctor()
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
-  TestLibrary.AliveClass.TestLibrary.AliveInterface.Func() [METHOD, ALIVE, !HIDE, !REFLECTION_TARGET, !ROOT]
-    DIRECTLY REFERENCES
-      TestLibrary.AliveClass
-    DIRECTLY REFERENCED BY
-      TestLibrary.AliveInterface.Func()
   TestLibrary.AliveClassAndAliveMembers [TYPE, ALIVE, !HIDE, !REFLECTION_TARGET, !ROOT]
     DIRECTLY REFERENCES
       System.Reflection.DefaultMemberAttribute
@@ -397,17 +389,6 @@ ASSEMBLY TestLibrary.dll [LOADED, !ROOT, !SYSTEM]
       System.IFormattable
       System.ISpanFormattable
       System.IConvertible
-    DIRECTLY REFERENCED BY
-      TestExe.Program.Main()
-  TestLibrary.AliveInterface [TYPE, ALIVE, !HIDE, !REFLECTION_TARGET, !ROOT]
-    DIRECTLY REFERENCED BY
-      TestExe.Program.Main()
-      TestLibrary.AliveClass
-      TestLibrary.AliveInterface.Func()
-  TestLibrary.AliveInterface.Func() [METHOD, ALIVE, !HIDE, !REFLECTION_TARGET, !ROOT]
-    DIRECTLY REFERENCES
-      TestLibrary.AliveInterface
-      TestLibrary.AliveClass.TestLibrary.AliveInterface.Func()
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
   TestLibrary.AliveRecordClass [TYPE, ALIVE, !HIDE, !REFLECTION_TARGET, !ROOT]

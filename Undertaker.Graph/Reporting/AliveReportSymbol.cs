@@ -30,7 +30,7 @@ public sealed class AliveReportSymbol
         Name = symbol;
 
         if (dependents.Count > 0)
-        { 
+        {
             ReferencedBy = dependents;
         }
 

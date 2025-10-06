@@ -51,8 +51,8 @@ internal sealed class TypeSymbol(Assembly assembly, string name, SymbolId id) : 
     public void SetDeclaresConstants()
     {
         DeclaresConstants = true;
-    } 
-    
+    }
+
     public override void TrimExcess()
     {
         _members.TrimExcess();

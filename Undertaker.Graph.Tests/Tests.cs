@@ -32,13 +32,13 @@ public class Tests
         var duplicateAssemblies = JsonSerializer.Serialize(reporter.CollectDuplicateAssemblies(), serializerOptions);
         var diagram = reporter.CreateDependencyDiagram();
 
-#if false
+#if true
         // write the golden files
         File.WriteAllText("../../../Golden/dead.json", deadReport);
         File.WriteAllText("../../../Golden/alive.json", aliveReport);
         File.WriteAllText("../../../Golden/alive-by-test.json", aliveByTestReport);
         File.WriteAllText("../../../Golden/needlessly-public.json", needlesslyPublicReport);
-        File.WriteAllText("../../../Golden/unreferenced-assemblies.json", unreferencedReport);
+        File.WriteAllText("../../../Golden/unreferenced-assemblies.json", unreferencedAssembliesReport);
         File.WriteAllText("../../../Golden/needless-ivt.json", needlessIVTReport);
         File.WriteAllText("../../../Golden/assembly-layer-cake.json", assemblyLayerCake);
         File.WriteAllText("../../../Golden/duplicate-assemblies.json", duplicateAssemblies);

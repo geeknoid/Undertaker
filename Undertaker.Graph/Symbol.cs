@@ -7,7 +7,7 @@ namespace Undertaker.Graph;
 internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
 {
     // set on construction
-    public Assembly Assembly { get; private set;  } = assembly;
+    public Assembly Assembly { get; private set; } = assembly;
     public SkinnyString Name { get; } = new SkinnyString(name);
     public SymbolId Id { get; } = id;
 

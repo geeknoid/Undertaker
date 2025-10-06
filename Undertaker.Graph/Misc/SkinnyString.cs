@@ -91,11 +91,11 @@ public readonly struct SkinnyString(string str) : IEquatable<SkinnyString>, IEqu
                 // Supplementary character - surrogate pair in UTF-16
                 if (charIndex + 1 >= other.Length)
                     return false;
-                
+
                 uint temp = codePoint - 0x10000;
                 char highSurrogate = (char)((temp >> 10) + 0xD800);
                 char lowSurrogate = (char)((temp & 0x3FF) + 0xDC00);
-                
+
                 if (other[charIndex] != highSurrogate || other[charIndex + 1] != lowSurrogate)
                     return false;
                 charIndex += 2;
@@ -168,11 +168,11 @@ public readonly struct SkinnyString(string str) : IEquatable<SkinnyString>, IEqu
                 // BMP character - single UTF-16 code unit
                 if (charIndex >= other.Length)
                     return 1; // This string is longer
-                
+
                 int comparison = ((char)codePoint).CompareTo(other[charIndex]);
                 if (comparison != 0)
                     return comparison;
-                
+
                 charIndex++;
             }
             else
@@ -180,19 +180,19 @@ public readonly struct SkinnyString(string str) : IEquatable<SkinnyString>, IEqu
                 // Supplementary character - surrogate pair in UTF-16
                 if (charIndex + 1 >= other.Length)
                     return 1; // This string is longer
-                
+
                 uint temp = codePoint - 0x10000;
                 char highSurrogate = (char)((temp >> 10) + 0xD800);
                 char lowSurrogate = (char)((temp & 0x3FF) + 0xDC00);
-                
+
                 int comparison = highSurrogate.CompareTo(other[charIndex]);
                 if (comparison != 0)
                     return comparison;
-                
+
                 comparison = lowSurrogate.CompareTo(other[charIndex + 1]);
                 if (comparison != 0)
                     return comparison;
-                
+
                 charIndex += 2;
             }
 
@@ -204,19 +204,13 @@ public readonly struct SkinnyString(string str) : IEquatable<SkinnyString>, IEqu
             return 1; // This string has more characters
         if (charIndex < other.Length)
             return -1; // Other string has more characters
-        
+
         return 0; // Equal
     }
 
     public bool Contains(char ch) => IndexOf(ch) >= 0;
 
-    public bool Contains(string value)
-    {
-        if (string.IsNullOrEmpty(value))
-            return true;
-
-        return IndexOf(value) >= 0;
-    }
+    public bool Contains(string value) => string.IsNullOrEmpty(value) || IndexOf(value) >= 0;
 
     public int IndexOf(char ch)
     {
@@ -294,7 +288,7 @@ public readonly struct SkinnyString(string str) : IEquatable<SkinnyString>, IEqu
     {
         ReadOnlySpan<byte> utf8Text = _data;
 
-        Rune needleRune = new Rune(ch);
+        Rune needleRune = new(ch);
         int lastFoundCharIndex = -1;
         int currentCharIndex = 0;
         ReadOnlySpan<byte> remainingSlice = utf8Text;
@@ -367,7 +361,7 @@ public readonly struct SkinnyString(string str) : IEquatable<SkinnyString>, IEqu
     public bool StartsWith(string value) => StartsWith(_data, value);
 
     private static bool StartsWith(ReadOnlySpan<byte> utf8Text, string value)
-    { 
+    {
         if (string.IsNullOrEmpty(value))
         {
             return true;

@@ -21,7 +21,7 @@ internal sealed class MethodSymbol(Assembly assembly, string name, SymbolId id) 
 
         if (m.AccessorOwner != null && !m.AccessorOwner.IsCompilerGenerated())
         {
-           
+
             Hide = false;  // always expose accessors in a first class way
         }
         else if (m.IsConstructor)

@@ -37,7 +37,7 @@ internal static class Program
             Console.WriteLine(ex.ToString());
         }
 
-        AliveInterface f = a;
+        IAliveInterface f = a;
         f.Func();
 
         Console.WriteLine(AliveClassAndAliveMembers.AliveConst);
