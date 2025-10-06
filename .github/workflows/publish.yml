@@ -1,0 +1,53 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'        # Matches semantic versioning: X.Y.Z
+      - '[0-9]+.[0-9]+.[0-9]+-*'      # Matches pre-release versions: X.Y.Z-alpha, X.Y.Z-beta.1, etc.
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  SOLUTION_FILE: 'Undertaker.sln'
+  PROJECT_PATH: 'Undertaker/Undertaker.csproj'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Cache NuGet Packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Restore
+      run: dotnet restore ${{ env.SOLUTION_FILE }}
+
+    - name: Build
+      run: dotnet build ${{ env.SOLUTION_FILE }} --no-restore --configuration Release
+
+    - name: Create Nuget
+      run: |
+        dotnet pack ${{ env.PROJECT_PATH }} \
+          --no-build \
+          --configuration Release \
+          --output ./nupkg \
+
+    - name: Publish to NuGet.org
+      run: |
+        dotnet nuget push "./nupkg/Undertaker.${{ github.ref_name }}.nupkg" \
+          --api-key ${{ secrets.NUGET_API_KEY }} \
+          --source https://api.nuget.org/v3/index.json \
+          --skip-duplicate

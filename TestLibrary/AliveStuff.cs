@@ -1,8 +1,8 @@
 ﻿namespace TestLibrary;
 
-public class AliveClass : AliveInterface
+public class AliveClass : IAliveInterface
 {
-    void AliveInterface.Func()
+    void IAliveInterface.Func()
     {
     }
 }
@@ -76,16 +76,12 @@ public class GenericTypeArgument
 }
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Interface | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Event | AttributeTargets.Delegate)]
-public class TestAttribute : Attribute
+public class TestAttribute(string name) : Attribute
 {
-    public TestAttribute(string name)
-    {
-        Name = name;
-    }
-    public string Name { get; }
+    public string Name { get; } = name;
 }
 
-public interface AliveInterface
+public interface IAliveInterface
 {
     void Func();
 }

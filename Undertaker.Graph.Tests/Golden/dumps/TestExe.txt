@@ -135,8 +135,8 @@ ASSEMBLY TestExe.dll [LOADED, !ROOT, !SYSTEM]
       TestLibrary.AliveClassAndAliveMembers.set_Item(System.Int32, System.Int32)
       System.Object.ToString()
       System.Console.WriteLine(System.String)
-      TestLibrary.AliveInterface.Func()
-      TestLibrary.AliveInterface
+      TestLibrary.IAliveInterface.Func()
+      TestLibrary.IAliveInterface
       System.Console.WriteLine(System.Int32)
       TestLibrary.AliveClassAndAliveMembers+AliveNestedType..ctor()
       TestLibrary.AliveClassAndAliveMembers+AliveNestedType

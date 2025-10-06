@@ -62,7 +62,7 @@
           "ReferencedBy": [
             "TestExe.Program.Main()",
             "TestLibrary.AliveClass..ctor()",
-            "TestLibrary.AliveClass.TestLibrary.AliveInterface.Func()"
+            "TestLibrary.AliveClass.TestLibrary.IAliveInterface.Func()"
           ]
         },
         {
@@ -114,14 +114,6 @@
           ]
         },
         {
-          "Name": "TestLibrary.AliveInterface",
-          "ReferencedBy": [
-            "TestExe.Program.Main()",
-            "TestLibrary.AliveClass",
-            "TestLibrary.AliveInterface.Func()"
-          ]
-        },
-        {
           "Name": "TestLibrary.AliveRecordClass",
           "ReferencedBy": [
             "TestExe.Program.Main()",
@@ -143,6 +135,14 @@
           "Name": "TestLibrary.GenericTypeArgument",
           "ReferencedBy": [
             "TestLibrary.AliveClassAndAliveMembers.AliveMethod()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.IAliveInterface",
+          "ReferencedBy": [
+            "TestExe.Program.Main()",
+            "TestLibrary.AliveClass",
+            "TestLibrary.IAliveInterface.Func()"
           ]
         },
         {
@@ -196,9 +196,9 @@
           ]
         },
         {
-          "Name": "TestLibrary.AliveClass.TestLibrary.AliveInterface.Func()",
+          "Name": "TestLibrary.AliveClass.TestLibrary.IAliveInterface.Func()",
           "ReferencedBy": [
-            "TestLibrary.AliveInterface.Func()"
+            "TestLibrary.IAliveInterface.Func()"
           ]
         },
         {
@@ -299,12 +299,6 @@
           ]
         },
         {
-          "Name": "TestLibrary.AliveInterface.Func()",
-          "ReferencedBy": [
-            "TestExe.Program.Main()"
-          ]
-        },
-        {
           "Name": "TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)",
           "ReferencedBy": [
             "TestExe.Program.Main()"
@@ -320,6 +314,12 @@
           "Name": "TestLibrary.AliveRecordClass.\u003CName\u003Ek__BackingField",
           "ReferencedBy": [
             "TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)"
+          ]
+        },
+        {
+          "Name": "TestLibrary.IAliveInterface.Func()",
+          "ReferencedBy": [
+            "TestExe.Program.Main()"
           ]
         },
         {

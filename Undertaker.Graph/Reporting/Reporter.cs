@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 using Undertaker.Graph.Misc;
 
@@ -19,7 +18,7 @@ public sealed class Reporter
     {
         _assemblies = assemblies;
         _symbolTable = symbolTable;
-        _layerCake = layerCake; 
+        _layerCake = layerCake;
         _dependencyDiagram = dependencyDiagram;
     }
 

@@ -12,6 +12,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Undertaker.Graph", "Undertaker.Graph\Undertaker.Graph.csproj", "{34AA91E1-2C0B-4EE4-8D13-A00712D2FC85}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Undertaker.Graph.Tests", "Undertaker.Graph.Tests\Undertaker.Graph.Tests.csproj", "{BD77CA7C-6329-473C-BE45-91CB4B650BF1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{272C24D9-0193-48BF-9217-7ECDF1A656BA} = {272C24D9-0193-48BF-9217-7ECDF1A656BA}
+		{485843AB-F119-42A6-B653-DF26415C487E} = {485843AB-F119-42A6-B653-DF26415C487E}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject

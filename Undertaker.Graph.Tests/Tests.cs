@@ -4,18 +4,26 @@ namespace Undertaker.Graph.Tests;
 
 public class Tests
 {
+#if DEBUG
     [Fact]
     public void All()
     {
         var graph = new AssemblyGraph();
         graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute");
 
-        using (var exe = new LoadedAssembly("../../../../TestExe/bin/debug/net9.0/TestExe.dll"))
+#if DEBUG
+        var exePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "../../../../TestExe/bin/debug/net9.0/TestExe.dll"));
+        var libPath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "../../../../TestExe/bin/debug/net9.0/TestLibrary.dll"));
+#else
+        var exePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "../../../../TestExe/bin/release/net9.0/TestExe.dll"));
+        var libPath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "../../../../TestExe/bin/release/net9.0/TestLibrary.dll"));
+#endif
+        using (var exe = new LoadedAssembly(exePath))
         {
             graph.MergeAssembly(exe);
         }
 
-        using (var lib = new LoadedAssembly("../../../../TestExe/bin/debug/net9.0/TestLibrary.dll"))
+        using (var lib = new LoadedAssembly(libPath))
         {
             graph.MergeAssembly(lib);
         }
@@ -38,7 +46,7 @@ public class Tests
         File.WriteAllText("../../../Golden/alive.json", aliveReport);
         File.WriteAllText("../../../Golden/alive-by-test.json", aliveByTestReport);
         File.WriteAllText("../../../Golden/needlessly-public.json", needlesslyPublicReport);
-        File.WriteAllText("../../../Golden/unreferenced-assemblies.json", unreferencedReport);
+        File.WriteAllText("../../../Golden/unreferenced-assemblies.json", unreferencedAssembliesReport);
         File.WriteAllText("../../../Golden/needless-ivt.json", needlessIVTReport);
         File.WriteAllText("../../../Golden/assembly-layer-cake.json", assemblyLayerCake);
         File.WriteAllText("../../../Golden/duplicate-assemblies.json", duplicateAssemblies);
@@ -55,6 +63,15 @@ public class Tests
         var goldenDuplicateAssemblies = File.ReadAllText("../../../Golden/duplicate-assemblies.json");
         var goldenDiagram = File.ReadAllText("../../../Golden/diagram.mmd");
 
+        goldenDeadReport = goldenDeadReport.ReplaceLineEndings();
+        goldenAliveReport = goldenAliveReport.ReplaceLineEndings();
+        goldenAliveByTestReport = goldenAliveByTestReport.ReplaceLineEndings();
+        goldenNeedlesslyPublicReport = goldenNeedlesslyPublicReport.ReplaceLineEndings();
+        goldenUnreferencedReport = goldenUnreferencedReport.ReplaceLineEndings();
+        goldenNeedlessIVTReport = goldenNeedlessIVTReport.ReplaceLineEndings();
+        goldenAssemblyLayerCake = goldenAssemblyLayerCake.ReplaceLineEndings();
+        goldenDiagram = goldenDiagram.ReplaceLineEndings();
+
         Assert.Equal(goldenDeadReport, deadReport);
         Assert.Equal(goldenAliveReport, aliveReport);
         Assert.Equal(goldenAliveByTestReport, aliveByTestReport);
@@ -66,4 +83,5 @@ public class Tests
         Assert.Equal(goldenDiagram, diagram);
 #endif
     }
+#endif
 }

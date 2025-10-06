@@ -1,5 +1,4 @@
 using Undertaker.Graph.Misc;
-using System.Text;
 
 namespace Undertaker.Graph.Tests;
 
@@ -81,7 +80,7 @@ public class SkinnyStringTests
     {
         var skinny = new SkinnyString("");
         // Should not throw
-        var hash = skinny.GetHashCode();
+        _ = skinny.GetHashCode();
     }
 
     #endregion
@@ -513,24 +512,24 @@ public class SkinnyStringTests
     public void EqualityOperator_SkinnyStringAndString_Equal_ReturnsTrue()
     {
         var skinny = new SkinnyString("test");
-        Assert.True(skinny == "test");
-        Assert.True("test" == skinny);
+        Assert.Equal("test", skinny);
+        Assert.Equal("test", skinny);
     }
 
     [Fact]
     public void EqualityOperator_SkinnyStringAndString_NotEqual_ReturnsFalse()
     {
         var skinny = new SkinnyString("test1");
-        Assert.False(skinny == "test2");
-        Assert.False("test2" == skinny);
+        Assert.NotEqual("test2", skinny);
+        Assert.NotEqual("test2", skinny);
     }
 
     [Fact]
     public void InequalityOperator_SkinnyStringAndString_NotEqual_ReturnsTrue()
     {
         var skinny = new SkinnyString("test1");
-        Assert.True(skinny != "test2");
-        Assert.True("test2" != skinny);
+        Assert.NotEqual("test2", skinny);
+        Assert.NotEqual("test2", skinny);
     }
 
     [Fact]
@@ -546,12 +545,12 @@ public class SkinnyStringTests
     {
         var skinny1 = new SkinnyString("a");
         var skinny2 = new SkinnyString("b");
-        
+
         Assert.True(skinny1 < skinny2);
         Assert.True(skinny1 <= skinny2);
         Assert.True(skinny2 > skinny1);
         Assert.True(skinny2 >= skinny1);
-        
+
         var skinny3 = new SkinnyString("a");
         Assert.True(skinny1 <= skinny3);
         Assert.True(skinny1 >= skinny3);
@@ -561,12 +560,12 @@ public class SkinnyStringTests
     public void ComparisonOperators_SkinnyStringAndString_WorkCorrectly()
     {
         var skinny = new SkinnyString("b");
-        
+
         Assert.True(skinny < "c");
         Assert.True(skinny <= "c");
         Assert.True(skinny > "a");
         Assert.True(skinny >= "a");
-        
+
         Assert.True("a" < skinny);
         Assert.True("a" <= skinny);
         Assert.True("c" > skinny);
@@ -658,7 +657,7 @@ public class SkinnyStringTests
     public void MultipleOperations_ChainedCalls_WorkCorrectly()
     {
         var skinny = new SkinnyString("Hello World");
-        
+
         Assert.True(skinny.Contains('H'));
         Assert.True(skinny.Contains("World"));
         Assert.True(skinny.StartsWith("Hello"));
@@ -673,7 +672,7 @@ public class SkinnyStringTests
         var skinny1 = new SkinnyString("apple");
         var skinny2 = new SkinnyString("banana");
         var skinny3 = new SkinnyString("apple");
-        
+
         Assert.True(skinny1 == skinny3);
         Assert.True(skinny1 != skinny2);
         Assert.True(skinny1 < skinny2);
@@ -686,7 +685,7 @@ public class SkinnyStringTests
     {
         var skinny1 = new SkinnyString("??");
         var skinny2 = new SkinnyString("??");
-        
+
         Assert.True(skinny1 == skinny2);
         Assert.True(((IEquatable<string>)skinny1).Equals("??"));
         Assert.Equal(0, ((IComparable<string>)skinny1).CompareTo("??"));
@@ -704,31 +703,31 @@ public class SkinnyStringTests
         // Test IndexOf
         var str1 = "Hello ??";
         var skinny1 = new SkinnyString(str1);
-        
+
         var expectedIndexOf1 = str1.IndexOf('?');  // Should be 6
         var expectedIndexOf2 = str1.IndexOf('?');  // Should be 7
         var actualIndexOf1 = skinny1.IndexOf('?');
         var actualIndexOf2 = skinny1.IndexOf('?');
-        
+
         Assert.Equal(expectedIndexOf1, actualIndexOf1);
         Assert.Equal(expectedIndexOf2, actualIndexOf2);
-        
+
         // Test LastIndexOf
         var str2 = "????";
         var skinny2 = new SkinnyString(str2);
-        
+
         var expectedLastIndexOf1 = str2.LastIndexOf('?');  // Should be 2
         var expectedLastIndexOf2 = str2.LastIndexOf('?');  // Should be 3
         var actualLastIndexOf1 = skinny2.LastIndexOf('?');
         var actualLastIndexOf2 = skinny2.LastIndexOf('?');
-        
+
         Assert.Equal(expectedLastIndexOf1, actualLastIndexOf1);
         Assert.Equal(expectedLastIndexOf2, actualLastIndexOf2);
-        
+
         // Test Contains
         var expectedContains1 = str1.Contains('?');  // Should be false
         var actualContains1 = skinny1.Contains('?');
-        
+
         Assert.Equal(expectedContains1, actualContains1);
     }
 

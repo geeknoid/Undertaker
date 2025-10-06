@@ -1,5 +1,4 @@
 ﻿using ICSharpCode.Decompiler.TypeSystem;
-using System.Text.Json.Serialization;
 using Undertaker.Graph.Misc;
 
 namespace Undertaker.Graph.Reporting;

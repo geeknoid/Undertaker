@@ -3,15 +3,14 @@ using System.CommandLine.NamingConventionBinder;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Undertaker.Graph;
-using Undertaker.Graph.Reporting;
 
 namespace Undertaker;
 
 internal static class Program
 {
     private const int MaxConcurrentAssemblyLoads = 32;
-    private static readonly JsonSerializerOptions _serializationOptions = new() 
-    { 
+    private static readonly JsonSerializerOptions _serializationOptions = new()
+    {
         WriteIndented = true,
         Converters = { new JsonStringEnumConverter() }
     };
@@ -156,7 +155,7 @@ internal static class Program
             args.UnreferencedSymbols = "./unreferenced-symbols";
 
             args.UnreferencedAssemblies = "./unreferenced-assemblies.txt";
-            args.UnanalyzedAssemblies= "./unanalyzed-assemblies.txt";
+            args.UnanalyzedAssemblies = "./unanalyzed-assemblies.txt";
             args.AssemblyLayerCake = "./assembly-layer-cake.json";
             args.DependencyDiagram = "./dependency-diagram.mmd";
         }
@@ -329,6 +328,8 @@ internal static class Program
             graph.RecordReflectionMarkerAttribute("Microsoft.AspNet.OData.Routing.ODataRoutePrefixAttribute");
 
             graph.RecordReflectionMarkerAttribute("System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute");
+
+            graph.RecordReflectionMarkerAttribute("ProtoBuf.ProtoContractAttribute");
         }
 
         // load the assemblies
