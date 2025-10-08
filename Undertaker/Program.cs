@@ -49,87 +49,103 @@ internal static class Program
             new Argument<DirectoryInfo>("assembly-folder")
             {
                 Description = "Path to a folder containing all the assemblies to work with.",
-                Arity = ArgumentArity.ExactlyOne,
             }.AcceptExistingOnly(),
 
             new Option<FileInfo>("-ra", "--root-assemblies")
             {
-                Description = "Path to a text file listing assemblies to be treated as roots, one assembly name per line (with or without a .dll extension)"
+                Description = "Path to a text file listing assemblies to be treated as roots, one assembly name per line (with or without a .dll extension)",
+                HelpName = "text file",
             }.AcceptExistingOnly(),
 
             new Option<FileInfo>("-rs", "--reflection-symbols")
             {
-                Description = "Path to a text file listing symbols accessed through reflection, with each line in the form of `assembly-name:fully-qualified-symbol-name`"
+                Description = "Path to a text file listing symbols accessed through reflection, with each line in the form of `assembly-name:fully-qualified-symbol-name`",
+                HelpName = "text file",
             }.AcceptExistingOnly(),
 
             new Option<FileInfo>("-tma", "--test-method-attributes")
             {
                 Description = "Path to a text file listing all the attributes that can mark a method as a test, one per line",
+                HelpName = "text file",
             }.AcceptExistingOnly(),
 
             new Option<FileInfo>("-rma", "--reflection-marker-attributes")
             {
                 Description = "Path to a text file listing all the attributes that can mark a method as being used from reflection, one per line",
+                HelpName = "text file",
             }.AcceptExistingOnly(),
 
             new Option<DirectoryInfo>("-ds", "--dead-symbols")
             {
                 Description = "Directory path where to emit the per-assembly reports on dead symbols",
+                HelpName = "output folder",
             },
 
             new Option<DirectoryInfo>("-as", "--alive-symbols")
             {
                 Description = "Directory path where to emit the per-assembly reports on alive symbols",
+                HelpName = "output folder",
             },
 
             new Option<DirectoryInfo>("-abts", "--alive-by-test-symbols")
             {
                 Description = "Directory path where to emit the per-assembly reports on symbols kept alive only by test methods",
+                HelpName = "output folder",
             },
 
             new Option<DirectoryInfo>("-nps", "--needlessly-public-symbols")
             {
                 Description = "Directory path where to emit the per-assembly reports on public symbols which could be made internal",
+                HelpName = "output folder",
             },
 
             new Option<DirectoryInfo>("-nivt", "--needless-internals-visible-to")
             {
                 Description = "Directory path where to emit the per-assembly reports on needless uses of [InternalsVisibleTo]",
+                HelpName = "output folder",
             },
 
             new Option<FileInfo>("-ua", "--unreferenced-assemblies")
             {
                 Description = "Path of the report to produce on completely unreferenced assemblies",
+                HelpName = "output file",
             },
 
             new Option<FileInfo>("-uaa", "--unanalyzed-assemblies")
             {
                 Description = "Path of the report to produce on assemblies which were referenced but not analyzed",
+                HelpName = "output file",
             },
 
             new Option<FileInfo>("-da", "--duplicate-assemblies")
             {
                 Description = "Path of the report to produce on assemblies which were found multiple times as input",
+                HelpName = "output file",
             },
 
             new Option<DirectoryInfo>("-urs", "--unreferenced-symbols")
             {
                 Description = "Directory path where to emit the per-assembly reports on completely unreferenced symbols",
+                HelpName = "output folder",
             },
 
             new Option<FileInfo>("-alc", "--assembly-layer-cake")
             {
                 Description = "Path of the assembly layer cake to produce",
+                HelpName = "output file",
             },
 
             new Option<FileInfo>("-dd", "--dependency-diagram")
             {
                 Description = "Path of the Mermaid-based assembly dependency diagram to produce",
+                HelpName = "output file",
             },
 
             new Option<DirectoryInfo>("-gd", "--graph-dumps")
             {
                 Description = "Directory path for the graph dump files to produce",
+                HelpName = "output folder",
+                Hidden = true,
             },
 
             new Option<bool>("-cle", "--continue-on-load-errors")

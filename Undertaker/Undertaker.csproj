@@ -9,11 +9,13 @@
     <WarningLevel>9999</WarningLevel>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 
-    <PackAsTool>true</PackAsTool>
+	<Version>1.0.6</Version>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+
+	<PackAsTool>true</PackAsTool>
     <ToolCommandName>undertaker</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <PackageId>Undertaker</PackageId>
-    <Version>1.0.5</Version>
     <Authors>Martin Taillefer</Authors>
     <Title>Undertaker</Title>
     <Description>Helps you find dead code and other legacy artifacts across a .NET codebase</Description>

@@ -9,6 +9,9 @@
 	<WarningLevel>9999</WarningLevel>
 	<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <NoWarn>IDE0079</NoWarn>
+
+    <Version>1.0.6</Version>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>
