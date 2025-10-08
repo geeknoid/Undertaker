@@ -328,6 +328,7 @@ internal static class Program
             graph.RecordReflectionMarkerAttribute("Microsoft.AspNet.OData.Routing.ODataRoutePrefixAttribute");
 
             graph.RecordReflectionMarkerAttribute("System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Runtime.Serialization.DataContractAttribute");
 
             graph.RecordReflectionMarkerAttribute("ProtoBuf.ProtoContractAttribute");
         }
