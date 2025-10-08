@@ -19,7 +19,7 @@ internal static class Program
 
     private sealed class UndertakerArgs(ParseResult parseResult)
     {
-        public DirectoryInfo? AssemblyFolder { get; set; } = parseResult.GetValue<DirectoryInfo>("assembly-folder");
+        public DirectoryInfo[]? AssemblyFolders { get; set; } = parseResult.GetValue<DirectoryInfo[]>("input folders");
         public FileInfo? RootAssemblies { get; set; } = parseResult.GetValue<FileInfo>("-ra");
         public FileInfo? ReflectionSymbols { get; set; } = parseResult.GetValue<FileInfo>("-rs");
         public FileInfo? TestMethodAttributes { get; set; } = parseResult.GetValue<FileInfo>("-tma");
@@ -46,9 +46,9 @@ internal static class Program
     {
         var rootCommand = new RootCommand("Helps with dead code detection over a large code base")
         {
-            new Argument<DirectoryInfo>("assembly-folder")
+            new Argument<DirectoryInfo[]>("input folders")
             {
-                Description = "Path to a folder containing all the assemblies to work with.",
+                Description = "Paths to folders containing the assemblies to analyze.",
             }.AcceptExistingOnly(),
 
             new Option<FileInfo>("-ra", "--root-assemblies")
@@ -396,28 +396,31 @@ internal static class Program
 
         Out("Loading assemblies...");
 
-        foreach (var file in args.AssemblyFolder!.EnumerateFiles("*", SearchOption.AllDirectories))
+        foreach (var folder in args.AssemblyFolders!)
         {
-            if (!(file.Name.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) || file.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)))
+            foreach (var file in folder.EnumerateFiles("*", SearchOption.AllDirectories))
             {
-                continue;
+                if (!(file.Name.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) || file.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)))
+                {
+                    continue;
+                }
+
+                if (tasks.Count >= MaxConcurrentAssemblyLoads)
+                {
+                    var t = await Task.WhenAny(tasks);
+                    await CompleteTask(t);
+                    _ = tasks.Remove(t);
+                }
+
+                var task = Task.Run(() =>
+                {
+                    Out($"  Loading assembly {file.FullName}");
+                    return new LoadedAssembly(file.FullName);
+                });
+
+                _ = tasks.Add(task);
+                map.Add(task, file);
             }
-
-            if (tasks.Count >= MaxConcurrentAssemblyLoads)
-            {
-                var t = await Task.WhenAny(tasks);
-                await CompleteTask(t);
-                _ = tasks.Remove(t);
-            }
-
-            var task = Task.Run(() =>
-            {
-                Out($"  Loading assembly {file.FullName}");
-                return new LoadedAssembly(file.FullName);
-            });
-
-            _ = tasks.Add(task);
-            map.Add(task, file);
         }
 
         await foreach (var task in Task.WhenEach(tasks))

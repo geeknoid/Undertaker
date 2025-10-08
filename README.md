@@ -25,11 +25,11 @@ and a Mermaid-based assembly dependency diagram.
 ## Options
 
 ```text
-Usage:
-  Undertaker <assembly-folder> [options]
+sage:
+  Undertaker [<input folders>...] [options]
 
 Arguments:
-  <assembly-folder>  Path to a folder containing all the assemblies to work with.
+  <input folders>  Paths to folders containing the assemblies to analyze.
 
 Options:
   -ra, --root-assemblies <text file>                      Path to a text file listing assemblies to be treated as roots, one assembly name per line (with or without
@@ -57,7 +57,7 @@ Options:
   --version                                               Show version information
 ```
 
-* `<assembly-folder>` is the path to a folder containing all the assemblies to work with. The tool will
+* `<input-folders>` are the paths to one or more folders containing all the assemblies to analyze. The tool will
   analyze any files with the `*.dll` and `*.exe` extensions, skipping any files that are not .NET assemblies.
   The tool recursively visits all subfolders, looking for files to analyze.
 
