@@ -1,5 +1,7 @@
 ﻿using System.CommandLine;
-using System.CommandLine.NamingConventionBinder;
+using System.CommandLine.Parsing;
+using System.ComponentModel;
+using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Undertaker.Graph;
@@ -15,121 +17,156 @@ internal static class Program
         Converters = { new JsonStringEnumConverter() }
     };
 
-    private sealed class UndertakerArgs
+    private sealed class UndertakerArgs(ParseResult parseResult)
     {
-        public DirectoryInfo? AssemblyFolder { get; set; }
-        public FileInfo? RootAssemblies { get; set; }
-        public FileInfo? ReflectionSymbols { get; set; }
-        public FileInfo? TestMethodAttributes { get; set; }
-        public FileInfo? ReflectionMarkerAttributes { get; set; }
-        public string? DeadSymbols { get; set; }
-        public string? AliveSymbols { get; set; }
-        public string? AliveByTestSymbols { get; set; }
-        public string? NeedlesslyPublicSymbols { get; set; }
-        public string? UnreferencedAssemblies { get; set; }
-        public string? AssemblyLayerCake { get; set; }
-        public string? NeedlessInternalsVisibleTo { get; set; }
-        public string? DependencyDiagram { get; set; }
-        public string? UnanalyzedAssemblies { get; set; }
-        public string? DuplicateAssemblies { get; set; }
-        public string? UnreferencedSymbols { get; set; }
-        public string? GraphDumps { get; set; }
-        public bool ContinueOnLoadErrors { get; set; }
-        public bool Verbose { get; set; }
+        public DirectoryInfo? AssemblyFolder { get; set; } = parseResult.GetValue<DirectoryInfo>("assembly-folder");
+        public FileInfo? RootAssemblies { get; set; } = parseResult.GetValue<FileInfo>("-ra");
+        public FileInfo? ReflectionSymbols { get; set; } = parseResult.GetValue<FileInfo>("-rs");
+        public FileInfo? TestMethodAttributes { get; set; } = parseResult.GetValue<FileInfo>("-tma");
+        public FileInfo? ReflectionMarkerAttributes { get; set; } = parseResult.GetValue<FileInfo>("-rma");
+        public DirectoryInfo? DeadSymbols { get; set; } = parseResult.GetValue<DirectoryInfo>("-ds");
+        public DirectoryInfo? AliveSymbols { get; set; } = parseResult.GetValue<DirectoryInfo>("-as");
+        public DirectoryInfo? AliveByTestSymbols { get; set; } = parseResult.GetValue<DirectoryInfo>("-abts");
+        public DirectoryInfo? NeedlesslyPublicSymbols { get; set; } = parseResult.GetValue<DirectoryInfo>("-nps");
+        public DirectoryInfo? NeedlessInternalsVisibleTo { get; set; } = parseResult.GetValue<DirectoryInfo>("-nivt");
+        public FileInfo? UnreferencedAssemblies { get; set; } = parseResult.GetValue<FileInfo>("-ua");
+        public FileInfo? AssemblyLayerCake { get; set; } = parseResult.GetValue<FileInfo>("-alc");
+        public FileInfo? DependencyDiagram { get; set; } = parseResult.GetValue<FileInfo>("-dd");
+        public FileInfo? UnanalyzedAssemblies { get; set; } = parseResult.GetValue<FileInfo>("-uaa");
+        public FileInfo? DuplicateAssemblies { get; set; } = parseResult.GetValue<FileInfo>("-da");
+        public DirectoryInfo? UnreferencedSymbols { get; set; } = parseResult.GetValue<DirectoryInfo>("-urs");
+        public DirectoryInfo? GraphDumps { get; set; } = parseResult.GetValue<DirectoryInfo>("-gd");
+        public bool ContinueOnLoadErrors { get; set; } = parseResult.GetValue<bool>("-cle");
+        public bool Verbose { get; set; } = parseResult.GetValue<bool>("-v");
         public bool DumpMemory { get; set; }
-        public bool CSV { get; set; }
+        public bool CSV { get; set; } = parseResult.GetValue<bool>("-csv");
     }
 
     public static Task<int> Main(string[] args)
     {
         var rootCommand = new RootCommand("Helps with dead code detection over a large code base")
         {
-            new Argument<DirectoryInfo>("assembly-folder", "Path to a folder containing all the assemblies to work with.").ExistingOnly(),
+            new Argument<DirectoryInfo>("assembly-folder")
+            {
+                Description = "Path to a folder containing all the assemblies to work with.",
+                Arity = ArgumentArity.ExactlyOne,
+            }.AcceptExistingOnly(),
 
-            new Option<FileInfo>(
-                ["-ra", "--root-assemblies"],
-                "Path to a text file listing assemblies to be treated as roots, one assembly name per line (with or without a .dll extension)"),
+            new Option<FileInfo>("-ra", "--root-assemblies")
+            {
+                Description = "Path to a text file listing assemblies to be treated as roots, one assembly name per line (with or without a .dll extension)"
+            }.AcceptExistingOnly(),
 
-            new Option<FileInfo>(
-                ["-rs", "--reflection-symbols"],
-                "Path to a text file listing symbols accessed through reflection, with each line in the form of `assembly-name:fully-qualified-symbol-name`"),
+            new Option<FileInfo>("-rs", "--reflection-symbols")
+            {
+                Description = "Path to a text file listing symbols accessed through reflection, with each line in the form of `assembly-name:fully-qualified-symbol-name`"
+            }.AcceptExistingOnly(),
 
-            new Option<FileInfo>(
-                ["-tma", "--test-method-attributes"],
-                "Path to a text file listing all the attributes that can mark a method as a test, one per line"),
+            new Option<FileInfo>("-tma", "--test-method-attributes")
+            {
+                Description = "Path to a text file listing all the attributes that can mark a method as a test, one per line",
+            }.AcceptExistingOnly(),
 
-            new Option<FileInfo>(
-                ["-rma", "--reflection-marker-attributes"],
-                "Path to a text file listing all the attributes that can mark a method as being used from reflection, one per line"),
+            new Option<FileInfo>("-rma", "--reflection-marker-attributes")
+            {
+                Description = "Path to a text file listing all the attributes that can mark a method as being used from reflection, one per line",
+            }.AcceptExistingOnly(),
 
-            new Option<string>(
-                ["-ds", "--dead-symbols"],
-                "Directory path where to emit the per-assembly reports on dead symbols"),
+            new Option<DirectoryInfo>("-ds", "--dead-symbols")
+            {
+                Description = "Directory path where to emit the per-assembly reports on dead symbols",
+            },
 
-            new Option<string>(
-                ["-as", "--alive-symbols"],
-                "Directory path where to emit the per-assembly reports on alive symbols"),
+            new Option<DirectoryInfo>("-as", "--alive-symbols")
+            {
+                Description = "Directory path where to emit the per-assembly reports on alive symbols",
+            },
 
-            new Option<string>(
-                ["-abts", "--alive-by-test-symbols"],
-                "Directory path where to emit the per-assembly reports on symbols kept alive only by test methods"),
+            new Option<DirectoryInfo>("-abts", "--alive-by-test-symbols")
+            {
+                Description = "Directory path where to emit the per-assembly reports on symbols kept alive only by test methods",
+            },
 
-            new Option<string>(
-                ["-nps", "--needlessly-public-symbols"],
-                "Directory path where to emit the per-assembly reports on public symbols which could be made internal"),
+            new Option<DirectoryInfo>("-nps", "--needlessly-public-symbols")
+            {
+                Description = "Directory path where to emit the per-assembly reports on public symbols which could be made internal",
+            },
 
-            new Option<string>(
-                ["-nivt", "--needless-internals-visible-to"],
-                "Directory path where to emit the per-assembly reports on needless uses of [InternalsVisibleTo]"),
+            new Option<DirectoryInfo>("-nivt", "--needless-internals-visible-to")
+            {
+                Description = "Directory path where to emit the per-assembly reports on needless uses of [InternalsVisibleTo]",
+            },
 
-            new Option<string>(
-                ["-ua", "--unreferenced-assemblies"],
-                "Path of the report to produce on completely unreferenced assemblies"),
+            new Option<FileInfo>("-ua", "--unreferenced-assemblies")
+            {
+                Description = "Path of the report to produce on completely unreferenced assemblies",
+            },
 
-            new Option<string>(
-                ["-uaa", "--unanalyzed-assemblies"],
-                "Path of the report to produce on assemblies which were referenced but not analyzed"),
+            new Option<FileInfo>("-uaa", "--unanalyzed-assemblies")
+            {
+                Description = "Path of the report to produce on assemblies which were referenced but not analyzed",
+            },
 
-            new Option<string>(
-                ["-da", "--duplicate-assemblies"],
-                "Path of the report to produce on assemblies which were found multiple times as input"),
+            new Option<FileInfo>("-da", "--duplicate-assemblies")
+            {
+                Description = "Path of the report to produce on assemblies which were found multiple times as input",
+            },
 
-            new Option<string>(
-                ["-urs", "--unreferenced-symbols"],
-                "Directory path where to emit the per-assembly reports on completely unreferenced symbols"),
+            new Option<DirectoryInfo>("-urs", "--unreferenced-symbols")
+            {
+                Description = "Directory path where to emit the per-assembly reports on completely unreferenced symbols",
+            },
 
-            new Option<string>(
-                ["-alc", "--assembly-layer-cake"],
-                "Path of the assembly layer cake to produce"),
+            new Option<FileInfo>("-alc", "--assembly-layer-cake")
+            {
+                Description = "Path of the assembly layer cake to produce",
+            },
 
-            new Option<string>(
-                ["-dd", "--dependency-diagram"],
-                "Path of the Mermaid-based assembly dependency diagram to produce"),
+            new Option<FileInfo>("-dd", "--dependency-diagram")
+            {
+                Description = "Path of the Mermaid-based assembly dependency diagram to produce",
+            },
 
-            new Option<string>(
-                ["-gd", "--graph-dumps"],
-                "Directory path for the graph dump files to produce"),
+            new Option<DirectoryInfo>("-gd", "--graph-dumps")
+            {
+                Description = "Directory path for the graph dump files to produce",
+            },
 
-            new Option<bool>(
-                ["-cle", "--continue-on-load-errors"],
-                "Proceed to the analysis and output phases even if some assemblies didn't load"),
+            new Option<bool>("-cle", "--continue-on-load-errors")
+            {
+                Description = "Proceed to the analysis and output phases even if some assemblies didn't load",
+            },
 
-            new Option<bool>(
-                ["-v", "--verbose"],
-                "Output progress reports"),
+            new Option<bool>("-v", "--verbose")
+            {
+                Description = "Output progress reports",
+            },
 
-            new Option<bool>(
-                ["-csv"],
-                "Switch some output files from JSON to CSV format"),
+            new Option<bool>("-csv")
+            {
+                Description = "Switch some output files from JSON to CSV format",
+            },
         };
 
-        rootCommand.Handler = CommandHandler.Create<UndertakerArgs>(ExecuteAsync);
+        rootCommand.SetAction(ExecuteAsync);
 
-        return rootCommand.InvokeAsync(args);
+        var parseResult = rootCommand.Parse(args);
+        if (parseResult.Errors.Count == 0)
+        {
+            return parseResult.InvokeAsync();
+        }
+
+        foreach (ParseError parseError in parseResult.Errors)
+        {
+            Console.Error.WriteLine(parseError.Message);
+        }
+
+        return Task.FromResult(1);
     }
 
-    private static async Task<int> ExecuteAsync(UndertakerArgs args)
+    private static async Task<int> ExecuteAsync(ParseResult parseResult)
     {
+        var args = new UndertakerArgs(parseResult);
         var graph = new AssemblyGraph();
 
         if (args.DeadSymbols == null
@@ -146,18 +183,18 @@ internal static class Program
         {
             Out("No explicit output requested, generating default outputs");
 
-            args.DeadSymbols = "./dead-symbols";
-            args.NeedlessInternalsVisibleTo = "./needless-internals-visible-to";
-            args.DuplicateAssemblies = "./duplicate-assemblies";
-            args.NeedlesslyPublicSymbols = "./needlessly-public-symbols";
-            args.AliveSymbols = "./alive-symbols";
-            args.AliveByTestSymbols = "./alive-by-test-symbols";
-            args.UnreferencedSymbols = "./unreferenced-symbols";
+            args.DeadSymbols = new("./dead-symbols");
+            args.NeedlessInternalsVisibleTo = new("./needless-internals-visible-to");
+            args.DuplicateAssemblies = new("./duplicate-assemblies");
+            args.NeedlesslyPublicSymbols = new("./needlessly-public-symbols");
+            args.AliveSymbols = new("./alive-symbols");
+            args.AliveByTestSymbols = new("./alive-by-test-symbols");
+            args.UnreferencedSymbols = new("./unreferenced-symbols");
 
-            args.UnreferencedAssemblies = "./unreferenced-assemblies.txt";
-            args.UnanalyzedAssemblies = "./unanalyzed-assemblies.txt";
-            args.AssemblyLayerCake = "./assembly-layer-cake.json";
-            args.DependencyDiagram = "./dependency-diagram.mmd";
+            args.UnreferencedAssemblies = new("./unreferenced-assemblies.txt");
+            args.UnanalyzedAssemblies = new("./unanalyzed-assemblies.txt");
+            args.AssemblyLayerCake = new("./assembly-layer-cake.json");
+            args.DependencyDiagram = new("./dependency-diagram.mmd");
         }
 
         if (args.RootAssemblies != null)
@@ -445,7 +482,7 @@ internal static class Program
         {
             if (args.DeadSymbols != null)
             {
-                var path = Path.GetFullPath(args.DeadSymbols);
+                var path = args.DeadSymbols.FullName;
                 Out($"  Writing reports on dead symbols to {path}");
 
                 try
@@ -500,7 +537,7 @@ internal static class Program
         {
             if (args.UnreferencedSymbols != null)
             {
-                var path = Path.GetFullPath(args.UnreferencedSymbols);
+                var path = args.UnreferencedSymbols.FullName;
                 Out($"  Writing reports on unreferenced symbols to {path}");
 
                 try
@@ -555,7 +592,7 @@ internal static class Program
         {
             if (args.AliveSymbols != null)
             {
-                var path = Path.GetFullPath(args.AliveSymbols);
+                var path = args.AliveSymbols.FullName;
                 Out($"  Writing reports on alive symbols to {path}");
 
                 try
@@ -592,7 +629,7 @@ internal static class Program
         {
             if (args.AliveByTestSymbols != null)
             {
-                var path = Path.GetFullPath(args.AliveByTestSymbols);
+                var path = args.AliveByTestSymbols.FullName;
                 Out($"  Writing report on symbols alive only by test to {path}");
 
                 try
@@ -629,7 +666,7 @@ internal static class Program
         {
             if (args.NeedlesslyPublicSymbols != null)
             {
-                var path = Path.GetFullPath(args.NeedlesslyPublicSymbols);
+                var path = args.NeedlesslyPublicSymbols.FullName;
                 Out($"  Writing report on needlessly public symbols to {path}");
 
                 try
@@ -684,7 +721,7 @@ internal static class Program
         {
             if (args.UnreferencedAssemblies != null)
             {
-                var path = Path.GetFullPath(args.UnreferencedAssemblies);
+                var path = args.UnreferencedAssemblies.FullName;
                 Out($"  Writing report on unanalyzed assemblies to {path}");
 
                 try
@@ -706,7 +743,7 @@ internal static class Program
         {
             if (args.UnanalyzedAssemblies != null)
             {
-                var path = Path.GetFullPath(args.UnanalyzedAssemblies);
+                var path = args.UnanalyzedAssemblies.FullName;
                 Out($"  Writing report on unanalyzed assemblies to {path}");
 
                 try
@@ -728,7 +765,7 @@ internal static class Program
         {
             if (args.DuplicateAssemblies != null)
             {
-                var path = Path.GetFullPath(args.DuplicateAssemblies);
+                var path = args.DuplicateAssemblies.FullName;
                 Out($"  Writing report on duplicate assemblies to {path}");
 
                 try
@@ -767,7 +804,7 @@ internal static class Program
         {
             if (args.NeedlessInternalsVisibleTo != null)
             {
-                var path = Path.GetFullPath(args.NeedlessInternalsVisibleTo);
+                var path = args.NeedlessInternalsVisibleTo.FullName;
                 Out($"  Writing report on needless [InternalsVisibleTo] to {path}");
 
                 try
@@ -817,7 +854,7 @@ internal static class Program
         {
             if (args.AssemblyLayerCake != null)
             {
-                var path = Path.GetFullPath(args.AssemblyLayerCake);
+                var path = args.AssemblyLayerCake.FullName;
                 Out($"  Writing assembly layer cake to {path}");
 
                 try
@@ -840,7 +877,7 @@ internal static class Program
         {
             if (args.DependencyDiagram != null)
             {
-                var path = Path.GetFullPath(args.DependencyDiagram);
+                var path = args.DependencyDiagram.FullName;
                 Out($"  Writing assembly dependency diagram to {path}");
 
                 try
@@ -862,7 +899,7 @@ internal static class Program
         {
             if (args.GraphDumps != null)
             {
-                var path = Path.GetFullPath(args.GraphDumps);
+                var path = args.GraphDumps.FullName;
                 Out($"  Writing graph dumps to {path}");
 
                 try
