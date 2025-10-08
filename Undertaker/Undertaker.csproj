@@ -13,7 +13,7 @@
     <ToolCommandName>undertaker</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <PackageId>Undertaker</PackageId>
-    <Version>1.0.3</Version>
+    <Version>1.0.5</Version>
     <Authors>Martin Taillefer</Authors>
     <Title>Undertaker</Title>
     <Description>Helps you find dead code and other legacy artifacts across a .NET codebase</Description>
