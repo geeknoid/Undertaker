@@ -410,7 +410,7 @@ internal static class Program
         // load the assemblies
         int successCount = 0;
         int errorCount = 0;
-        int skipCount = 0;
+        int badFmtCount = 0;
         int duplicateCount = 0;
 
         var tasks = new HashSet<Task<LoadedAssembly>>(MaxConcurrentAssemblyLoads);
@@ -429,7 +429,7 @@ internal static class Program
 
                 if (graph.AssemblyLoaded(file.FullName))
                 {
-                    Warn($"Duplicate assembly {file.FullName}, ignoring");
+                    OutLoadStatus(ConsoleColor.Yellow, "Duplicate", $"{file.FullName}");
                     duplicateCount++;
                     continue;
                 }
@@ -443,7 +443,6 @@ internal static class Program
 
                 var task = Task.Run(() =>
                 {
-                    Out($"  Loading assembly {file.FullName}");
                     return new LoadedAssembly(file.FullName);
                 });
 
@@ -470,7 +469,7 @@ internal static class Program
             }
         }
 
-        Out($"Done loading assemblies: loaded {successCount}, duplicates {duplicateCount}, skipped {skipCount}, failed {errorCount}");
+        Out($"Done loading assemblies: loaded {successCount}, duplicate(s) {duplicateCount}, not .NET {badFmtCount}, error(s) {errorCount}");
 
         Out("Analyzing...");
         var reporter = graph.Done(x => Out($"  {x}"));
@@ -511,21 +510,22 @@ internal static class Program
                 {
                     if (!graph.MergeAssembly(la))
                     {
-                        Warn($"Duplicate assembly {file.FullName}, ignoring");
+                        OutLoadStatus(ConsoleColor.Yellow, "Duplicate", $"{file.FullName}");
                         duplicateCount++;
                     }
                 }
 
                 successCount++;
+                OutLoadStatus(ConsoleColor.White, "Loaded", $"{file.FullName}");
             }
             catch (BadImageFormatException)
             {
-                Warn($"{file.FullName} is not a .NET assembly, skipping");
-                skipCount++;
+                OutLoadStatus(ConsoleColor.Yellow, "Not .NET", $"{file.FullName}");
+                badFmtCount++;
             }
             catch (Exception ex)
             {
-                Error($"Unable to load assembly {file.FullName}: {ex.Message}");
+                OutLoadStatus(ConsoleColor.Red, "Error", $"{file.FullName}: {ex.Message}");
                 errorCount++;
             }
         }
@@ -991,6 +991,33 @@ internal static class Program
                 else
                 {
                     Console.WriteLine(message);
+                }
+            }
+        }
+
+        void OutLoadStatus(ConsoleColor? color, string status, string message)
+        {
+            if (args.Verbose)
+            {
+                Console.Write("[");
+                if (color.HasValue)
+                {
+                    Console.ForegroundColor = color.Value;
+                }
+
+                Console.Write($"{status,-10}");
+                Console.ResetColor();
+
+                if (args.DumpMemory)
+                {
+                    var proc = System.Diagnostics.Process.GetCurrentProcess();
+                    var mem = proc.PrivateMemorySize64 / 1024 / 1024;
+
+                    Console.WriteLine($"] {message} ({mem}MB)");
+                }
+                else
+                {
+                    Console.WriteLine($"] {message}");
                 }
             }
         }
