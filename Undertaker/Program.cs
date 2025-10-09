@@ -324,9 +324,30 @@ internal static class Program
 
             graph.RecordTestMethodAttribute("Xunit.FactAttribute");
             graph.RecordTestMethodAttribute("Xunit.TheoryAttribute");
+
+            graph.RecordTestMethodAttribute("NUnit.Framework.OneTimeSetUpAttribute");
+            graph.RecordTestMethodAttribute("NUnit.Framework.OneTimeTearDownAttribute");
+            graph.RecordTestMethodAttribute("NUnit.Framework.SetUpAttribute");
+            graph.RecordTestMethodAttribute("NUnit.Framework.SetUpFixtureAttribute");
+            graph.RecordTestMethodAttribute("NUnit.Framework.TearDownAttribute");
             graph.RecordTestMethodAttribute("NUnit.Framework.TestAttribute");
+            graph.RecordTestMethodAttribute("NUnit.Framework.TestCaseAttribute");
+            graph.RecordTestMethodAttribute("NUnit.Framework.TestCaseSourceAttribute");
+            graph.RecordTestMethodAttribute("NUnit.Framework.TestFixtureSetUpAttribute");
+            graph.RecordTestMethodAttribute("NUnit.Framework.TestFixtureTearDownAttribute");
+            graph.RecordTestMethodAttribute("NUnit.Framework.TheoryAttribute");
+
+            graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.AssemblyCleanupAttribute");
+            graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.AssemblyInitializeAttribute");
+            graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.ClassCleanupAttribute");
+            graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.ClassInitializeAttribute");
+            graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.DataTestMethodAttribute");
+            graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.GlobalTestCleanupAttribute");
+            graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.GlobalTestInitializeAttribute");
+            graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.STATestMethod");
+            graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.TestCleanupAttribute");
+            graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.TestInitializeAttribute");
             graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute");
-            graph.RecordTestMethodAttribute("MSTest.TestFramework.TestMethodAttribute");
         }
 
         if (args.ReflectionMarkerAttributes != null)
