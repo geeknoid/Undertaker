@@ -390,6 +390,7 @@ internal static class Program
         int successCount = 0;
         int errorCount = 0;
         int skipCount = 0;
+        int duplicateCount = 0;
 
         var tasks = new HashSet<Task<LoadedAssembly>>(MaxConcurrentAssemblyLoads);
         var map = new Dictionary<Task<LoadedAssembly>, FileInfo>(MaxConcurrentAssemblyLoads);
@@ -402,6 +403,13 @@ internal static class Program
             {
                 if (!(file.Name.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) || file.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)))
                 {
+                    continue;
+                }
+
+                if (graph.AssemblyLoaded(file.FullName))
+                {
+                    Warn($"Duplicate assembly {file.FullName}, ignoring");
+                    duplicateCount++;
                     continue;
                 }
 
@@ -441,7 +449,7 @@ internal static class Program
             }
         }
 
-        Out($"Done loading assemblies: loaded {successCount}, skipped {skipCount}, failed {errorCount}");
+        Out($"Done loading assemblies: loaded {successCount}, duplicates {duplicateCount}, skipped {skipCount}, failed {errorCount}");
 
         Out("Analyzing...");
         var reporter = graph.Done(x => Out($"  {x}"));
@@ -480,7 +488,11 @@ internal static class Program
             {
                 using (var la = await task)
                 {
-                    graph.MergeAssembly(la);
+                    if (!graph.MergeAssembly(la))
+                    {
+                        Warn($"Duplicate assembly {file.FullName}, ignoring");
+                        duplicateCount++;
+                    }
                 }
 
                 successCount++;

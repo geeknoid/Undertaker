@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Reflection;
 using System.Text;
 using ICSharpCode.Decompiler.TypeSystem;
 using Undertaker.Graph.Misc;
@@ -29,6 +30,18 @@ public sealed class AssemblyGraph
     public AssemblyGraph()
     {
         _assemblies[UnhomedAssembly.Name] = UnhomedAssembly;
+    }
+
+    public bool AssemblyLoaded(string path)
+    {
+        var name = Path.GetFileNameWithoutExtension(path);
+        if (_assemblies.TryGetValue(name, out var asm) && asm.Loaded)
+        {
+            asm.AddDuplicate(path, new Version(0, 0, 0, 0));
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -99,20 +112,22 @@ public sealed class AssemblyGraph
     /// <summary>
     /// Merge a new asssembly into the graph.
     /// </summary>
-    public void MergeAssembly(LoadedAssembly la)
+    public bool MergeAssembly(LoadedAssembly la)
     {
         if (_layerCake != null)
         {
             throw new InvalidOperationException("Cannot merge new assemblies after the graph has been finalized.");
         }
 
-        AssemblyProcessor.Merge(this, la);
+        var result = AssemblyProcessor.Merge(this, la);
 
         // every once in a while, try to reclaim wasted space so we minimize RAM usage
         if (_assemblies.Count % 256 == 0)
         {
             TrimExcess();
         }
+
+        return result;
     }
 
     private void TrimExcess()

@@ -29,7 +29,7 @@ internal static class AssemblyProcessor
 #endif
         ];
 
-    public static void Merge(AssemblyGraph graph, LoadedAssembly la)
+    public static bool Merge(AssemblyGraph graph, LoadedAssembly la)
     {
         var decomp = la.Decompiler;
         var asm = graph.GetAssembly(decomp.TypeSystem.MainModule.AssemblyName);
@@ -38,7 +38,7 @@ internal static class AssemblyProcessor
         if (asm.Loaded)
         {
             asm.AddDuplicate(la.Path, decomp.TypeSystem.MainModule.AssemblyVersion);
-            return;
+            return false;
         }
 
         foreach (var type in decomp.TypeSystem.MainModule.TypeDefinitions)
@@ -167,6 +167,8 @@ internal static class AssemblyProcessor
         asm.Loaded = true;
         asm.Version = decomp.TypeSystem.MainModule.AssemblyVersion;
         asm.Path = la.Path;
+
+        return true;
 
         Symbol DefineSymbol(IEntity entity) => DefineSymbolIn(entity, asm);
 
