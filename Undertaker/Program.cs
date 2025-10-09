@@ -403,7 +403,7 @@ internal static class Program
 
             graph.RecordReflectionMarkerAttribute("System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute");
             graph.RecordReflectionMarkerAttribute("System.Runtime.Serialization.DataContractAttribute");
-
+            graph.RecordReflectionMarkerAttribute("System.SerializableAttribute");
             graph.RecordReflectionMarkerAttribute("ProtoBuf.ProtoContractAttribute");
         }
 
