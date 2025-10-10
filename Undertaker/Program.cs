@@ -403,8 +403,12 @@ internal static class Program
 
             graph.RecordReflectionMarkerAttribute("System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute");
             graph.RecordReflectionMarkerAttribute("System.Runtime.Serialization.DataContractAttribute");
+            graph.RecordReflectionMarkerAttribute("System.Runtime.Serialization.DataMemberAttribute");
             graph.RecordReflectionMarkerAttribute("System.SerializableAttribute");
             graph.RecordReflectionMarkerAttribute("ProtoBuf.ProtoContractAttribute");
+
+            graph.RecordReflectionMarkerAttribute("Newtonsoft.Json.JsonObjectAttribute");
+            graph.RecordReflectionMarkerAttribute("Newtonsoft.Json.JsonPropertyAttribute");
         }
 
         // load the assemblies
