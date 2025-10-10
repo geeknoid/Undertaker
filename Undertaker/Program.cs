@@ -453,11 +453,13 @@ internal static class Program
             await CompleteTask(task);
         }
 
+        Out($"Done loading assemblies: loaded {successCount}, duplicate(s) {duplicateCount}, not .NET {badFmtCount}, error(s) {errorCount}");
+
         if (errorCount > 0)
         {
             if (args.ContinueOnLoadErrors)
             {
-                Warn($"Unable to load {errorCount} assemblies, ignoring");
+                Warn($"Unable to load {errorCount} assemblies, ignoring due to -cle option");
             }
             else
             {
@@ -465,8 +467,6 @@ internal static class Program
                 return 1;
             }
         }
-
-        Out($"Done loading assemblies: loaded {successCount}, duplicate(s) {duplicateCount}, not .NET {badFmtCount}, error(s) {errorCount}");
 
         Out("Analyzing...");
         var reporter = graph.Done(x => Out($"  {x}"));
@@ -679,7 +679,7 @@ internal static class Program
             if (args.AliveByTestSymbols != null)
             {
                 var path = args.AliveByTestSymbols.FullName;
-                Out($"  Writing report on symbols alive only by test to {path}");
+                Out($"  Writing reports on symbols alive only by test to {path}");
 
                 try
                 {
@@ -716,7 +716,7 @@ internal static class Program
             if (args.NeedlesslyPublicSymbols != null)
             {
                 var path = args.NeedlesslyPublicSymbols.FullName;
-                Out($"  Writing report on needlessly public symbols to {path}");
+                Out($"  Writing reports on needlessly public symbols to {path}");
 
                 try
                 {
@@ -854,7 +854,7 @@ internal static class Program
             if (args.NeedlessInternalsVisibleTo != null)
             {
                 var path = args.NeedlessInternalsVisibleTo.FullName;
-                Out($"  Writing report on needless [InternalsVisibleTo] to {path}");
+                Out($"  Writing reports on needless [InternalsVisibleTo] to {path}");
 
                 try
                 {
@@ -996,7 +996,7 @@ internal static class Program
         {
             if (args.Verbose)
             {
-                Console.Write("[");
+                Console.Write("  [");
                 if (color.HasValue)
                 {
                     Console.ForegroundColor = color.Value;
