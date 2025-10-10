@@ -1,5 +1,6 @@
 ﻿using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
 using System.Text;
 using ICSharpCode.Decompiler.Disassembler;
 using ICSharpCode.Decompiler.Metadata;
@@ -13,6 +14,8 @@ internal static class AssemblyProcessor
         "System.Object",
         "System.ValueType",
         "System.Void",
+        "System.String",
+        "System.Text.StringBuilder"
 #if false
         "System.Int32",
         "System.Int64",
@@ -24,8 +27,6 @@ internal static class AssemblyProcessor
         "System.UInt64",
         "System.Boolean",
         "System.Guid",
-        "System.String",
-        "System.Text.StringBuilder"
 #endif
         ];
 
@@ -43,36 +44,32 @@ internal static class AssemblyProcessor
 
         foreach (var type in decomp.TypeSystem.MainModule.TypeDefinitions)
         {
+            // find the static constructor (if any) and default constructor (if any)
+            IMethod? cctor = null;
+            IMethod? ctor = null;
+            foreach (var method in type.Methods)
+            {
+                if (method.IsConstructor)
+                {
+                    if (method.IsStatic)
+                    {
+                        cctor = method;
+                    }
+                    else if (method.Parameters.Count == 0)
+                    {
+                        ctor = method;
+                    }
+                }
+            }
+
             var typeSym = (TypeSymbol)DefineSymbol(type);
-            RecordSymbolsReferencedByType(typeSym, type);
+            RecordSymbolsReferencedByType(typeSym, type, cctor);
 
             if (type.Kind == TypeKind.Enum)
             {
                 // we don't handle enum values, so pretend they don't exist
                 typeSym.SetDeclaresConstants();
                 continue;
-            }
-
-            // find the static constructor (if any)
-            IMethod? cctor = null;
-            foreach (var method in type.Methods)
-            {
-                if (method.IsConstructor && method.IsStatic)
-                {
-                    cctor = method;
-                    break;
-                }
-            }
-
-            // find the default constructor (if any)
-            IMethod? ctor = null;
-            foreach (var method in type.Methods)
-            {
-                if (method.IsConstructor && !method.IsStatic && method.Parameters.Count == 0)
-                {
-                    ctor = method;
-                    break;
-                }
             }
 
             foreach (var method in type.Methods)
@@ -92,48 +89,27 @@ internal static class AssemblyProcessor
 
                         break;
                     }
-
-                    if (graph.IsReflectionMarkerAttribute(a.AttributeType.ReflectionName))
-                    {
-                        sym.SetReflectionTarget();
-                        break;
-                    }
                 }
 
-                RecordSymbolsReferencedByMethod(sym, method, cctor);
+                RecordSymbolsReferencedByMethod(sym, method);
+                RecordReflectionTarget(sym, method);
                 typeSym.AddMember(sym);
             }
 
             foreach (var property in type.Properties)
             {
                 var sym = DefineSymbol(property);
-                RecordSymbolsReferencedByProperty(sym, property, cctor);
+                RecordSymbolsReferencedByProperty(sym, property);
+                RecordReflectionTarget(sym, property);
                 typeSym.AddMember(sym);
-
-                foreach (var a in type.GetAttributes())
-                {
-                    if (graph.IsReflectionMarkerAttribute(a.AttributeType.ReflectionName))
-                    {
-                        sym.SetReflectionTarget();
-                        break;
-                    }
-                }
             }
 
             foreach (var evt in type.Events)
             {
                 var sym = DefineSymbol(evt);
-                RecordSymbolsReferencedByEvent(sym, evt, cctor);
+                RecordSymbolsReferencedByEvent(sym, evt);
+                RecordReflectionTarget(sym, evt);
                 typeSym.AddMember(sym);
-
-                foreach (var a in type.GetAttributes())
-                {
-                    if (graph.IsReflectionMarkerAttribute(a.AttributeType.ReflectionName))
-                    {
-                        typeSym.SetReflectionTarget();
-                        break;
-                    }
-                }
             }
 
             foreach (var field in type.Fields)
@@ -150,17 +126,9 @@ internal static class AssemblyProcessor
                 }
 
                 var sym = DefineSymbol(field);
-                RecordSymbolsReferencedByField(sym, field, cctor);
+                RecordSymbolsReferencedByField(sym, field);
+                RecordReflectionTarget(sym, field);
                 typeSym.AddMember(sym);
-
-                foreach (var a in type.GetAttributes())
-                {
-                    if (graph.IsReflectionMarkerAttribute(a.AttributeType.ReflectionName))
-                    {
-                        typeSym.SetReflectionTarget();
-                        break;
-                    }
-                }
             }
         }
 
@@ -187,7 +155,19 @@ internal static class AssemblyProcessor
             return sym;
         }
 
-        void RecordSymbolsReferencedByType(TypeSymbol typeSym, ITypeDefinition type)
+        void RecordReflectionTarget(Symbol sym, IEntity entity)
+        {
+            foreach (var a in entity.GetAttributes())
+            {
+                if (graph.IsReflectionMarkerAttribute(a.AttributeType.ReflectionName))
+                {
+                    sym.SetReflectionTarget();
+                    break;
+                }
+            }
+        }
+
+        void RecordSymbolsReferencedByType(TypeSymbol typeSym, ITypeDefinition type, IMethod? cctor)
         {
             foreach (var bt in type.DirectBaseTypes)
             {
@@ -216,15 +196,7 @@ internal static class AssemblyProcessor
             }
 
             RecordSymbolsReferencedByAttributes(typeSym, type.GetAttributes());
-
-            foreach (var a in type.GetAttributes())
-            {
-                if (graph.IsReflectionMarkerAttribute(a.AttributeType.ReflectionName))
-                {
-                    typeSym.SetReflectionTarget();
-                    break;
-                }
-            }
+            RecordReflectionTarget(typeSym, type);
 
             foreach (var bt in type.GetAllBaseTypeDefinitions())
             {
@@ -235,6 +207,11 @@ internal static class AssemblyProcessor
 
                 var sym = (TypeSymbol)graph.GetAssembly(bt.ParentModule!.AssemblyName).GetSymbol(graph, bt);
                 RecordReferenceToType(typeSym, bt);
+
+                if (typeSym.ReflectionTarget)
+                {
+                    sym.SetReflectionTarget();
+                }
 
                 if (bt.Kind == TypeKind.Interface)
                 {
@@ -269,9 +246,14 @@ internal static class AssemblyProcessor
                     }
                 }
             }
+
+            if (cctor != null)
+            {
+                RecordReferenceToMember(typeSym, cctor);
+            }
         }
 
-        void RecordSymbolsReferencedByMethod(Symbol methodSym, IMethod method, IMethod? cctor)
+        void RecordSymbolsReferencedByMethod(Symbol methodSym, IMethod method)
         {
             RecordReferenceToType(methodSym, method.DeclaringType);
 
@@ -329,6 +311,11 @@ internal static class AssemblyProcessor
                 }
             }
 
+            foreach (var im in method.ExplicitlyImplementedInterfaceMembers)
+            {
+                RecordReferenceToMember(methodSym, im);
+            }
+
             if (method.HasBody)
             {
                 var metadataModule = method.DeclaringType.GetDefinition()!.ParentModule! as MetadataModule;
@@ -348,7 +335,6 @@ internal static class AssemblyProcessor
                                 var handle = MetadataTokens.EntityHandle(token);
                                 var field = (IField)metadataModule.ResolveEntity(handle);
                                 RecordReferenceToMember(methodSym, field);
-                                RecordReferenceToType(methodSym, field.DeclaringType);
                                 break;
                             }
 
@@ -359,7 +345,6 @@ internal static class AssemblyProcessor
                                 var m = metadataModule.ResolveMethod(handle, default);
 
                                 RecordReferenceToMember(methodSym, m);
-                                RecordReferenceToType(methodSym, m.DeclaringType);
 
                                 var count = 0;
                                 foreach (var ta in m.TypeArguments)
@@ -430,28 +415,24 @@ internal static class AssemblyProcessor
                     RecordReferenceToType(methodSym, type);
                 }
             }
-
-            if (cctor != null && method != cctor)
-            {
-                RecordReferenceToMember(methodSym, cctor);
-            }
         }
 
-        void RecordSymbolsReferencedByProperty(Symbol propertySym, IProperty property, IMethod? cctor)
+        void RecordSymbolsReferencedByProperty(Symbol propertySym, IProperty property)
         {
             RecordReferenceToType(propertySym, property.DeclaringType);
             RecordSymbolsReferencedByAttributes(propertySym, property.GetAttributes());
+            RecordReferenceToType(propertySym, property.ReturnType);
 
             if (property.Getter != null)
             {
                 var sym = DefineSymbol(property.Getter);
-                RecordSymbolsReferencedByMethod(sym, property.Getter, cctor);
+                RecordSymbolsReferencedByMethod(sym, property.Getter);
             }
 
             if (property.Setter != null)
             {
                 var sym = DefineSymbol(property.Setter);
-                RecordSymbolsReferencedByMethod(sym, property.Setter, cctor);
+                RecordSymbolsReferencedByMethod(sym, property.Setter);
             }
 
             foreach (var pp in property.Parameters)
@@ -475,28 +456,34 @@ internal static class AssemblyProcessor
             // a property depends on all interface properties it implements
             foreach (var it in property.DeclaringType.GetAllBaseTypeDefinitions().Where(bt => bt.Kind == TypeKind.Interface))
             {
-                foreach (var ip in it.GetProperties().Where(bm => bm.Name == property.Name))
+                foreach (var ip in it.GetProperties().Where(bm => bm.Name == property.Name && bm.Parameters.Count == property.Parameters.Count))
                 {
                     RecordReferenceToMember(propertySym, ip);
                 }
             }
+
+            foreach (var im in property.ExplicitlyImplementedInterfaceMembers)
+            {
+                RecordReferenceToMember(propertySym, im);
+            }
         }
 
-        void RecordSymbolsReferencedByEvent(Symbol eventSym, IEvent evt, IMethod? cctor)
+        void RecordSymbolsReferencedByEvent(Symbol eventSym, IEvent evt)
         {
             RecordReferenceToType(eventSym, evt.DeclaringType);
             RecordSymbolsReferencedByAttributes(eventSym, evt.GetAttributes());
+            RecordReferenceToType(eventSym, evt.ReturnType);
 
             if (evt.AddAccessor != null)
             {
                 var sym = DefineSymbol(evt.AddAccessor);
-                RecordSymbolsReferencedByMethod(sym, evt.AddAccessor, cctor);
+                RecordSymbolsReferencedByMethod(sym, evt.AddAccessor);
             }
 
             if (evt.RemoveAccessor != null)
             {
                 var sym = DefineSymbol(evt.RemoveAccessor);
-                RecordSymbolsReferencedByMethod(sym, evt.RemoveAccessor, cctor);
+                RecordSymbolsReferencedByMethod(sym, evt.RemoveAccessor);
             }
 
             // an override depends on all base events
@@ -514,23 +501,23 @@ internal static class AssemblyProcessor
             // an event depends on all interface events it implements
             foreach (var it in evt.DeclaringType.GetAllBaseTypeDefinitions().Where(bt => bt.Kind == TypeKind.Interface))
             {
-                foreach (var ie in it.GetProperties().Where(bm => bm.Name == evt.Name))
+                foreach (var ie in it.GetEvents().Where(bm => bm.Name == evt.Name))
                 {
                     RecordReferenceToMember(eventSym, ie);
                 }
             }
+
+            foreach (var im in evt.ExplicitlyImplementedInterfaceMembers)
+            {
+                RecordReferenceToMember(eventSym, im);
+            }
         }
 
-        void RecordSymbolsReferencedByField(Symbol fieldSym, IField field, IMethod? cctor)
+        void RecordSymbolsReferencedByField(Symbol fieldSym, IField field)
         {
             RecordReferenceToType(fieldSym, field.DeclaringType);
             RecordReferenceToType(fieldSym, field.Type);
             RecordSymbolsReferencedByAttributes(fieldSym, field.GetAttributes());
-
-            if (cctor != null)
-            {
-                RecordReferenceToMember(fieldSym, cctor);
-            }
         }
 
         void RecordSymbolsReferencedByAttributes(Symbol sym, IEnumerable<IAttribute> attributes)
@@ -600,7 +587,6 @@ internal static class AssemblyProcessor
                     if (reflectionTarget)
                     {
                         toSym.SetReflectionTarget();
-                        reflectionTarget = false;
                     }
                 }
 

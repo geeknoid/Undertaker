@@ -6,11 +6,11 @@
     <Nullable>enable</Nullable>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
-	  <WarningLevel>9999</WarningLevel>
-	  <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <WarningLevel>9999</WarningLevel>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <NoWarn>IDE0079</NoWarn>
 
-    <Version>1.0.11</Version>
+    <Version>1.0.12</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 

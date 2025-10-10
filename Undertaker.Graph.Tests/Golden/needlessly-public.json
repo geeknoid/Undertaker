@@ -4,12 +4,14 @@
       "Assembly": "TestLibrary",
       "NeedlesslyPublicTypes": [
         "TestLibrary.AliveByTestClas",
+        "TestLibrary.AliveClassAndAliveMembers\u002BAliveNestedType",
         "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType",
         "TestLibrary.DeadClass",
         "TestLibrary.DeadDelegate",
         "TestLibrary.DeadEnum",
         "TestLibrary.DeadStruct",
         "TestLibrary.GenericTypeArgument",
+        "TestLibrary.MyThrownException",
         "TestLibrary.TestAttribute"
       ],
       "NeedlesslyPublicMembers": [

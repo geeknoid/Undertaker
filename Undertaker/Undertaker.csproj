@@ -9,7 +9,7 @@
     <WarningLevel>9999</WarningLevel>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 
-	<Version>1.0.11</Version>
+	<Version>1.0.12</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 
 	<PackAsTool>true</PackAsTool>

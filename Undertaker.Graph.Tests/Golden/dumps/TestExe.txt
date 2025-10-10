@@ -33,8 +33,8 @@ ASSEMBLY TestExe.dll [LOADED, !ROOT, !SYSTEM]
       TestExe.Program
       System.SerializableAttribute
       System.Runtime.CompilerServices.CompilerGeneratedAttribute
+      TestExe.Program+<>c..cctor()
     DIRECTLY REFERENCED BY
-      TestExe.Program.Main()
       TestExe.Program+<>c..cctor()
       TestExe.Program+<>c..ctor()
       TestExe.Program+<>c.<Main>b__0_0()
@@ -49,25 +49,18 @@ ASSEMBLY TestExe.dll [LOADED, !ROOT, !SYSTEM]
       TestExe.Program+<>c..ctor()
       TestExe.Program+<>c.<>9
     DIRECTLY REFERENCED BY
-      TestExe.Program+<>c..ctor()
-      TestExe.Program+<>c.<Main>b__0_0()
-      TestExe.Program+<>c.<Main>b__0_1(System.Object, System.EventArgs)
-      TestExe.Program+<>c.<>9
-      TestExe.Program+<>c.<>9__0_0
-      TestExe.Program+<>c.<>9__0_1
+      TestExe.Program+<>c
   TestExe.Program+<>c..ctor() [METHOD, ALIVE, HIDE, !REFLECTION_TARGET, !ROOT]
     DIRECTLY REFERENCES
       TestExe.Program+<>c
       TestExe.Program
       System.Object..ctor()
-      TestExe.Program+<>c..cctor()
     DIRECTLY REFERENCED BY
       TestExe.Program+<>c..cctor()
   TestExe.Program+<>c.<>9 [FIELD, ALIVE, HIDE, !REFLECTION_TARGET, !ROOT]
     DIRECTLY REFERENCES
       TestExe.Program+<>c
       TestExe.Program
-      TestExe.Program+<>c..cctor()
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
       TestExe.Program+<>c..cctor()
@@ -76,7 +69,6 @@ ASSEMBLY TestExe.dll [LOADED, !ROOT, !SYSTEM]
       TestExe.Program+<>c
       TestExe.Program
       TestLibrary.AliveDelegate
-      TestExe.Program+<>c..cctor()
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
   TestExe.Program+<>c.<>9__0_1 [FIELD, ALIVE, HIDE, !REFLECTION_TARGET, !ROOT]
@@ -84,14 +76,12 @@ ASSEMBLY TestExe.dll [LOADED, !ROOT, !SYSTEM]
       TestExe.Program+<>c
       TestExe.Program
       System.EventHandler
-      TestExe.Program+<>c..cctor()
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
   TestExe.Program+<>c.<Main>b__0_0() [METHOD, ALIVE, HIDE, !REFLECTION_TARGET, !ROOT]
     DIRECTLY REFERENCES
       TestExe.Program+<>c
       TestExe.Program
-      TestExe.Program+<>c..cctor()
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
   TestExe.Program+<>c.<Main>b__0_1(System.Object, System.EventArgs) [METHOD, ALIVE, HIDE, !REFLECTION_TARGET, !ROOT]
@@ -99,7 +89,6 @@ ASSEMBLY TestExe.dll [LOADED, !ROOT, !SYSTEM]
       TestExe.Program+<>c
       TestExe.Program
       System.EventArgs
-      TestExe.Program+<>c..cctor()
     DIRECTLY REFERENCED BY
       TestExe.Program.Main()
   TestExe.Program.Main() [METHOD, ALIVE, !HIDE, !REFLECTION_TARGET, ROOT]
@@ -107,22 +96,15 @@ ASSEMBLY TestExe.dll [LOADED, !ROOT, !SYSTEM]
       TestExe.Program
       TestLibrary.AliveClassButDeadMembers
       System.Type.GetTypeFromHandle(System.RuntimeTypeHandle)
-      System.Type
       System.Console.WriteLine(System.Object)
-      System.Console
       TestLibrary.AliveClass..ctor()
-      TestLibrary.AliveClass
       TestLibrary.AliveStruct
       TestExe.Program+<>c.<>9__0_0
-      TestExe.Program+<>c
       TestExe.Program+<>c.<>9
       TestExe.Program+<>c.<Main>b__0_0()
       TestLibrary.AliveDelegate..ctor(System.Object, nint)
-      TestLibrary.AliveDelegate
       TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)
-      TestLibrary.AliveRecordClass
       TestLibrary.AliveClassAndAliveMembers..ctor()
-      TestLibrary.AliveClassAndAliveMembers
       TestLibrary.AliveClassAndAliveMembers.AliveMethod()
       TestLibrary.AliveClassAndAliveMembers.set_AliveSimpleProperty(System.Int32)
       TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(System.Int32)
@@ -130,17 +112,18 @@ ASSEMBLY TestExe.dll [LOADED, !ROOT, !SYSTEM]
       TestExe.Program+<>c.<>9__0_1
       TestExe.Program+<>c.<Main>b__0_1(System.Object, System.EventArgs)
       System.EventHandler..ctor(System.Object, nint)
-      System.EventHandler
       TestLibrary.AliveClassAndAliveMembers.add_AliveEvent(System.EventHandler)
       TestLibrary.AliveClassAndAliveMembers.set_Item(System.Int32, System.Int32)
       System.Object.ToString()
       System.Console.WriteLine(System.String)
       TestLibrary.IAliveInterface.Func()
-      TestLibrary.IAliveInterface
       System.Console.WriteLine(System.Int32)
       TestLibrary.AliveClassAndAliveMembers+AliveNestedType..ctor()
-      TestLibrary.AliveClassAndAliveMembers+AliveNestedType
       TestLibrary.MyThrownException..ctor()
-      TestLibrary.MyThrownException
+      TestLibrary.AliveClass
       TestLibrary.AliveEnum
+      TestLibrary.AliveDelegate
+      TestLibrary.AliveRecordClass
+      TestLibrary.AliveClassAndAliveMembers
+      TestLibrary.IAliveInterface
       TestLibrary.MyCaughtException

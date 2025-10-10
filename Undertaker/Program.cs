@@ -441,10 +441,7 @@ internal static class Program
                     _ = tasks.Remove(t);
                 }
 
-                var task = Task.Run(() =>
-                {
-                    return new LoadedAssembly(file.FullName);
-                });
+                var task = Task.Run(() => new LoadedAssembly(file.FullName));
 
                 _ = tasks.Add(task);
                 map.Add(task, file);
