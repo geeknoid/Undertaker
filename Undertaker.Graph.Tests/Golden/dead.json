@@ -6,189 +6,266 @@
         {
           "Name": "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType",
           "Kind": "Class",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": [
+            "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType..ctor()"
+          ]
         },
         {
           "Name": "TestLibrary.DeadClass",
           "Kind": "Class",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": [
+            "TestLibrary.DeadClass..ctor()"
+          ]
         },
         {
           "Name": "TestLibrary.DeadDelegate",
           "Kind": "Delegate",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": [
+            "TestLibrary.DeadDelegate..ctor(System.Object, nint)",
+            "TestLibrary.DeadDelegate.BeginInvoke(System.AsyncCallback, System.Object)",
+            "TestLibrary.DeadDelegate.EndInvoke(System.IAsyncResult)",
+            "TestLibrary.DeadDelegate.Invoke()"
+          ]
         },
         {
           "Name": "TestLibrary.DeadStruct",
           "Kind": "Struct",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": [
+            "TestLibrary.DeadStruct..ctor()"
+          ]
         }
       ],
       "DeadMembers": [
         {
           "Name": "TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveClassAndAliveMembers.get_Item(System.Int32)",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveClassAndAliveMembers.remove_AliveEvent(System.EventHandler)",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers..ctor()",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.DeadComplexProperty",
           "Kind": "Property",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": [
+            "TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()",
+            "TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(System.Int32)"
+          ]
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.DeadEvent",
           "Kind": "Event",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": [
+            "TestLibrary.AliveClassButDeadMembers.add_DeadEvent(System.EventHandler)",
+            "TestLibrary.AliveClassButDeadMembers.remove_DeadEvent(System.EventHandler)"
+          ]
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.DeadField",
           "Kind": "Field",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.DeadSimpleProperty",
           "Kind": "Property",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": [
+            "TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty()",
+            "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(System.Int32)"
+          ]
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.Item",
           "Kind": "Misc",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": [
+            "TestLibrary.AliveClassButDeadMembers.get_Item(System.Int32)",
+            "TestLibrary.AliveClassButDeadMembers.set_Item(System.Int32, System.Int32)"
+          ]
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers._value",
           "Kind": "Field",
-          "Access": 1
+          "Access": "Private",
+          "ReferencedBy": [
+            "TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()",
+            "TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(System.Int32)"
+          ]
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.add_DeadEvent(System.EventHandler)",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty()",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.get_Item(System.Int32)",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.remove_DeadEvent(System.EventHandler)",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(System.Int32)",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(System.Int32)",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveClassButDeadMembers.set_Item(System.Int32, System.Int32)",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveDelegate.Invoke()",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveRecordClass.Id",
           "Kind": "Property",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": [
+            "TestLibrary.AliveRecordClass.get_Id()",
+            "TestLibrary.AliveRecordClass.set_Id(System.Int32)"
+          ]
         },
         {
           "Name": "TestLibrary.AliveRecordClass.Name",
           "Kind": "Property",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": [
+            "TestLibrary.AliveRecordClass.get_Name()",
+            "TestLibrary.AliveRecordClass.set_Name(System.String)"
+          ]
         },
         {
           "Name": "TestLibrary.AliveRecordClass.get_Id()",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": [
+            "TestLibrary.AliveRecordClass.Deconstruct(System.Int32\u0026, System.String\u0026)",
+            "TestLibrary.AliveRecordClass.PrintMembers(System.Text.StringBuilder)"
+          ]
         },
         {
           "Name": "TestLibrary.AliveRecordClass.get_Name()",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": [
+            "TestLibrary.AliveRecordClass.Deconstruct(System.Int32\u0026, System.String\u0026)",
+            "TestLibrary.AliveRecordClass.PrintMembers(System.Text.StringBuilder)"
+          ]
         },
         {
           "Name": "TestLibrary.AliveRecordClass.set_Id(System.Int32)",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveRecordClass.set_Name(System.String)",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.AliveStruct..ctor()",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.GenericTypeArgument..ctor()",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.MyCaughtException..ctor()",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.TestAttribute..ctor(System.String)",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         },
         {
           "Name": "TestLibrary.TestAttribute.Name",
           "Kind": "Property",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": [
+            "TestLibrary.TestAttribute.get_Name()"
+          ]
         },
         {
           "Name": "TestLibrary.TestAttribute.get_Name()",
           "Kind": "Method",
-          "Access": 6
+          "Access": "Public",
+          "ReferencedBy": []
         }
       ]
     }

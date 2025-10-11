@@ -608,12 +608,12 @@ internal static class Program
                             if (args.CSV)
                             {
                                 using var writer = new StreamWriter(filePath);
-                                foreach (var sym in asm.DeadMembers)
+                                foreach (var sym in asm.UnreferencedMembers)
                                 {
                                     writer.WriteLine($"\"{sym.Name}\",{sym.Kind}");
                                 }
 
-                                foreach (var sym in asm.DeadTypes)
+                                foreach (var sym in asm.UnreferencedTypes)
                                 {
                                     writer.WriteLine($"\"{sym.Name}\",{sym.Kind}");
                                 }
@@ -1006,7 +1006,7 @@ internal static class Program
                     Console.ForegroundColor = color.Value;
                 }
 
-                Console.Write($"{status,-10}");
+                Console.Write($"{status,-9}");
                 Console.ResetColor();
 
                 if (args.DumpMemory)

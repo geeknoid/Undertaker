@@ -36,18 +36,22 @@ public sealed class Reporter
 
             foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide).Cast<TypeSymbol>())
             {
+                var dependents = sym.Referencers.Select(_symbolTable.GetSymbol).Select(x => x.Name).OrderBy(x => x).ToList();
+
                 if (sym.Marked)
                 {
                     foreach (var member in sym.Members.Select(_symbolTable.GetSymbol).Where(member => !member.Marked && !member.Hide && member.Kind != SymbolKind.Type))
                     {
+                        dependents = [.. member.Referencers.Select(_symbolTable.GetSymbol).Select(x => x.Name).OrderBy(x => x)];
+
                         deadMembers ??= [];
-                        deadMembers.Add(new DeadReportSymbol(member.Name, member.Kind.ToString(), member.Access));
+                        deadMembers.Add(new(member.Name, member.Kind.ToString(), member.Access, dependents));
                     }
                 }
                 else
                 {
                     deadTypes ??= [];
-                    deadTypes.Add(new DeadReportSymbol(sym.Name, sym.TypeKind.ToString(), sym.Access));
+                    deadTypes.Add(new(sym.Name, sym.TypeKind.ToString(), sym.Access, dependents));
                 }
             }
 
@@ -74,13 +78,13 @@ public sealed class Reporter
     /// Gets information about the unreferenced symbols in the graph.
     /// </summary>
     /// <remarks>Unreferenced symbols are ones which aren't referenced by any other symbol in the graph.</remarks>
-    public DeadReport CollectUnreferencedSymbols()
+    public UnreferencedReport CollectUnreferencedSymbols()
     {
-        var assemblies = new List<DeadReportAssembly>();
+        var assemblies = new List<UnreferencedReportAssembly>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && !asm.IsSystemAssembly))
         {
-            List<DeadReportSymbol>? deadTypes = null;
-            List<DeadReportSymbol>? deadMembers = null;
+            List<UnreferencedReportSymbol>? unreferencedTypes = null;
+            List<UnreferencedReportSymbol>? unreferencedMembers = null;
 
             foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide).Cast<TypeSymbol>())
             {
@@ -88,26 +92,26 @@ public sealed class Reporter
                 {
                     foreach (var member in sym.Members.Select(_symbolTable.GetSymbol).Where(member => member.Referencers.Count == 0 && member.Kind != SymbolKind.Type && !member.Marked))
                     {
-                        deadMembers ??= [];
-                        deadMembers.Add(new DeadReportSymbol(member.Name, member.Kind.ToString(), member.Access));
+                        unreferencedMembers ??= [];
+                        unreferencedMembers.Add(new UnreferencedReportSymbol(member.Name, member.Kind.ToString(), member.Access));
                     }
                 }
                 else
                 {
-                    deadTypes ??= [];
-                    deadTypes.Add(new DeadReportSymbol(sym.Name, sym.TypeKind.ToString(), sym.Access));
+                    unreferencedTypes ??= [];
+                    unreferencedTypes.Add(new UnreferencedReportSymbol(sym.Name, sym.TypeKind.ToString(), sym.Access));
                 }
             }
 
-            if (deadTypes != null || deadMembers != null)
+            if (unreferencedTypes != null || unreferencedMembers != null)
             {
-                deadTypes?.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
-                deadMembers?.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
+                unreferencedTypes?.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
+                unreferencedMembers?.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
 
-                IReadOnlyList<DeadReportSymbol>? dt = deadTypes;
+                IReadOnlyList<UnreferencedReportSymbol>? dt = unreferencedTypes;
                 dt ??= [];
 
-                IReadOnlyList<DeadReportSymbol>? dm = deadMembers;
+                IReadOnlyList<UnreferencedReportSymbol>? dm = unreferencedMembers;
                 dm ??= [];
 
                 assemblies.Add(new(asm.Name, dt, dm));

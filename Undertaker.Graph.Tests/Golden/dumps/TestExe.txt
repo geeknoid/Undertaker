@@ -9,7 +9,6 @@ ASSEMBLY TestExe.dll [LOADED, !ROOT, !SYSTEM]
       System.Diagnostics.DebuggableAttribute
       System.Diagnostics.DebuggableAttribute+DebuggingModes
       System.Runtime.Versioning.TargetFrameworkAttribute
-      System.String
       System.Reflection.AssemblyCompanyAttribute
       System.Reflection.AssemblyConfigurationAttribute
       System.Reflection.AssemblyFileVersionAttribute

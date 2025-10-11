@@ -7,7 +7,7 @@ namespace Undertaker.Graph.Reporting;
 /// <summary>
 /// Information about a symbol.
 /// </summary>
-public sealed class DeadReportSymbol
+public sealed class UnreferencedReportSymbol
 {
     /// <summary>
     /// The name of the symbol.
@@ -25,17 +25,10 @@ public sealed class DeadReportSymbol
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public Accessibility Access { get; }
 
-    /// <summary>
-    /// The name of the other symbols that have a dependence on this symbol.
-    /// </summary>
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public IReadOnlyList<SkinnyString>? ReferencedBy { get; }
-
-    internal DeadReportSymbol(SkinnyString symbol, string kind, Accessibility accessibility, IReadOnlyList<SkinnyString> dependents)
+    internal UnreferencedReportSymbol(SkinnyString symbol, string kind, Accessibility accessibility)
     {
         Name = symbol;
         Kind = kind;
         Access = accessibility;
-        ReferencedBy = dependents;
     }
 }

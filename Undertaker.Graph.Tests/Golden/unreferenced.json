@@ -1,0 +1,200 @@
+{
+  "Assemblies": [
+    {
+      "Assembly": "TestLibrary",
+      "UnreferencedTypes": [],
+      "UnreferencedMembers": [
+        {
+          "Name": "TestLibrary.AliveClassAndAliveMembers.get_AliveComplexProperty()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveClassAndAliveMembers.get_AliveSimpleProperty()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveClassAndAliveMembers.get_Item(System.Int32)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveClassAndAliveMembers.remove_AliveEvent(System.EventHandler)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers\u002BDeadNestedType..ctor()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers..ctor()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.DeadField",
+          "Kind": "Field",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.DeadMethod()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.add_DeadEvent(System.EventHandler)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.get_DeadComplexProperty()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.get_DeadSimpleProperty()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.get_Item(System.Int32)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.remove_DeadEvent(System.EventHandler)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.set_DeadComplexProperty(System.Int32)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.set_DeadSimpleProperty(System.Int32)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveClassButDeadMembers.set_Item(System.Int32, System.Int32)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveDelegate.BeginInvoke(System.AsyncCallback, System.Object)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveDelegate.EndInvoke(System.IAsyncResult)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveDelegate.Invoke()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.\u003CClone\u003E$()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.Deconstruct(System.Int32\u0026, System.String\u0026)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.Equals(System.Object)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.GetHashCode()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.ToString()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.op_Inequality(TestLibrary.AliveRecordClass, TestLibrary.AliveRecordClass)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.set_Id(System.Int32)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.set_Name(System.String)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.AliveStruct..ctor()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.DeadClass..ctor()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.DeadDelegate..ctor(System.Object, nint)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.DeadDelegate.BeginInvoke(System.AsyncCallback, System.Object)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.DeadDelegate.EndInvoke(System.IAsyncResult)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.DeadDelegate.Invoke()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.DeadStruct..ctor()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.GenericTypeArgument..ctor()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.MyCaughtException..ctor()",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.TestAttribute..ctor(System.String)",
+          "Kind": "Method",
+          "Access": "Public"
+        },
+        {
+          "Name": "TestLibrary.TestAttribute.get_Name()",
+          "Kind": "Method",
+          "Access": "Public"
+        }
+      ]
+    }
+  ]
+}

@@ -31,6 +31,7 @@ public class Tests
         var reporter = graph.Done(x => { });
         var serializerOptions = new JsonSerializerOptions { WriteIndented = true };
         var deadReport = JsonSerializer.Serialize(reporter.CollectDeadSymbols(), serializerOptions);
+        var unreferencedReport = JsonSerializer.Serialize(reporter.CollectUnreferencedSymbols(), serializerOptions);
         var aliveReport = JsonSerializer.Serialize(reporter.CollectAliveSymbols(), serializerOptions);
         var aliveByTestReport = JsonSerializer.Serialize(reporter.CollectAliveByTestSymbols(), serializerOptions);
         var needlesslyPublicReport = JsonSerializer.Serialize(reporter.CollectNeedlesslyPublicSymbols(), serializerOptions);
@@ -43,6 +44,7 @@ public class Tests
 #if false
         // write the golden files
         File.WriteAllText("../../../Golden/dead.json", deadReport);
+        File.WriteAllText("../../../Golden/unreferenced.json", unreferencedReport);
         File.WriteAllText("../../../Golden/alive.json", aliveReport);
         File.WriteAllText("../../../Golden/alive-by-test.json", aliveByTestReport);
         File.WriteAllText("../../../Golden/needlessly-public.json", needlesslyPublicReport);
@@ -54,6 +56,7 @@ public class Tests
         reporter.Dump("../../../Golden/dumps");
 #else
         var goldenDeadReport = File.ReadAllText("../../../Golden/dead.json");
+        var goldenUnreferencedReport = File.ReadAllText("../../../Golden/unreferenced.json");
         var goldenAliveReport = File.ReadAllText("../../../Golden/alive.json");
         var goldenAliveByTestReport = File.ReadAllText("../../../Golden/alive-by-test.json");
         var goldenNeedlesslyPublicReport = File.ReadAllText("../../../Golden/needlessly-public.json");
@@ -64,6 +67,7 @@ public class Tests
         var goldenDiagram = File.ReadAllText("../../../Golden/diagram.mmd");
 
         goldenDeadReport = goldenDeadReport.ReplaceLineEndings();
+        goldenUnreferencedReport = goldenUnreferencedReport.ReplaceLineEndings();
         goldenAliveReport = goldenAliveReport.ReplaceLineEndings();
         goldenAliveByTestReport = goldenAliveByTestReport.ReplaceLineEndings();
         goldenNeedlesslyPublicReport = goldenNeedlesslyPublicReport.ReplaceLineEndings();
@@ -73,6 +77,7 @@ public class Tests
         goldenDiagram = goldenDiagram.ReplaceLineEndings();
 
         Assert.Equal(goldenDeadReport, deadReport);
+        Assert.Equal(goldenUnreferencedReport, unreferencedReport);
         Assert.Equal(goldenAliveReport, aliveReport);
         Assert.Equal(goldenAliveByTestReport, aliveByTestReport);
         Assert.Equal(goldenNeedlesslyPublicReport, needlesslyPublicReport);
