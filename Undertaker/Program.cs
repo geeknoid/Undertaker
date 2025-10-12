@@ -2,15 +2,20 @@
 using System.CommandLine.Parsing;
 using System.ComponentModel;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Channels;
+using ICSharpCode.Decompiler.CSharp.Syntax;
 using Undertaker.Graph;
 
 namespace Undertaker;
 
 internal static class Program
 {
-    private const int MaxConcurrentAssemblyLoads = 32;
+    private const int MaxConcurrentAssemblyLoads = 3;
+    private const int MaxPendingAssemblyMerges = 32;
+
     private static readonly JsonSerializerOptions _serializationOptions = new()
     {
         WriteIndented = true,
@@ -38,7 +43,8 @@ internal static class Program
         public DirectoryInfo? GraphDumps { get; set; } = parseResult.GetValue<DirectoryInfo>("-gd");
         public bool ContinueOnLoadErrors { get; set; } = parseResult.GetValue<bool>("-cle");
         public bool Verbose { get; set; } = parseResult.GetValue<bool>("-v");
-        public bool DumpMemory { get; set; }
+        public bool Quiet { get; set; } = parseResult.GetValue<bool>("-q");
+        public bool DumpMemory { get; set; } = parseResult.GetValue<bool>("-dm");
         public bool CSV { get; set; } = parseResult.GetValue<bool>("-csv");
     }
 
@@ -148,6 +154,12 @@ internal static class Program
                 Hidden = true,
             },
 
+            new Option<bool>("-dm", "--dump-memory")
+            {
+                Description = "Show memory usage info",
+                Hidden = true,
+            },
+
             new Option<bool>("-cle", "--continue-on-load-errors")
             {
                 Description = "Proceed to the analysis and output phases even if some assemblies didn't load",
@@ -155,7 +167,12 @@ internal static class Program
 
             new Option<bool>("-v", "--verbose")
             {
-                Description = "Output progress reports",
+                Description = "Enable on-going progress messages",
+            },
+
+            new Option<bool>("-q", "--quiet")
+            {
+                Description = "Suppress any console output, except for warnings and errors",
             },
 
             new Option<bool>("-csv")
@@ -197,7 +214,7 @@ internal static class Program
             && args.AssemblyLayerCake == null
             && args.DependencyDiagram == null)
         {
-            Out("No explicit output requested, generating default outputs");
+            Verbose("No explicit output requested, generating default outputs");
 
             args.DeadSymbols = new("./dead-symbols");
             args.NeedlessInternalsVisibleTo = new("./needless-internals-visible-to");
@@ -215,7 +232,7 @@ internal static class Program
 
         if (args.RootAssemblies != null)
         {
-            Out($"Loading root assembly file {args.RootAssemblies.FullName}");
+            Verbose($"Loading root assembly file {args.RootAssemblies.FullName}");
 
             try
             {
@@ -249,7 +266,7 @@ internal static class Program
 
         if (args.ReflectionSymbols != null)
         {
-            Out($"Loading reflection symbol file {args.ReflectionSymbols.FullName}");
+            Verbose($"Loading reflection symbol file {args.ReflectionSymbols.FullName}");
 
             try
             {
@@ -296,7 +313,7 @@ internal static class Program
 
         if (args.TestMethodAttributes != null)
         {
-            Out($"Loading test method attribute file {args.TestMethodAttributes.FullName}");
+            Verbose($"Loading test method attribute file {args.TestMethodAttributes.FullName}");
 
             try
             {
@@ -320,7 +337,7 @@ internal static class Program
         }
         else
         {
-            Out("Using default test method attributes");
+            Verbose("Using default test method attributes");
 
             graph.RecordTestMethodAttribute("Xunit.FactAttribute");
             graph.RecordTestMethodAttribute("Xunit.TheoryAttribute");
@@ -352,7 +369,7 @@ internal static class Program
 
         if (args.ReflectionMarkerAttributes != null)
         {
-            Out($"Loading reflection marker attribute file {args.ReflectionMarkerAttributes.FullName}");
+            Verbose($"Loading reflection marker attribute file {args.ReflectionMarkerAttributes.FullName}");
 
             try
             {
@@ -376,7 +393,7 @@ internal static class Program
         }
         else
         {
-            Out("Using default reflection marker attributes");
+            Verbose("Using default reflection marker attributes");
 
             graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.AcceptsVerbsAttribute");
             graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.ApiControllerAttribute");
@@ -411,53 +428,7 @@ internal static class Program
             graph.RecordReflectionMarkerAttribute("Newtonsoft.Json.JsonPropertyAttribute");
         }
 
-        // load the assemblies
-        int successCount = 0;
-        int errorCount = 0;
-        int badFmtCount = 0;
-        int duplicateCount = 0;
-
-        var tasks = new HashSet<Task<LoadedAssembly>>(MaxConcurrentAssemblyLoads);
-        var map = new Dictionary<Task<LoadedAssembly>, FileInfo>(MaxConcurrentAssemblyLoads);
-
-        Out("Loading assemblies...");
-
-        foreach (var folder in args.AssemblyFolders!)
-        {
-            foreach (var file in folder.EnumerateFiles("*", SearchOption.AllDirectories))
-            {
-                if (!(file.Name.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) || file.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)))
-                {
-                    continue;
-                }
-
-                if (graph.AssemblyLoaded(file.FullName))
-                {
-                    OutLoadStatus(ConsoleColor.Yellow, "Duplicate", $"{file.FullName}");
-                    duplicateCount++;
-                    continue;
-                }
-
-                if (tasks.Count >= MaxConcurrentAssemblyLoads)
-                {
-                    var t = await Task.WhenAny(tasks);
-                    await CompleteTask(t);
-                    _ = tasks.Remove(t);
-                }
-
-                var task = Task.Run(() => new LoadedAssembly(file.FullName));
-
-                _ = tasks.Add(task);
-                map.Add(task, file);
-            }
-        }
-
-        await foreach (var task in Task.WhenEach(tasks))
-        {
-            await CompleteTask(task);
-        }
-
-        Out($"Done loading assemblies: loaded {successCount}, duplicate(s) {duplicateCount}, not .NET {badFmtCount}, error(s) {errorCount}");
+        int errorCount  = await LoadAssemblies();
 
         if (errorCount > 0)
         {
@@ -472,18 +443,18 @@ internal static class Program
             }
         }
 
-        Out("Analyzing...");
-        var reporter = graph.Done(x => Out($"  {x}"));
+        Info("Analyzing...");
+        var reporter = graph.Done(x => Verbose($"  {x}"));
 
         if (args.Verbose)
         {
             System.GC.Collect(2, GCCollectionMode.Aggressive);
             var proc = System.Diagnostics.Process.GetCurrentProcess();
             var mem = proc.PrivateMemorySize64 / 1024 / 1024;
-            Out($"Total memory used: {mem}MB");
+            Verbose($"Total memory used: {mem}MB");
         }
 
-        Out("Generating reports...");
+        Info("Generating reports...");
 
         return !OutputDeadSymbols() ||
             !OutputAliveSymbols() ||
@@ -500,35 +471,127 @@ internal static class Program
             ? 1
             : 0;
 
-        async Task CompleteTask(Task<LoadedAssembly> task)
+        async Task<int> LoadAssemblies()
         {
-            var file = map[task];
-            _ = map.Remove(task);
+            Info("Loading assemblies...");
 
-            try
+            var loadProcessorChannel = Channel.CreateBounded<(LoadedAssembly? la, Exception? ex, FileInfo File)>(new BoundedChannelOptions(MaxPendingAssemblyMerges)
             {
-                using (var la = await task)
+                SingleReader = true,
+                SingleWriter = false,
+                FullMode = BoundedChannelFullMode.Wait
+            });
+
+            var loadProcessor = Task.Run(async () =>
+            {
+                int loadCount = 0;
+                int errorCount = 0;
+                int badFmtCount = 0;
+                int duplicateCount = 0;
+                int processedCount = 0;
+                bool needNewLine = false;
+
+                await foreach (var (la, ex, file) in loadProcessorChannel.Reader.ReadAllAsync())
                 {
-                    if (!graph.MergeAssembly(la))
+                    processedCount++;
+                    
+                    var e = ex;
+                    if (e == null)
                     {
-                        OutLoadStatus(ConsoleColor.Yellow, "Duplicate", $"{file.FullName}");
-                        duplicateCount++;
+                        try
+                        {
+                            if (la == null || !graph.MergeAssembly(la))
+                            {
+                                VerboseLoadStatus(ConsoleColor.Yellow, "Duplicate", $"{file.FullName}");
+                                graph.RecordDuplicateAssembly(file.FullName);
+                                duplicateCount++;
+                            }
+                            else
+                            {
+                                loadCount++;
+
+                                if (args.Verbose)
+                                {
+                                    VerboseLoadStatus(ConsoleColor.White, "Loaded", $"{file.FullName}");
+                                }
+                                else if (!args.Quiet && processedCount % 16 == 0)
+                                {
+                                    Console.Write($"\r  Loaded: {loadCount}, duplicate(s): {duplicateCount}, not_msil: {badFmtCount}, error(s): {errorCount}");
+                                    needNewLine = true;
+                                }
+                            }
+                        }
+                        catch (Exception exc)
+                        {
+                            e = exc;
+                        }
+                    }
+
+                    if (e is BadImageFormatException)
+                    {
+                        VerboseLoadStatus(ConsoleColor.Yellow, "Not MSIL", $"{file.FullName}");
+                        badFmtCount++;
+                    }
+                    else if (e != null)
+                    {
+                        VerboseLoadStatus(ConsoleColor.Red, "Error", $"{file.FullName}: {e.Message}");
+                        errorCount++;
                     }
                 }
 
-                successCount++;
-                OutLoadStatus(ConsoleColor.White, "Loaded", $"{file.FullName}");
-            }
-            catch (BadImageFormatException)
+                if (needNewLine)
+                {
+                    Console.WriteLine();
+                }
+
+                Verbose($"Done loading assemblies: loaded: {loadCount}, duplicate(s): {duplicateCount}, not MSIL: {badFmtCount}, error(s): {errorCount}");
+
+                return errorCount;
+            });
+
+            using var concurrentLoadSemaphore = new SemaphoreSlim(MaxConcurrentAssemblyLoads);
+            var loaders = new List<Task>();
+            var loaded = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var folder in args.AssemblyFolders!)
             {
-                OutLoadStatus(ConsoleColor.Yellow, "Not .NET", $"{file.FullName}");
-                badFmtCount++;
+                foreach (var file in folder.EnumerateFiles("*", SearchOption.AllDirectories))
+                {
+                    if (file.Name.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) || file.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (loaded.Add(file.Name))
+                        {
+                            await concurrentLoadSemaphore.WaitAsync().ConfigureAwait(false);
+
+                            var capturedFile = file;
+                            loaders.Add(Task.Run(async () =>
+                            {
+                                LoadedAssembly? la = null;
+                                Exception? ex = null;
+                                try
+                                {
+                                    la = new LoadedAssembly(capturedFile.FullName);
+                                }
+                                catch (Exception e)
+                                {
+                                    ex = e;
+                                }
+
+                                await loadProcessorChannel.Writer.WriteAsync((la, ex, capturedFile)).ConfigureAwait(false);
+                                _ = concurrentLoadSemaphore.Release();
+                            }));
+                        }
+                        else
+                        {
+                            // indicate we have a duplicate
+                            await loadProcessorChannel.Writer.WriteAsync((null, null, file)).ConfigureAwait(false);
+                        }
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                OutLoadStatus(ConsoleColor.Red, "Error", $"{file.FullName}: {ex.Message}");
-                errorCount++;
-            }
+
+            Task.WaitAll(loaders);
+            loadProcessorChannel.Writer.Complete();
+            return await loadProcessor.ConfigureAwait(false);
         }
 
         bool OutputDeadSymbols()
@@ -536,7 +599,7 @@ internal static class Program
             if (args.DeadSymbols != null)
             {
                 var path = args.DeadSymbols.FullName;
-                Out($"  Writing reports on dead symbols to {path}");
+                Verbose($"  Writing reports on dead symbols to {path}");
 
                 try
                 {
@@ -591,7 +654,7 @@ internal static class Program
             if (args.UnreferencedSymbols != null)
             {
                 var path = args.UnreferencedSymbols.FullName;
-                Out($"  Writing reports on unreferenced symbols to {path}");
+                Verbose($"  Writing reports on unreferenced symbols to {path}");
 
                 try
                 {
@@ -646,7 +709,7 @@ internal static class Program
             if (args.AliveSymbols != null)
             {
                 var path = args.AliveSymbols.FullName;
-                Out($"  Writing reports on alive symbols to {path}");
+                Verbose($"  Writing reports on alive symbols to {path}");
 
                 try
                 {
@@ -683,7 +746,7 @@ internal static class Program
             if (args.AliveByTestSymbols != null)
             {
                 var path = args.AliveByTestSymbols.FullName;
-                Out($"  Writing reports on symbols alive only by test to {path}");
+                Verbose($"  Writing reports on symbols alive only by test to {path}");
 
                 try
                 {
@@ -720,7 +783,7 @@ internal static class Program
             if (args.NeedlesslyPublicSymbols != null)
             {
                 var path = args.NeedlesslyPublicSymbols.FullName;
-                Out($"  Writing reports on needlessly public symbols to {path}");
+                Verbose($"  Writing reports on needlessly public symbols to {path}");
 
                 try
                 {
@@ -775,7 +838,7 @@ internal static class Program
             if (args.UnreferencedAssemblies != null)
             {
                 var path = args.UnreferencedAssemblies.FullName;
-                Out($"  Writing report on unanalyzed assemblies to {path}");
+                Verbose($"  Writing report on unanalyzed assemblies to {path}");
 
                 try
                 {
@@ -797,7 +860,7 @@ internal static class Program
             if (args.UnanalyzedAssemblies != null)
             {
                 var path = args.UnanalyzedAssemblies.FullName;
-                Out($"  Writing report on unanalyzed assemblies to {path}");
+                Verbose($"  Writing report on unanalyzed assemblies to {path}");
 
                 try
                 {
@@ -819,7 +882,7 @@ internal static class Program
             if (args.DuplicateAssemblies != null)
             {
                 var path = args.DuplicateAssemblies.FullName;
-                Out($"  Writing report on duplicate assemblies to {path}");
+                Verbose($"  Writing report on duplicate assemblies to {path}");
 
                 try
                 {
@@ -830,10 +893,10 @@ internal static class Program
                         using var writer = new StreamWriter(path);
                         foreach (var asm in report)
                         {
-                            writer.WriteLine($"{asm.Assembly},{asm.Version},{asm.Path}");
+                            writer.WriteLine($"{asm.Assembly},{asm.Path}");
                             foreach (var other in asm.Duplicates)
                             {
-                                writer.WriteLine($"{asm.Assembly},{other.Version},{other.Path}");
+                                writer.WriteLine($"{asm.Assembly},{other.Path}");
                             }
                         }
                     }
@@ -858,7 +921,7 @@ internal static class Program
             if (args.NeedlessInternalsVisibleTo != null)
             {
                 var path = args.NeedlessInternalsVisibleTo.FullName;
-                Out($"  Writing reports on needless [InternalsVisibleTo] to {path}");
+                Verbose($"  Writing reports on needless [InternalsVisibleTo] to {path}");
 
                 try
                 {
@@ -908,7 +971,7 @@ internal static class Program
             if (args.AssemblyLayerCake != null)
             {
                 var path = args.AssemblyLayerCake.FullName;
-                Out($"  Writing assembly layer cake to {path}");
+                Verbose($"  Writing assembly layer cake to {path}");
 
                 try
                 {
@@ -931,7 +994,7 @@ internal static class Program
             if (args.DependencyDiagram != null)
             {
                 var path = args.DependencyDiagram.FullName;
-                Out($"  Writing assembly dependency diagram to {path}");
+                Verbose($"  Writing assembly dependency diagram to {path}");
 
                 try
                 {
@@ -953,7 +1016,7 @@ internal static class Program
             if (args.GraphDumps != null)
             {
                 var path = args.GraphDumps.FullName;
-                Out($"  Writing graph dumps to {path}");
+                Verbose($"  Writing graph dumps to {path}");
 
                 try
                 {
@@ -979,24 +1042,7 @@ internal static class Program
             return true;
         }
 
-        void Out(string message)
-        {
-            if (args.Verbose)
-            {
-                if (args.DumpMemory)
-                {
-                    var proc = System.Diagnostics.Process.GetCurrentProcess();
-                    var mem = proc.PrivateMemorySize64 / 1024 / 1024;
-                    Console.WriteLine($"{message} ({mem}MB)");
-                }
-                else
-                {
-                    Console.WriteLine(message);
-                }
-            }
-        }
-
-        void OutLoadStatus(ConsoleColor? color, string status, string message)
+        void VerboseLoadStatus(ConsoleColor? color, string status, string message)
         {
             if (args.Verbose)
             {
@@ -1019,6 +1065,40 @@ internal static class Program
                 else
                 {
                     Console.WriteLine($"] {message}");
+                }
+            }
+        }
+
+        void Info(string message)
+        {
+            if (!args.Quiet)
+            {
+                if (args.DumpMemory)
+                {
+                    var proc = System.Diagnostics.Process.GetCurrentProcess();
+                    var mem = proc.PrivateMemorySize64 / 1024 / 1024;
+                    Console.WriteLine($"{message} ({mem}MB)");
+                }
+                else
+                {
+                    Console.WriteLine(message);
+                }
+            }
+        }
+
+        void Verbose(string message)
+        {
+            if (args.Verbose)
+            {
+                if (args.DumpMemory)
+                {
+                    var proc = System.Diagnostics.Process.GetCurrentProcess();
+                    var mem = proc.PrivateMemorySize64 / 1024 / 1024;
+                    Console.WriteLine($"{message} ({mem}MB)");
+                }
+                else
+                {
+                    Console.WriteLine(message);
                 }
             }
         }

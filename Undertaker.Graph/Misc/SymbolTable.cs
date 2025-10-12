@@ -1,4 +1,6 @@
-﻿namespace Undertaker.Graph.Misc;
+﻿using System.Globalization;
+
+namespace Undertaker.Graph.Misc;
 
 internal readonly struct SymbolId(int index) : IComparable<SymbolId>
 {
@@ -6,6 +8,7 @@ internal readonly struct SymbolId(int index) : IComparable<SymbolId>
     public int CompareTo(SymbolId other) => Index.CompareTo(other.Index);
     public override int GetHashCode() => Index.GetHashCode();
     public override bool Equals(object? obj) => obj is SymbolId other && Index == other.Index;
+    public override string ToString() => Index.ToString(CultureInfo.InvariantCulture);
 }
 
 internal sealed class SymbolTable

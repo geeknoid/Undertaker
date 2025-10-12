@@ -48,7 +48,7 @@ internal sealed class Assembly(string name, bool root)
 
             if (graph.IsReflectionSymbol(Name, sym.Name))
             {
-                sym.SetReflectionTarget();
+                sym.ReflectionTarget = true;
             }
 
             return sym;
@@ -92,7 +92,7 @@ internal sealed class Assembly(string name, bool root)
 
     public void RecordInternalsVisibleTo(Assembly other) => _ = _internalsVisibleTo.Add(other);
     public override string ToString() => Name;
-    public void AddDuplicate(string path, Version version) => _duplicates.Add(new DuplicateAssembly(path, version));
+    public void AddDuplicate(string path) => _duplicates.Add(new DuplicateAssembly(path));
 
     public void TrimExcess()
     {

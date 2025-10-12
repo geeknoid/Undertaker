@@ -60,7 +60,7 @@ public class Tests
         var goldenAliveReport = File.ReadAllText("../../../Golden/alive.json");
         var goldenAliveByTestReport = File.ReadAllText("../../../Golden/alive-by-test.json");
         var goldenNeedlesslyPublicReport = File.ReadAllText("../../../Golden/needlessly-public.json");
-        var goldenUnreferencedReport = File.ReadAllText("../../../Golden/unreferenced-assemblies.json");
+        var goldenUnreferencedAssembliesReport = File.ReadAllText("../../../Golden/unreferenced-assemblies.json");
         var goldenNeedlessIVTReport = File.ReadAllText("../../../Golden/needless-ivt.json");
         var goldenAssemblyLayerCake = File.ReadAllText("../../../Golden/assembly-layer-cake.json");
         var goldenDuplicateAssemblies = File.ReadAllText("../../../Golden/duplicate-assemblies.json");
@@ -71,7 +71,7 @@ public class Tests
         goldenAliveReport = goldenAliveReport.ReplaceLineEndings();
         goldenAliveByTestReport = goldenAliveByTestReport.ReplaceLineEndings();
         goldenNeedlesslyPublicReport = goldenNeedlesslyPublicReport.ReplaceLineEndings();
-        goldenUnreferencedReport = goldenUnreferencedReport.ReplaceLineEndings();
+        goldenUnreferencedAssembliesReport = goldenUnreferencedAssembliesReport.ReplaceLineEndings();
         goldenNeedlessIVTReport = goldenNeedlessIVTReport.ReplaceLineEndings();
         goldenAssemblyLayerCake = goldenAssemblyLayerCake.ReplaceLineEndings();
         goldenDiagram = goldenDiagram.ReplaceLineEndings();
@@ -81,7 +81,7 @@ public class Tests
         Assert.Equal(goldenAliveReport, aliveReport);
         Assert.Equal(goldenAliveByTestReport, aliveByTestReport);
         Assert.Equal(goldenNeedlesslyPublicReport, needlesslyPublicReport);
-        Assert.Equal(goldenUnreferencedReport, unreferencedAssembliesReport);
+        Assert.Equal(goldenUnreferencedAssembliesReport, unreferencedAssembliesReport);
         Assert.Equal(goldenNeedlessIVTReport, needlessIVTReport);
         Assert.Equal(goldenAssemblyLayerCake, assemblyLayerCake);
         Assert.Equal(goldenDuplicateAssemblies, duplicateAssemblies);

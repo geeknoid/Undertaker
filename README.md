@@ -32,13 +32,11 @@ Arguments:
   <input folders>  Paths to folders containing the assemblies to analyze.
 
 Options:
-  -ra, --root-assemblies <text file>                      Path to a text file listing assemblies to be treated as roots, one assembly name per line (with or without
-                                                          a .dll extension)
+  -ra, --root-assemblies <text file>                      Path to a text file listing assemblies to be treated as roots, one assembly name per line (with or without a .dll extension)
   -rs, --reflection-symbols <text file>                   Path to a text file listing symbols accessed through reflection, with each line in the form of
                                                           `assembly-name:fully-qualified-symbol-name`
   -tma, --test-method-attributes <text file>              Path to a text file listing all the attributes that can mark a method as a test, one per line
-  -rma, --reflection-marker-attributes <text file>        Path to a text file listing all the attributes that can mark a method as being used from reflection, one
-                                                          per line
+  -rma, --reflection-marker-attributes <text file>        Path to a text file listing all the attributes that can mark a method as being used from reflection, one per line
   -ds, --dead-symbols <output folder>                     Directory path where to emit the per-assembly reports on dead symbols
   -as, --alive-symbols <output folder>                    Directory path where to emit the per-assembly reports on alive symbols
   -abts, --alive-by-test-symbols <output folder>          Directory path where to emit the per-assembly reports on symbols kept alive only by test methods
@@ -51,7 +49,8 @@ Options:
   -alc, --assembly-layer-cake <output file>               Path of the assembly layer cake to produce
   -dd, --dependency-diagram <output file>                 Path of the Mermaid-based assembly dependency diagram to produce
   -cle, --continue-on-load-errors                         Proceed to the analysis and output phases even if some assemblies didn't load
-  -v, --verbose                                           Output progress reports
+  -v, --verbose                                           Enable on-going progress messages
+  -q, --quiet                                             Suppress any console output, except for warnings and errors
   -csv                                                    Switch some output files from JSON to CSV format
   -?, -h, --help                                          Show help and usage information
   --version                                               Show version information
@@ -127,6 +126,8 @@ Options:
 
 * `--verbose` lets you specify that the program should output progress reports as it runs. This is useful for
   understanding what the tool is doing and how long it will take to complete.
+
+* `--quiet` lets disables all console output, except for errors and warnings.
 
 * `-csv` switch some of the output files from JSON format to CSV format.
 

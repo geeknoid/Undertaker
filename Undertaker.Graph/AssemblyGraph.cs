@@ -17,11 +17,12 @@ namespace Undertaker.Graph;
 /// </remarks>
 public sealed class AssemblyGraph
 {
-    private readonly Dictionary<string, Assembly> _assemblies = [];
+    private readonly Dictionary<string, Assembly> _assemblies = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _rootAssemblies = [];
     private readonly HashSet<string> _testMethodAttributes = [];
     private readonly HashSet<string> _reflectionMarkerAttributes = [];
     private readonly Dictionary<string, HashSet<string>> _reflectionSymbols = [];
+    private readonly List<string> _duplicateAssemblies = [];
     private List<IReadOnlyList<string>>? _layerCake;
     private string? _dependencyDiagram;
     internal SymbolTable SymbolTable { get; } = new();
@@ -30,18 +31,6 @@ public sealed class AssemblyGraph
     public AssemblyGraph()
     {
         _assemblies[UnhomedAssembly.Name] = UnhomedAssembly;
-    }
-
-    public bool AssemblyLoaded(string path)
-    {
-        var name = Path.GetFileNameWithoutExtension(path);
-        if (_assemblies.TryGetValue(name, out var asm) && asm.Loaded)
-        {
-            asm.AddDuplicate(path, new Version(0, 0, 0, 0));
-            return true;
-        }
-
-        return false;
     }
 
     /// <summary>
@@ -130,6 +119,16 @@ public sealed class AssemblyGraph
         return result;
     }
 
+    public void RecordDuplicateAssembly(string path)
+    {
+        if (_layerCake != null)
+        {
+            throw new InvalidOperationException("Cannot add duplicate assemblies after the graph has been finalized.");
+        }
+
+        _duplicateAssemblies.Add(path);
+    }
+
     private void TrimExcess()
     {
         foreach (var asm in _assemblies)
@@ -165,6 +164,10 @@ public sealed class AssemblyGraph
                 if (sym.Root || sym.ReflectionTarget)
                 {
                     sym.Mark(this);
+                }
+                else if (sym is MethodSymbol ms && ms.IsTestMethod)
+                {
+                    ms.Mark(this);  
                 }
             }
         }
@@ -204,9 +207,9 @@ public sealed class AssemblyGraph
         {
             foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
             {
-                foreach (var ifaceMember in sym.Members.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
+                foreach (var derivedType in sym.DerivedTypes.Select(SymbolTable.GetSymbol).Cast<TypeSymbol>())
                 {
-                    foreach (var derivedType in sym.DerivedTypes.Select(SymbolTable.GetSymbol).Cast<TypeSymbol>())
+                    foreach (var ifaceMember in sym.Members.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                     {
                         foreach (var derivedMember in derivedType.Members.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
                         {
@@ -301,7 +304,7 @@ public sealed class AssemblyGraph
             {
                 foreach (var member in sym.Members.Select(SymbolTable.GetSymbol))
                 {
-                    member.SetReflectionTarget();
+                    member.ReflectionTarget = true;
                 }
             }
         }
@@ -331,65 +334,83 @@ public sealed class AssemblyGraph
     /// </remarks>
     private void HackSystemTypes()
     {
-        foreach (var asm in _assemblies.Values.Where(asm => !asm.Loaded && asm.IsSystemAssembly))
+        List<(TypeSymbol, Symbol)> added = [];
+
+        foreach (var asm in _assemblies.Values.Where(asm => asm.IsSystemAssembly))
         {
-            var method_additions = new List<(TypeSymbol, string)>();
-            var property_additions = new List<(TypeSymbol, string)>();
-            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
+            var types = asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().ToList();
+            foreach (var typeSym in types)
             {
-                var name = sym.Name;
-                if (!name.StartsWith("System."))
+                var name = typeSym.Name;
+                switch (name)
                 {
-                    continue;
+                    case "System.Runtime.CompilerServices.IAsyncStateMachine":
+                        AddMethod("System.Runtime.CompilerServices.IAsyncStateMachine.MoveNext()");
+                        AddMethod("System.Runtime.CompilerServices.IAsyncStateMachine.SetStateMachine(System.Runtime.CompilerServices.IAsyncStateMachine)");
+                        break;
+
+                    case "System.IDisposable":
+                        AddMethod("System.IDisposable.Dispose()");
+                        break;
+
+                    case "System.Collections.IEnumerable":
+                        AddMethod("System.Collections.IEnumerable.GetEnumerator()");
+                        break;
+
+                    case "System.Collections.IEnumerator":
+                        AddMethod("System.Collections.IEnumerator.MoveNext()");
+                        AddMethod("System.Collections.IEnumerator.Reset()");
+                        AddProperty("System.Collections.IEnumerator.Current");
+                        break;
+
+                    case "System.Collections.Generic.IEnumerable`1":
+                        AddMethod("System.Collections.Generic.IEnumerable`1.GetEnumerator()");
+                        break;
+
+                    case "System.Collections.Generic.IEnumerator`1":
+                        AddMethod("System.Collections.Generic.IEnumerator`1.MoveNext()");
+                        AddMethod("System.Collections.Generic.IEnumerator`1.Reset()");
+                        AddProperty("System.Collections.Generic.IEnumerator`1.Current");
+                        break;
+
+                    case "System.Collections.ICollection":
+                        AddMethod("System.Collections.ICollection.CopyTo(System.Array,System.Int32)");
+                        AddMethod("System.Collections.ICollection.get_Count()");
+                        AddProperty("System.Collections.ICollection.Count");
+                        break;
+
+                    case "System.Collections.Generic.ICollection`1":
+                        AddMethod("System.Collections.Generic.ICollection`1.CopyTo(System.Array,System.Int32)");
+                        AddMethod("System.Collections.Generic.ICollection`1.get_Count()");
+                        AddProperty("System.Collections.Generic.ICollection`1.Count");
+                        break;
+
+                    case "System.Object":
+                        AddMethod("System.Object.ToString()", true);
+                        AddMethod("System.Object.GetHashCode()", true);
+                        AddMethod("System.Object.Equals(System.Object)", true);
+                        break;
                 }
 
-                if (name == "System.Runtime.CompilerServices.IAsyncStateMachine")
+                void AddMethod(string methodName, bool makeVirtual = false)
                 {
-                    method_additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.MoveNext()"));
-                    method_additions.Add((sym, "System.Runtime.CompilerServices.IAsyncStateMachine.SetStateMachine(System.Runtime.CompilerServices.IAsyncStateMachine)"));
-                }
-                else if (name == "System.IDisposable")
-                {
-                    method_additions.Add((sym, "System.IDisposable.Dispose()"));
-                }
-                else if (name == "System.Collections.IEnumerable")
-                {
-                    method_additions.Add((sym, "System.Collections.IEnumerable.GetEnumerator()"));
-                }
-                else if (name == "System.Collections.Generic.IEnumerable`1")
-                {
-                    method_additions.Add((sym, "System.Collections.Generic.IEnumerable`1.GetEnumerator()"));
-                }
-                else if (name == "System.Collections.ICollection")
-                {
-                    method_additions.Add((sym, "System.Collections.ICollection.CopyTo(System.Array,System.Int32)"));
-                    method_additions.Add((sym, "System.Collections.ICollection.get_count()"));
-                    property_additions.Add((sym, "System.Collections.ICollection.count"));
-                }
-                else if (name == "System.Collections.Generic.ICollection`1")
-                {
-                    method_additions.Add((sym, "System.Collections.ICollection.CopyTo(System.Array,System.Int32)"));
-                    method_additions.Add((sym, "System.Collections.ICollection.get_count()"));
-                    property_additions.Add((sym, "System.Collections.ICollection.count"));
-                }
-                else if (name == "System.Object")
-                {
-                    method_additions.Add((sym, "System.Object.ToString()"));
-                    method_additions.Add((sym, "System.Object.GetHashCode()"));
-                    method_additions.Add((sym, "System.Object.Equals(System.Object)"));
-                }
-            }
+                    var methodSym = (MethodSymbol)asm.GetSymbol(this, methodName, SymbolKind.Method);
+                    methodSym.Access = Accessibility.Public;
 
-            foreach (var addition in method_additions)
-            {
-                var method = asm.GetSymbol(this, addition.Item2, SymbolKind.Method);
-                addition.Item1.AddMember(method);
-            }
+                    if (makeVirtual)
+                    {
+                        methodSym.IsVirtualOrOverrideOrAbstract = true;
+                    }
 
-            foreach (var addition in property_additions)
-            {
-                var property = asm.GetSymbol(this, addition.Item2, SymbolKind.Property);
-                addition.Item1.AddMember(property);
+                    typeSym.AddMember(methodSym);
+                }
+
+                void AddProperty(string propertyName)
+                {
+                    var propertySym = asm.GetSymbol(this, propertyName, SymbolKind.Property);
+                    propertySym.Access = Accessibility.Public;
+                    typeSym.AddMember(propertySym);
+                }
             }
         }
     }
@@ -498,6 +519,18 @@ public sealed class AssemblyGraph
         return sb.ToString();
     }
 
+    private void HandleDuplicateAssemblies()
+    {
+        foreach (var path in _duplicateAssemblies)
+        {
+            var name = Path.GetFileNameWithoutExtension(path);
+            if (_assemblies.TryGetValue(name, out var asm))
+            {
+                asm.AddDuplicate(path);
+            }
+        }
+    }
+
     /// <summary>
     /// Completes the graph and returns a reporter to extract meaning from the graph.
     /// </summary>
@@ -508,6 +541,7 @@ public sealed class AssemblyGraph
         {
             TrimExcess();
             HackSystemTypes();
+            HandleDuplicateAssemblies();
 
             // we need to do these first, since the code below will introduce downward links in the graph which leads to cycles
             _layerCake = CreateAssemblyLayerCake();

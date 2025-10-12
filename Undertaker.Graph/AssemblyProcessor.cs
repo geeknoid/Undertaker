@@ -33,15 +33,14 @@ internal static class AssemblyProcessor
     public static bool Merge(AssemblyGraph graph, LoadedAssembly la)
     {
         var decomp = la.Decompiler;
-        var asm = graph.GetAssembly(decomp.TypeSystem.MainModule.AssemblyName);
-        var sb = new StringBuilder();
 
+        var asm = graph.GetAssembly(decomp.TypeSystem.MainModule.AssemblyName);
         if (asm.Loaded)
         {
-            asm.AddDuplicate(la.Path, decomp.TypeSystem.MainModule.AssemblyVersion);
             return false;
         }
 
+        var sb = new StringBuilder();
         foreach (var type in decomp.TypeSystem.MainModule.TypeDefinitions)
         {
             // find the static constructor (if any) and default constructor (if any)
@@ -68,18 +67,19 @@ internal static class AssemblyProcessor
             if (type.Kind == TypeKind.Enum)
             {
                 // we don't handle enum values, so pretend they don't exist
-                typeSym.SetDeclaresConstants();
+                typeSym.DeclaresConstants = true;
                 continue;
             }
 
             foreach (var method in type.Methods)
             {
                 var sym = (MethodSymbol)DefineSymbol(method);
+
                 foreach (var a in method.GetAttributes())
                 {
                     if (graph.IsTestMethodAttribute(a.AttributeType.ReflectionName))
                     {
-                        sym.MarkAsTestMethod();
+                        sym.IsTestMethod = true;
 
                         if (ctor != null)
                         {
@@ -118,7 +118,7 @@ internal static class AssemblyProcessor
                 {
                     if (field.Accessibility != Accessibility.Private)
                     {
-                        typeSym.SetDeclaresConstants();
+                        typeSym.DeclaresConstants = true;
                     }
 
                     // we don't handle const values, so pretend they don't exist
@@ -161,7 +161,7 @@ internal static class AssemblyProcessor
             {
                 if (graph.IsReflectionMarkerAttribute(a.AttributeType.ReflectionName))
                 {
-                    sym.SetReflectionTarget();
+                    sym.ReflectionTarget = true;
                     break;
                 }
             }
@@ -210,7 +210,7 @@ internal static class AssemblyProcessor
 
                 if (typeSym.ReflectionTarget)
                 {
-                    sym.SetReflectionTarget();
+                    sym.ReflectionTarget = true;
                 }
 
                 if (bt.Kind == TypeKind.Interface)
@@ -586,7 +586,7 @@ internal static class AssemblyProcessor
 
                     if (reflectionTarget)
                     {
-                        toSym.SetReflectionTarget();
+                        toSym.ReflectionTarget = true;
                     }
                 }
 

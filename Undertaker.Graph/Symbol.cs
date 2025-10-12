@@ -6,33 +6,23 @@ namespace Undertaker.Graph;
 
 internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
 {
+    public abstract SymbolKind Kind { get; }
+    public bool IsPublic => Access == Accessibility.Public;
+    public IReadOnlyCollection<SymbolId> Referencers => _referencers;
+    public IReadOnlyCollection<SymbolId> ReferencedSymbols => _referencedSymbols;
+
     // set on construction
     public Assembly Assembly { get; private set; } = assembly;
     public SkinnyString Name { get; } = new SkinnyString(name);
     public SymbolId Id { get; } = id;
 
-    public abstract SymbolKind Kind { get; }
-
-    // set by Define
-    public bool Hide { get; protected set; }
-    public bool IsPublic { get; private set; }
-
-    // Accessibility of the symbol.
-    public Accessibility Access { get; private set; }
-
-    // set by RecordReferencedSymbol
-    public IReadOnlyCollection<SymbolId> Referencers => _referencers;
-    public IReadOnlyCollection<SymbolId> ReferencedSymbols => _referencedSymbols;
-
-    // filled-in over time as the overall graph is populated
-    public SymbolId? DeclaringType { get; set; }
-    public bool Root { get; protected set; }
-
-    // set by Mark when visiting the graph
+    public bool Hide { get; set; }
+    public bool ReflectionTarget { get; set; }
+    public bool Root { get; set; }
     public bool Marked { get; private set; }
+    public Accessibility Access { get; set; }
 
-    // set by SetReflectionTarget
-    public bool ReflectionTarget { get; private set; }
+    public SymbolId? DeclaringType { get; set; }
 
     private readonly HashSet<SymbolId> _referencers = [];
     private readonly HashSet<SymbolId> _referencedSymbols = [];
@@ -41,7 +31,6 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
     {
         Hide = entity.IsCompilerGenerated() || Name.Contains('<');
         Access = entity.EffectiveAccessibility();
-        IsPublic = Access == Accessibility.Public;
 
         if (Assembly.IsRootAssembly)
         {
@@ -86,8 +75,6 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
             refSym.Mark(graph);
         }
     }
-
-    public void SetReflectionTarget() => ReflectionTarget = true;
 
     public override string ToString() => Name.ToString();
 

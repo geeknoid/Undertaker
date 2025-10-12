@@ -319,7 +319,7 @@ public sealed class Reporter
         var result = new List<DuplicateAssemblyReport>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && asm.Duplicates.Count > 0))
         {
-            result.Add(new DuplicateAssemblyReport(asm.Name, asm.Version!, asm.Path!, asm.Duplicates));
+            result.Add(new DuplicateAssemblyReport(asm.Name, asm.Path!, asm.Duplicates));
         }
 
         return result;
@@ -418,9 +418,7 @@ public sealed class Reporter
 
             using var output = File.CreateText(p);
 
-            output.Write("ASSEMBLY ");
-            output.Write(asm.Name);
-            output.Write(".dll");
+            output.Write($"ASSEMBLY: {asm.Name}.dll");
 
             if (!asm.Loaded)
             {
@@ -428,39 +426,42 @@ public sealed class Reporter
                 continue;
             }
 
-            output.Write(" [LOADED");
-            output.Write(asm.IsRootAssembly ? ", ROOT" : ", !ROOT");
-            output.WriteLine(asm.IsSystemAssembly ? ", SYSTEM]" : ", !SYSTEM]");
+            {
+                var root = asm.IsRootAssembly ? "ROOT" : "ROOT";
+                var isSystem = asm.IsSystemAssembly ? "SYSTEM" : "!SYSTEM";
+                output.WriteLine($" [LOADED, {root}, {isSystem}]");
+            }
 
             foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).OrderBy(s => s.Name))
             {
-                output.Write("  ");
-                output.Write(sym.Name);
-                output.Write(" [");
-                output.Write(sym.Kind.ToString().ToUpperInvariant());
+                var state = sym.Marked ? "ALIVE" : "DEAD";
+                var hide = sym.Hide ? "HIDE" : "!HIDE";
+                var refTarget = sym.ReflectionTarget ? "REFLECTION_TARGET" : "!REFLECTION_TARGET";
+                var root = sym.Root ? "ROOT" : "!ROOT";
+                var test = "";
 
-                output.Write(sym.Marked ? ", ALIVE" : ", DEAD");
-                output.Write(sym.Hide ? ", HIDE" : ", !HIDE");
-                output.Write(sym.ReflectionTarget ? ", REFLECTION_TARGET" : ", !REFLECTION_TARGET");
-                output.WriteLine(sym.Root ? ", ROOT]" : ", !ROOT]");
+                if (sym is MethodSymbol ms)
+                {
+                    test = ms.IsTestMethod ? ", TEST" : ", !TEST";
+                }
+
+                output.WriteLine($"  SYM: {sym.Name} [{sym.Kind.ToString().ToUpperInvariant()}, {state}, {hide}, {refTarget}, {root}{test}]");
 
                 if (sym.ReferencedSymbols.Count > 0)
                 {
                     output.WriteLine("    DIRECTLY REFERENCES");
-                    foreach (var s in sym.ReferencedSymbols.Select(_symbolTable.GetSymbol))
+                    foreach (var s in sym.ReferencedSymbols.Select(_symbolTable.GetSymbol).OrderBy(s => s.Name))
                     {
-                        output.Write("      ");
-                        output.WriteLine(s.Name);
+                        output.WriteLine($"      REF: {s.Name}");
                     }
                 }
 
                 if (sym.Referencers.Count > 0)
                 {
                     output.WriteLine("    DIRECTLY REFERENCED BY");
-                    foreach (var s in sym.Referencers.Select(_symbolTable.GetSymbol))
+                    foreach (var s in sym.Referencers.Select(_symbolTable.GetSymbol).OrderBy(s => s.Name))
                     {
-                        output.Write("      ");
-                        output.WriteLine(s.Name);
+                        output.WriteLine($"      REFBY: {s.Name}");
                     }
                 }
             }

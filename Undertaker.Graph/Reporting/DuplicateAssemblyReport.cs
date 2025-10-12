@@ -14,11 +14,6 @@ public class DuplicateAssemblyReport : IComparable<DuplicateAssemblyReport>
     public string Assembly { get; }
 
     /// <summary>
-    /// The version of the assembly.
-    /// </summary>
-    public Version Version { get; }
-
-    /// <summary>
     /// Path of the assembly.
     /// </summary>
     public string Path { get; }
@@ -30,10 +25,9 @@ public class DuplicateAssemblyReport : IComparable<DuplicateAssemblyReport>
     /// </summary>
     public IEnumerable<DuplicateAssembly> Duplicates { get; }
 
-    internal DuplicateAssemblyReport(string assemblyName, Version version, string path, IEnumerable<DuplicateAssembly> duplicates)
+    internal DuplicateAssemblyReport(string assemblyName, string path, IEnumerable<DuplicateAssembly> duplicates)
     {
         Assembly = assemblyName;
-        Version = version;
         Path = path;
         Duplicates = duplicates;
     }
@@ -45,24 +39,19 @@ public class DuplicateAssemblyReport : IComparable<DuplicateAssemblyReport>
             return 1; // this instance is greater than null
         }
 
-        int nameComparison = string.Compare(Assembly, other.Assembly, StringComparison.OrdinalIgnoreCase);
-        return nameComparison != 0
-            ? nameComparison
-            : Version.CompareTo(other.Version);
+        return string.Compare(Assembly, other.Assembly, StringComparison.OrdinalIgnoreCase);
     }
 
     public override bool Equals(object? obj)
     {
         return obj is DuplicateAssemblyReport other
-            && string.Equals(Assembly, other.Assembly, StringComparison.OrdinalIgnoreCase)
-            && Version.Equals(other.Version);
+            && string.Equals(Assembly, other.Assembly, StringComparison.OrdinalIgnoreCase);
     }
 
-    public override int GetHashCode() => HashCode.Combine(Assembly, Version);
+    public override int GetHashCode() => Path.GetHashCode();
 }
 
-public readonly struct DuplicateAssembly(string path, Version version)
+public readonly struct DuplicateAssembly(string path)
 {
     public string Path { get; } = path;
-    public Version Version { get; } = version;
 }

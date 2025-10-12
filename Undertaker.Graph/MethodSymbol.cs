@@ -6,9 +6,9 @@ namespace Undertaker.Graph;
 
 internal sealed class MethodSymbol(Assembly assembly, string name, SymbolId id) : Symbol(assembly, name, id)
 {
-    public bool IsVirtualOrOverrideOrAbstract { get; private set; }
-    public bool IsOverride { get; private set; }
-    public bool IsTestMethod { get; private set; }
+    public bool IsVirtualOrOverrideOrAbstract { get; set; }
+    public bool IsOverride { get; set; }
+    public bool IsTestMethod { get; set; }
 
     public override void Define(IEntity entity)
     {
@@ -21,7 +21,6 @@ internal sealed class MethodSymbol(Assembly assembly, string name, SymbolId id) 
 
         if (m.AccessorOwner != null && !m.AccessorOwner.IsCompilerGenerated())
         {
-
             Hide = false;  // always expose accessors in a first class way
         }
         else if (m.IsConstructor)
@@ -42,12 +41,6 @@ internal sealed class MethodSymbol(Assembly assembly, string name, SymbolId id) 
 
         IsVirtualOrOverrideOrAbstract = m.IsVirtual || m.IsOverride || m.IsAbstract;
         IsOverride = m.IsOverride;
-    }
-
-    public void MarkAsTestMethod()
-    {
-        IsTestMethod = true;
-        Root = true;
     }
 
     private int FindSignature()
