@@ -488,13 +488,11 @@ internal static class Program
                 int errorCount = 0;
                 int badFmtCount = 0;
                 int duplicateCount = 0;
-                int processedCount = 0;
                 bool needNewLine = false;
+                DateTime update = DateTime.Now;
 
                 await foreach (var (la, ex, file) in loadProcessorChannel.Reader.ReadAllAsync())
                 {
-                    processedCount++;
-                    
                     var e = ex;
                     if (e == null)
                     {
@@ -514,10 +512,15 @@ internal static class Program
                                 {
                                     VerboseLoadStatus(ConsoleColor.White, "Loaded", $"{file.FullName}");
                                 }
-                                else if (!args.Quiet && processedCount % 16 == 0)
+                                else if (!args.Quiet)
                                 {
-                                    Console.Write($"\r  Loaded: {loadCount}, duplicate(s): {duplicateCount}, not_msil: {badFmtCount}, error(s): {errorCount}");
-                                    needNewLine = true;
+                                    var now = DateTime.Now;
+                                    if (now >= update.AddSeconds(1))
+                                    {
+                                        Console.Write($"\r  Loaded: {loadCount}, duplicate(s): {duplicateCount}, not_msil: {badFmtCount}, error(s): {errorCount}");
+                                        needNewLine = true;
+                                        update = now;
+                                    }
                                 }
                             }
                         }
@@ -541,7 +544,7 @@ internal static class Program
 
                 if (needNewLine)
                 {
-                    Console.WriteLine();
+                    Console.WriteLine($"\r  Loaded: {loadCount}, duplicate(s): {duplicateCount}, not_msil: {badFmtCount}, error(s): {errorCount}");
                 }
 
                 Verbose($"Done loading assemblies: loaded: {loadCount}, duplicate(s): {duplicateCount}, not MSIL: {badFmtCount}, error(s): {errorCount}");

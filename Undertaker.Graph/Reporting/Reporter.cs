@@ -234,6 +234,10 @@ public sealed class Reporter
     /// </summary>
     public NeedlesslyPublicReport CollectNeedlesslyPublicSymbols()
     {
+        // BUGBUG: This analysis is a bit too simple. EVen if a type isn't used directly
+        // outside its assembly, it might be used in a type hierarchy and a more derived type
+        // is public, which forces the base type to be public as well.
+
         var assemblies = new List<NeedlesslyPublicReportAssembly>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && !asm.IsSystemAssembly))
         {
@@ -259,7 +263,7 @@ public sealed class Reporter
                         affectedTypes ??= [];
                         affectedTypes.Add(sym.Name);
                     }
-                    else
+                    else if (!(sym is MethodSymbol ms && ms.IsOverride))
                     {
                         affectedMembers ??= [];
                         affectedMembers.Add(sym.Name);

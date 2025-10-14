@@ -11,7 +11,6 @@ namespace Undertaker.Graph;
 internal static class AssemblyProcessor
 {
     private static readonly HashSet<string> _ignorables = [
-        "System.Object",
         "System.ValueType",
         "System.Void",
         "System.String",
