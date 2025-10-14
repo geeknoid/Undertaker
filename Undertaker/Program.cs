@@ -1,12 +1,8 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Parsing;
-using System.ComponentModel;
-using System.IO;
-using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Channels;
-using ICSharpCode.Decompiler.CSharp.Syntax;
 using Undertaker.Graph;
 
 namespace Undertaker;
@@ -428,7 +424,7 @@ internal static class Program
             graph.RecordReflectionMarkerAttribute("Newtonsoft.Json.JsonPropertyAttribute");
         }
 
-        int errorCount  = await LoadAssemblies();
+        int errorCount = await LoadAssemblies();
 
         if (errorCount > 0)
         {

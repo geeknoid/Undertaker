@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Reflection;
 using System.Text;
 using ICSharpCode.Decompiler.TypeSystem;
 using Undertaker.Graph.Misc;
@@ -167,7 +166,7 @@ public sealed class AssemblyGraph
                 }
                 else if (sym is MethodSymbol ms && ms.IsTestMethod)
                 {
-                    ms.Mark(this);  
+                    ms.Mark(this);
                 }
             }
         }
