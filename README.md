@@ -25,7 +25,7 @@ and a Mermaid-based assembly dependency diagram.
 ## Options
 
 ```text
-sage:
+Usage:
   Undertaker [<input folders>...] [options]
 
 Arguments:
