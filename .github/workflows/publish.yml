@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 env:
   DOTNET_VERSION: '10.0.x'
@@ -51,9 +52,17 @@ jobs:
           --configuration Release \
           --output ./nupkg \
 
+    - name: Authenticate to NuGet.org
+      uses: NuGet/login@v1
+      id: nuget
+      with:
+        user: geeknoid
+
     - name: Publish to NuGet.org
+      env:
+        NUGET_API_KEY: ${{ steps.nuget.outputs.NUGET_API_KEY }}
       run: |
         dotnet nuget push "./nupkg/Undertaker.${{ github.ref_name }}.nupkg" \
-          --api-key ${{ secrets.NUGET_API_KEY }} \
+          --api-key "$NUGET_API_KEY" \
           --source https://api.nuget.org/v3/index.json \
           --skip-duplicate
