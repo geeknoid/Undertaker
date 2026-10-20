@@ -110,7 +110,7 @@
           ]
         },
         {
-          "Name": "TestLibrary.AliveClassButDeadMembers.Item",
+          "Name": "TestLibrary.AliveClassButDeadMembers.Item(System.Int32)",
           "Kind": "Misc",
           "Access": "Public",
           "ReferencedBy": [
@@ -182,42 +182,6 @@
           "ReferencedBy": []
         },
         {
-          "Name": "TestLibrary.AliveRecordClass.Id",
-          "Kind": "Property",
-          "Access": "Public",
-          "ReferencedBy": [
-            "TestLibrary.AliveRecordClass.get_Id()",
-            "TestLibrary.AliveRecordClass.set_Id(System.Int32)"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveRecordClass.Name",
-          "Kind": "Property",
-          "Access": "Public",
-          "ReferencedBy": [
-            "TestLibrary.AliveRecordClass.get_Name()",
-            "TestLibrary.AliveRecordClass.set_Name(System.String)"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveRecordClass.get_Id()",
-          "Kind": "Method",
-          "Access": "Public",
-          "ReferencedBy": [
-            "TestLibrary.AliveRecordClass.Deconstruct(System.Int32\u0026, System.String\u0026)",
-            "TestLibrary.AliveRecordClass.PrintMembers(System.Text.StringBuilder)"
-          ]
-        },
-        {
-          "Name": "TestLibrary.AliveRecordClass.get_Name()",
-          "Kind": "Method",
-          "Access": "Public",
-          "ReferencedBy": [
-            "TestLibrary.AliveRecordClass.Deconstruct(System.Int32\u0026, System.String\u0026)",
-            "TestLibrary.AliveRecordClass.PrintMembers(System.Text.StringBuilder)"
-          ]
-        },
-        {
           "Name": "TestLibrary.AliveRecordClass.set_Id(System.Int32)",
           "Kind": "Method",
           "Access": "Public",
@@ -243,12 +207,6 @@
         },
         {
           "Name": "TestLibrary.MyCaughtException..ctor()",
-          "Kind": "Method",
-          "Access": "Public",
-          "ReferencedBy": []
-        },
-        {
-          "Name": "TestLibrary.TestAttribute..ctor(System.String)",
           "Kind": "Method",
           "Access": "Public",
           "ReferencedBy": []

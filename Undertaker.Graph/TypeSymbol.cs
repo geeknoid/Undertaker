@@ -13,6 +13,7 @@ internal sealed class TypeSymbol(Assembly assembly, string name, SymbolId id) : 
 
     public TypeKind TypeKind { get; set; }
     public bool DeclaresConstants { get; private set; }
+    public bool MembersPopulated { get; set; }
     private readonly HashSet<SymbolId> _members = [];
     private SmallList<SymbolId> _interfacesImplemented = [];
     private SmallList<SymbolId> _baseTypes = [];

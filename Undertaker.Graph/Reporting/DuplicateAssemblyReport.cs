@@ -24,9 +24,7 @@ public class DuplicateAssemblyReport : IComparable<DuplicateAssemblyReport>
     public string Path { get; }
 
     /// <summary>
-    /// The set of other assembly files & version which were not loaded
-    /// ies which have access to the internal symbols of the
-    /// assembly, but don't need this access.
+    /// The set of other assembly files &amp; versions which were not loaded.
     /// </summary>
     public IEnumerable<DuplicateAssembly> Duplicates { get; }
 
@@ -58,9 +56,10 @@ public class DuplicateAssemblyReport : IComparable<DuplicateAssemblyReport>
             && Version.Equals(other.Version);
     }
 
-    public override int GetHashCode() => HashCode.Combine(Assembly, Version);
+    public override int GetHashCode() => HashCode.Combine(StringComparer.OrdinalIgnoreCase.GetHashCode(Assembly), Version);
 }
 
+/// <summary>Identifies an assembly file and version that was not loaded because it was a duplicate.</summary>
 public readonly struct DuplicateAssembly(string path, Version version)
 {
     public string Path { get; } = path;

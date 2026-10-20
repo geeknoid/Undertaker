@@ -110,21 +110,6 @@
           "Access": "Public"
         },
         {
-          "Name": "TestLibrary.AliveRecordClass.Equals(System.Object)",
-          "Kind": "Method",
-          "Access": "Public"
-        },
-        {
-          "Name": "TestLibrary.AliveRecordClass.GetHashCode()",
-          "Kind": "Method",
-          "Access": "Public"
-        },
-        {
-          "Name": "TestLibrary.AliveRecordClass.ToString()",
-          "Kind": "Method",
-          "Access": "Public"
-        },
-        {
           "Name": "TestLibrary.AliveRecordClass.op_Inequality(TestLibrary.AliveRecordClass, TestLibrary.AliveRecordClass)",
           "Kind": "Method",
           "Access": "Public"
@@ -181,11 +166,6 @@
         },
         {
           "Name": "TestLibrary.MyCaughtException..ctor()",
-          "Kind": "Method",
-          "Access": "Public"
-        },
-        {
-          "Name": "TestLibrary.TestAttribute..ctor(System.String)",
           "Kind": "Method",
           "Access": "Public"
         },

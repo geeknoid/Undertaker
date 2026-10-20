@@ -6,8 +6,11 @@ on:
       - '[0-9]+.[0-9]+.[0-9]+'        # Matches semantic versioning: X.Y.Z
       - '[0-9]+.[0-9]+.[0-9]+-*'      # Matches pre-release versions: X.Y.Z-alpha, X.Y.Z-beta.1, etc.
 
+permissions:
+  contents: read
+
 env:
-  DOTNET_VERSION: '9.0.x'
+  DOTNET_VERSION: '10.0.x'
   SOLUTION_FILE: 'Undertaker.sln'
   PROJECT_PATH: 'Undertaker/Undertaker.csproj'
 
@@ -37,6 +40,9 @@ jobs:
 
     - name: Build
       run: dotnet build ${{ env.SOLUTION_FILE }} --no-restore --configuration Release
+
+    - name: Test
+      run: dotnet test ${{ env.SOLUTION_FILE }} --no-build --configuration Release
 
     - name: Create Nuget
       run: |
