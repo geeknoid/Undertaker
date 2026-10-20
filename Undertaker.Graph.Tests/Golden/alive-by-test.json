@@ -6,23 +6,21 @@
         {
           "Name": "TestLibrary.AliveByTestClas",
           "ReferencedBy": [
+            "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
+            "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
+            "TestLibrary.AliveByTestClas..ctor()",
             "TestLibrary.AliveByTestClas.MyTestMethod()"
           ]
         },
         {
           "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
           "ReferencedBy": [
+            "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
             "TestLibrary.AliveByTestClas.MyTestMethod()"
           ]
         }
       ],
       "AliveMembers": [
-        {
-          "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest",
-          "ReferencedBy": [
-            "TestLibrary.AliveByTestClas.MyTestMethod()"
-          ]
-        },
         {
           "Name": "TestLibrary.AliveByTestClas\u002BOnlyUsedInATest..ctor()",
           "ReferencedBy": [
@@ -34,6 +32,10 @@
           "ReferencedBy": [
             "TestLibrary.AliveByTestClas.MyTestMethod()"
           ]
+        },
+        {
+          "Name": "TestLibrary.AliveByTestClas.MyTestMethod()",
+          "Root": true
         }
       ]
     }

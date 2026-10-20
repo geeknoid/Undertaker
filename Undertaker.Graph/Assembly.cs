@@ -23,6 +23,7 @@ internal sealed class Assembly(string name, bool root)
     public IReadOnlyCollection<Assembly> InternalsVisibleTo => _internalsVisibleTo;
     public Version? Version { get; set; }
     public string? Path { get; set; }
+    public IReadOnlyCollection<Assembly> RealDependencies { get; private set; } = [];
 
     private readonly Dictionary<Key, SymbolId> _symbols = [];
     private readonly HashSet<Assembly> _internalsVisibleTo = [];
@@ -91,6 +92,16 @@ internal sealed class Assembly(string name, bool root)
     }
 
     public void RecordInternalsVisibleTo(Assembly other) => _ = _internalsVisibleTo.Add(other);
+    public void SnapshotDependencies(AssemblyGraph graph)
+    {
+        RealDependencies = Symbols.Select(graph.SymbolTable.GetSymbol)
+            .SelectMany(sym => sym.ReferencedSymbols)
+            .Select(graph.SymbolTable.GetSymbol)
+            .Select(sym => sym.Assembly)
+            .Where(asm => asm != this)
+            .Distinct()
+            .ToArray();
+    }
     public override string ToString() => Name;
     public void AddDuplicate(string path, Version version) => _duplicates.Add(new DuplicateAssembly(path, version));
 
@@ -116,8 +127,12 @@ internal sealed class Assembly(string name, bool root)
             }
 
             var sb = new StringBuilder()
-                .Append(entity.ReflectionName)
-                .Append('(');
+                .Append(method.ReflectionName);
+            if (method.TypeParameters.Count != 0)
+            {
+                sb.Append("``").Append(method.TypeParameters.Count);
+            }
+            sb.Append('(');
 
             bool first = true;
             foreach (var p in method.Parameters)
@@ -135,6 +150,12 @@ internal sealed class Assembly(string name, bool root)
             }
 
             return sb.Append(')').ToString();
+        }
+
+        if (entity is IProperty property && property.Parameters.Count != 0)
+        {
+            property = (IProperty)property.MemberDefinition;
+            return property.ReflectionName + "(" + string.Join(", ", property.Parameters.Select(p => p.Type.ReflectionName)) + ")";
         }
 
         return entity.ReflectionName;

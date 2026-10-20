@@ -26,7 +26,7 @@ public class SkinnyStringTests
     [Fact]
     public void Constructor_UnicodeString_PreservesValue()
     {
-        var original = "Hello ?? ??";
+        var original = "Hello \u4E16\u754C \u03A9\u20AC";
         var skinny = new SkinnyString(original);
         Assert.Equal(original, skinny.ToString());
     }
@@ -34,7 +34,7 @@ public class SkinnyStringTests
     [Fact]
     public void Constructor_MultiByteCharacters_PreservesValue()
     {
-        var original = "Café"; // é is a multi-byte UTF-8 character
+        var original = "Caf\u00E9";
         var skinny = new SkinnyString(original);
         Assert.Equal(original, skinny.ToString());
     }
@@ -42,7 +42,7 @@ public class SkinnyStringTests
     [Fact]
     public void Constructor_SurrogatePairs_PreservesValue()
     {
-        var original = "??????????"; // Mathematical bold characters (surrogate pairs)
+        var original = "\U0001D400\U0001D401\U0001D402\U0001D403\U0001D404";
         var skinny = new SkinnyString(original);
         Assert.Equal(original, skinny.ToString());
     }
@@ -50,7 +50,7 @@ public class SkinnyStringTests
     [Fact]
     public void Constructor_EmojiSequence_PreservesValue()
     {
-        var original = "Hello ??????????? Family";
+        var original = "Hello \U0001F468\u200D\U0001F469\u200D\U0001F467\u200D\U0001F466 Family";
         var skinny = new SkinnyString(original);
         Assert.Equal(original, skinny.ToString());
     }
@@ -68,11 +68,14 @@ public class SkinnyStringTests
     }
 
     [Fact]
-    public void GetHashCode_DifferentStrings_ReturnsDifferentHash()
+    public void GetHashCode_DifferentStrings_RemainDistinctDictionaryKeys()
     {
         var skinny1 = new SkinnyString("test1");
         var skinny2 = new SkinnyString("test2");
-        Assert.NotEqual(skinny1.GetHashCode(), skinny2.GetHashCode());
+        var values = new Dictionary<SkinnyString, int> { [skinny1] = 1, [skinny2] = 2 };
+        Assert.Equal(2, values.Count);
+        Assert.Equal(1, values[new SkinnyString("test1")]);
+        Assert.Equal(2, values[new SkinnyString("test2")]);
     }
 
     [Fact]
@@ -127,7 +130,7 @@ public class SkinnyStringTests
     [Fact]
     public void Equals_String_Unicode_ReturnsTrue()
     {
-        var original = "Hello ??";
+        var original = "Hello \u4E16\u754C";
         var skinny = new SkinnyString(original);
         Assert.True(((IEquatable<string>)skinny).Equals(original));
     }
@@ -135,7 +138,7 @@ public class SkinnyStringTests
     [Fact]
     public void Equals_String_SurrogatePairs_ReturnsTrue()
     {
-        var original = "??????????";
+        var original = "\U0001D400\U0001D401\U0001D402\U0001D403\U0001D404";
         var skinny = new SkinnyString(original);
         Assert.True(((IEquatable<string>)skinny).Equals(original));
     }
@@ -222,17 +225,15 @@ public class SkinnyStringTests
     [Fact]
     public void CompareTo_String_Unicode_WorksCorrectly()
     {
-        var skinny1 = new SkinnyString("??");
-        var skinny2 = new SkinnyString("??");
-        Assert.Equal(0, ((IComparable<string>)skinny1).CompareTo(skinny2.ToString()));
+        var skinny = new SkinnyString("\u4E16\u754C");
+        Assert.Equal(0, ((IComparable<string>)skinny).CompareTo("\u4E16\u754C"));
     }
 
     [Fact]
     public void CompareTo_String_SurrogatePairs_WorksCorrectly()
     {
-        var skinny1 = new SkinnyString("??????????");
-        var skinny2 = new SkinnyString("??????????");
-        Assert.Equal(0, ((IComparable<string>)skinny1).CompareTo(skinny2.ToString()));
+        var skinny = new SkinnyString("\U0001D400\U0001D401");
+        Assert.Equal(0, ((IComparable<string>)skinny).CompareTo("\U0001D400\U0001D401"));
     }
 
     #endregion
@@ -259,16 +260,16 @@ public class SkinnyStringTests
     [Fact]
     public void Contains_Char_Unicode_Found_ReturnsTrue()
     {
-        var skinny = new SkinnyString("Hello ??");
-        Assert.True(skinny.Contains('?'));
-        Assert.True(skinny.Contains('?'));
+        var skinny = new SkinnyString("Hello \u4E16\u754C");
+        Assert.True(skinny.Contains('\u4E16'));
+        Assert.True(skinny.Contains('\u754C'));
     }
 
     [Fact]
     public void Contains_Char_MultiByteUtf8_Found_ReturnsTrue()
     {
-        var skinny = new SkinnyString("Café");
-        Assert.True(skinny.Contains('é'));
+        var skinny = new SkinnyString("Caf\u00E9");
+        Assert.True(skinny.Contains('\u00E9'));
     }
 
     [Fact]
@@ -316,8 +317,8 @@ public class SkinnyStringTests
     [Fact]
     public void Contains_String_Unicode_Found_ReturnsTrue()
     {
-        var skinny = new SkinnyString("Hello ??");
-        Assert.True(skinny.Contains("??"));
+        var skinny = new SkinnyString("Hello \u4E16\u754C");
+        Assert.True(skinny.Contains("\u4E16\u754C"));
     }
 
     [Fact]
@@ -350,8 +351,8 @@ public class SkinnyStringTests
     [Fact]
     public void IndexOf_Char_MultiByteUtf8_ReturnsCorrectCharIndex()
     {
-        var skinny = new SkinnyString("Café");
-        Assert.Equal(3, skinny.IndexOf('é'));
+        var skinny = new SkinnyString("Caf\u00E9");
+        Assert.Equal(3, skinny.IndexOf('\u00E9'));
     }
 
     [Fact]
@@ -447,15 +448,15 @@ public class SkinnyStringTests
     [Fact]
     public void StartsWith_Unicode_Matching_ReturnsTrue()
     {
-        var skinny = new SkinnyString("?? Hello");
-        Assert.True(skinny.StartsWith("??"));
+        var skinny = new SkinnyString("\u4E16\u754C Hello");
+        Assert.True(skinny.StartsWith("\u4E16\u754C"));
     }
 
     [Fact]
     public void StartsWith_SurrogatePairs_Matching_ReturnsTrue()
     {
-        var skinny = new SkinnyString("?????????? World");
-        Assert.True(skinny.StartsWith("????"));
+        var skinny = new SkinnyString("\U0001D400\U0001D401\U0001D402\U0001D403\U0001D404 World");
+        Assert.True(skinny.StartsWith("\U0001D400\U0001D401"));
     }
 
     [Fact]
@@ -512,24 +513,24 @@ public class SkinnyStringTests
     public void EqualityOperator_SkinnyStringAndString_Equal_ReturnsTrue()
     {
         var skinny = new SkinnyString("test");
-        Assert.Equal("test", skinny);
-        Assert.Equal("test", skinny);
+        Assert.True(skinny == "test");
+        Assert.True("test" == skinny);
     }
 
     [Fact]
     public void EqualityOperator_SkinnyStringAndString_NotEqual_ReturnsFalse()
     {
         var skinny = new SkinnyString("test1");
-        Assert.NotEqual("test2", skinny);
-        Assert.NotEqual("test2", skinny);
+        Assert.False(skinny == "test2");
+        Assert.False("test2" == skinny);
     }
 
     [Fact]
     public void InequalityOperator_SkinnyStringAndString_NotEqual_ReturnsTrue()
     {
         var skinny = new SkinnyString("test1");
-        Assert.NotEqual("test2", skinny);
-        Assert.NotEqual("test2", skinny);
+        Assert.True(skinny != "test2");
+        Assert.True("test2" != skinny);
     }
 
     [Fact]
@@ -590,22 +591,22 @@ public class SkinnyStringTests
     [Fact]
     public void EdgeCase_AllUnicode_WorksCorrectly()
     {
-        var unicode = "?????????????";
+        var unicode = "\u4E16\u754C\u03A9\u20AC\U0001F600\U00010000";
         var skinny = new SkinnyString(unicode);
         Assert.Equal(unicode, skinny.ToString());
-        Assert.True(skinny.Contains('?'));
-        Assert.True(skinny.StartsWith("?????"));
+        Assert.True(skinny.Contains('\u03A9'));
+        Assert.True(skinny.StartsWith("\u4E16\u754C\u03A9"));
     }
 
     [Fact]
     public void EdgeCase_MixedContent_WorksCorrectly()
     {
-        var mixed = "ASCII 123 ?? ?? Café";
+        var mixed = "ASCII 123 \u4E16\u754C \U0001F600 Caf\u00E9";
         var skinny = new SkinnyString(mixed);
         Assert.Equal(mixed, skinny.ToString());
         Assert.True(skinny.Contains('1'));
-        Assert.True(skinny.Contains('?'));
-        Assert.True(skinny.Contains('é'));
+        Assert.True(skinny.Contains("\U0001F600"));
+        Assert.True(skinny.Contains('\u00E9'));
     }
 
     [Fact]
@@ -683,14 +684,14 @@ public class SkinnyStringTests
     [Fact]
     public void MultipleOperations_UnicodeComparisons_WorkCorrectly()
     {
-        var skinny1 = new SkinnyString("??");
-        var skinny2 = new SkinnyString("??");
+        var skinny1 = new SkinnyString("\u4E16\u754C");
+        var skinny2 = new SkinnyString("\u4E16\u754C");
 
         Assert.True(skinny1 == skinny2);
-        Assert.True(((IEquatable<string>)skinny1).Equals("??"));
-        Assert.Equal(0, ((IComparable<string>)skinny1).CompareTo("??"));
-        Assert.True(skinny1.Contains('?'));
-        Assert.True(skinny1.Contains("??"));
+        Assert.True(((IEquatable<string>)skinny1).Equals("\u4E16\u754C"));
+        Assert.Equal(0, ((IComparable<string>)skinny1).CompareTo("\u4E16\u754C"));
+        Assert.True(skinny1.Contains('\u4E16'));
+        Assert.True(skinny1.Contains("\u4E16\u754C"));
     }
 
     #endregion
@@ -701,32 +702,32 @@ public class SkinnyStringTests
     public void Debug_VerifyActualBehavior()
     {
         // Test IndexOf
-        var str1 = "Hello ??";
+        var str1 = "Hello \u4E16\u754C";
         var skinny1 = new SkinnyString(str1);
 
-        var expectedIndexOf1 = str1.IndexOf('?');  // Should be 6
-        var expectedIndexOf2 = str1.IndexOf('?');  // Should be 7
-        var actualIndexOf1 = skinny1.IndexOf('?');
-        var actualIndexOf2 = skinny1.IndexOf('?');
+        var expectedIndexOf1 = str1.IndexOf('\u4E16');
+        var expectedIndexOf2 = str1.IndexOf('\u754C');
+        var actualIndexOf1 = skinny1.IndexOf('\u4E16');
+        var actualIndexOf2 = skinny1.IndexOf('\u754C');
 
         Assert.Equal(expectedIndexOf1, actualIndexOf1);
         Assert.Equal(expectedIndexOf2, actualIndexOf2);
 
         // Test LastIndexOf
-        var str2 = "????";
+        var str2 = "\u4E16\u754C\u4E16\u754C";
         var skinny2 = new SkinnyString(str2);
 
-        var expectedLastIndexOf1 = str2.LastIndexOf('?');  // Should be 2
-        var expectedLastIndexOf2 = str2.LastIndexOf('?');  // Should be 3
-        var actualLastIndexOf1 = skinny2.LastIndexOf('?');
-        var actualLastIndexOf2 = skinny2.LastIndexOf('?');
+        var expectedLastIndexOf1 = str2.LastIndexOf('\u4E16');
+        var expectedLastIndexOf2 = str2.LastIndexOf('\u754C');
+        var actualLastIndexOf1 = skinny2.LastIndexOf('\u4E16');
+        var actualLastIndexOf2 = skinny2.LastIndexOf('\u754C');
 
         Assert.Equal(expectedLastIndexOf1, actualLastIndexOf1);
         Assert.Equal(expectedLastIndexOf2, actualLastIndexOf2);
 
         // Test Contains
-        var expectedContains1 = str1.Contains('?');  // Should be false
-        var actualContains1 = skinny1.Contains('?');
+        var expectedContains1 = str1.Contains('\u03A9');
+        var actualContains1 = skinny1.Contains('\u03A9');
 
         Assert.Equal(expectedContains1, actualContains1);
     }

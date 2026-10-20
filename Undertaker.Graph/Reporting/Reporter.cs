@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Text;
+﻿using Undertaker.Graph.IO;
 using Undertaker.Graph.Misc;
 
 namespace Undertaker.Graph.Reporting;
@@ -175,8 +174,14 @@ public sealed class Reporter
     /// <summary>
     /// Gets information about the alive symbols in the graph that are kept alive strictly by test methods.
     /// </summary>
+    /// <remarks>Includes transitive dependencies of tests, excluding anything reachable from production roots, reflection targets or retained constant-declaring types.</remarks>
     public AliveReport CollectAliveByTestSymbols()
     {
+        var symbols = _assemblies.Values.Where(asm => asm.Loaded).SelectMany(asm => asm.Symbols).Select(_symbolTable.GetSymbol).ToList();
+        var testOnly = ReachableFrom(symbols.Where(sym => sym is MethodSymbol { IsTestMethod: true }));
+        testOnly.ExceptWith(ReachableFrom(symbols.Where(sym =>
+            sym.NonTestRoot || sym.ReflectionTarget || sym is TypeSymbol { DeclaresConstants: true })));
+
         var assemblies = new List<AliveReportAssembly>();
         foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded && !asm.IsSystemAssembly))
         {
@@ -185,27 +190,18 @@ public sealed class Reporter
 
             foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type && !sym.Hide && sym.Marked).Cast<TypeSymbol>())
             {
-                var dependents = sym.Referencers.Select(_symbolTable.GetSymbol).Where(x => x.Marked && x.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(x => x.IsTestMethod).Select(x => x.Name).OrderBy(x => x).ToList();
-                if (dependents.Count == 0)
+                if (testOnly.Contains(sym))
                 {
-                    continue;
+                    aliveTypes ??= [];
+                    aliveTypes.Add(new(sym.Name, TestReferencers(sym), sym.Root));
                 }
 
-                aliveTypes ??= [];
-                aliveTypes.Add(new(sym.Name, dependents, sym.Root));
-
-                foreach (var member in sym.Members.Select(_symbolTable.GetSymbol))
+                foreach (var member in sym.Members.Select(_symbolTable.GetSymbol).Where(member => member.Kind != SymbolKind.Type))
                 {
-                    if (member.Marked && !member.Hide)
+                    if (member.Marked && !member.Hide && testOnly.Contains(member))
                     {
-                        dependents = [.. member.Referencers.Select(_symbolTable.GetSymbol).Where(x => x.Marked && x.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(x => x.IsTestMethod).Select(x => x.Name).OrderBy(x => x)];
-                        if (dependents.Count == 0)
-                        {
-                            continue;
-                        }
-
                         aliveMembers ??= [];
-                        aliveMembers.Add(new(member.Name, dependents, member.Root));
+                        aliveMembers.Add(new(member.Name, TestReferencers(member), member.Root));
                     }
                 }
             }
@@ -227,6 +223,27 @@ public sealed class Reporter
 
         assemblies.Sort((x, y) => string.CompareOrdinal(x.Assembly, y.Assembly));
         return new(assemblies);
+
+        HashSet<Symbol> ReachableFrom(IEnumerable<Symbol> roots)
+        {
+            var reachable = new HashSet<Symbol>();
+            var pending = new Stack<Symbol>(roots);
+            while (pending.TryPop(out var symbol))
+            {
+                if (reachable.Add(symbol))
+                {
+                    foreach (var referenced in symbol.ReferencedSymbols.Select(_symbolTable.GetSymbol))
+                    {
+                        pending.Push(referenced);
+                    }
+                }
+            }
+
+            return reachable;
+        }
+
+        List<SkinnyString> TestReferencers(Symbol symbol) =>
+            [.. symbol.Referencers.Select(_symbolTable.GetSymbol).Where(testOnly.Contains).Select(sym => sym.Name).OrderBy(name => name)];
     }
 
     /// <summary>
@@ -267,7 +284,7 @@ public sealed class Reporter
                 }
             }
 
-            if (affectedTypes != null || affectedTypes != null)
+            if (affectedTypes != null || affectedMembers != null)
             {
                 affectedTypes?.Sort();
                 affectedMembers?.Sort();
@@ -291,15 +308,10 @@ public sealed class Reporter
     /// </summary>
     public IReadOnlyList<string> CollectUnreferencedAssemblies()
     {
-        var result = new List<string>();
-
-        var aliveReport = CollectAliveSymbols();
-        foreach (var asm in aliveReport.Assemblies.Where(asm => asm.AliveTypes.Count == 0 && asm.AliveMembers.Count == 0))
-        {
-            result.Add(asm.Assembly);
-        }
-
-        return result;
+        return [.. _assemblies.Values
+            .Where(asm => asm.Loaded && !asm.IsSystemAssembly && !asm.Symbols.Select(_symbolTable.GetSymbol).Any(sym => sym.Marked))
+            .Select(asm => asm.Name)
+            .OrderBy(name => name, StringComparer.Ordinal)];
     }
 
     /// <summary>
@@ -386,86 +398,67 @@ public sealed class Reporter
     /// <summary>
     /// Creates a dependency diagram in Mermaid format showing the relationships between assemblies.
     /// </summary>
-    public string CreateDependencyDiagram()
-    {
-        var sb = new StringBuilder()
-            .AppendLine("stateDiagram-v2");
+    public string CreateDependencyDiagram() => _dependencyDiagram;
 
-        var done = new HashSet<string>();
-        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded).OrderBy(a => a.Name))
-        {
-            done.Clear();
-            foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).OrderBy(sym => sym.Name))
-            {
-                foreach (var rs in sym.ReferencedSymbols.Select(_symbolTable.GetSymbol).Where(rs => rs.Assembly != asm && rs.Assembly.Loaded).OrderBy(rs => rs.Name))
-                {
-                    if (done.Add(rs.Assembly.Name))
-                    {
-                        _ = sb.AppendLine(CultureInfo.InvariantCulture, $"    {asm.Name.Replace('-', '_')} --> {rs.Assembly.Name.Replace('-', '_')}");
-                    }
-                }
-            }
-        }
-
-        return sb.ToString();
-    }
-
+    /// <summary>
+    /// Writes loaded assembly dumps atomically, removing only obsolete dumps previously owned by Undertaker.
+    /// </summary>
     public void Dump(string path)
     {
-        foreach (var asm in _assemblies.Values)
+        var directory = new ReportDirectory(path, "graph-dumps");
+        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
         {
-            var p = Path.Combine(path, asm.Name.Trim()) + ".txt";
-
-            using var output = File.CreateText(p);
-
-            output.Write("ASSEMBLY ");
-            output.Write(asm.Name);
-            output.Write(".dll");
-
-            if (!asm.Loaded)
+            directory.Write(asm.Name, ".txt", stream =>
             {
-                output.WriteLine(" [!LOADED]");
-                continue;
-            }
+                using var output = new StreamWriter(stream, leaveOpen: true);
+                DumpAssembly(asm, output);
+            });
+        }
 
-            output.Write(" [LOADED");
-            output.Write(asm.IsRootAssembly ? ", ROOT" : ", !ROOT");
-            output.WriteLine(asm.IsSystemAssembly ? ", SYSTEM]" : ", !SYSTEM]");
+        directory.Complete();
+    }
 
-            foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).OrderBy(s => s.Name))
+    private void DumpAssembly(Assembly asm, TextWriter output)
+    {
+        output.Write("ASSEMBLY ");
+        output.Write(asm.Name);
+        output.Write(".dll");
+
+        output.Write(" [LOADED");
+        output.Write(asm.IsRootAssembly ? ", ROOT" : ", !ROOT");
+        output.WriteLine(asm.IsSystemAssembly ? ", SYSTEM]" : ", !SYSTEM]");
+
+        foreach (var sym in asm.Symbols.Select(_symbolTable.GetSymbol).OrderBy(s => s.Name))
+        {
+            output.Write("  ");
+            output.Write(sym.Name);
+            output.Write(" [");
+            output.Write(sym.Kind.ToString().ToUpperInvariant());
+
+            output.Write(sym.Marked ? ", ALIVE" : ", DEAD");
+            output.Write(sym.Hide ? ", HIDE" : ", !HIDE");
+            output.Write(sym.ReflectionTarget ? ", REFLECTION_TARGET" : ", !REFLECTION_TARGET");
+            output.WriteLine(sym.Root ? ", ROOT]" : ", !ROOT]");
+
+            if (sym.ReferencedSymbols.Count > 0)
             {
-                output.Write("  ");
-                output.Write(sym.Name);
-                output.Write(" [");
-                output.Write(sym.Kind.ToString().ToUpperInvariant());
-
-                output.Write(sym.Marked ? ", ALIVE" : ", DEAD");
-                output.Write(sym.Hide ? ", HIDE" : ", !HIDE");
-                output.Write(sym.ReflectionTarget ? ", REFLECTION_TARGET" : ", !REFLECTION_TARGET");
-                output.WriteLine(sym.Root ? ", ROOT]" : ", !ROOT]");
-
-                if (sym.ReferencedSymbols.Count > 0)
+                output.WriteLine("    DIRECTLY REFERENCES");
+                foreach (var s in sym.ReferencedSymbols.Select(_symbolTable.GetSymbol))
                 {
-                    output.WriteLine("    DIRECTLY REFERENCES");
-                    foreach (var s in sym.ReferencedSymbols.Select(_symbolTable.GetSymbol))
-                    {
-                        output.Write("      ");
-                        output.WriteLine(s.Name);
-                    }
-                }
-
-                if (sym.Referencers.Count > 0)
-                {
-                    output.WriteLine("    DIRECTLY REFERENCED BY");
-                    foreach (var s in sym.Referencers.Select(_symbolTable.GetSymbol))
-                    {
-                        output.Write("      ");
-                        output.WriteLine(s.Name);
-                    }
+                    output.Write("      ");
+                    output.WriteLine(s.Name);
                 }
             }
 
-            output.Close();
+            if (sym.Referencers.Count > 0)
+            {
+                output.WriteLine("    DIRECTLY REFERENCED BY");
+                foreach (var s in sym.Referencers.Select(_symbolTable.GetSymbol))
+                {
+                    output.Write("      ");
+                    output.WriteLine(s.Name);
+                }
+            }
         }
     }
 }

@@ -27,6 +27,7 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
     // filled-in over time as the overall graph is populated
     public SymbolId? DeclaringType { get; set; }
     public bool Root { get; protected set; }
+    public bool NonTestRoot { get; protected set; }
 
     // set by Mark when visiting the graph
     public bool Marked { get; private set; }
@@ -47,7 +48,7 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
         {
             if (entity.EffectiveAccessibility() is Accessibility.Public or Accessibility.Protected)
             {
-                Root = true;
+                Root = NonTestRoot = true;
             }
         }
     }
@@ -67,9 +68,10 @@ internal abstract class Symbol(Assembly assembly, string name, SymbolId id)
         {
             var r = graph.SymbolTable.GetSymbol(referencer);
             _ = r._referencedSymbols.Remove(Id);
-            _ = r._referencedSymbols.Add(replacement.Id);
+            r.RecordReferencedSymbol(replacement);
         }
 
+        _referencers.Clear();
         graph.SymbolTable.Redirect(Id, replacement);
     }
 

@@ -77,7 +77,7 @@
             "TestLibrary.AliveClassAndAliveMembers.AliveField",
             "TestLibrary.AliveClassAndAliveMembers.AliveMethod()",
             "TestLibrary.AliveClassAndAliveMembers.AliveSimpleProperty",
-            "TestLibrary.AliveClassAndAliveMembers.Item",
+            "TestLibrary.AliveClassAndAliveMembers.Item(System.Int32)",
             "TestLibrary.AliveClassAndAliveMembers._value",
             "TestLibrary.AliveClassAndAliveMembers.add_AliveEvent(System.EventHandler)",
             "TestLibrary.AliveClassAndAliveMembers.set_AliveComplexProperty(System.Int32)",
@@ -117,7 +117,16 @@
             "TestExe.Program.Main()",
             "TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)",
             "TestLibrary.AliveRecordClass.\u003CId\u003Ek__BackingField",
-            "TestLibrary.AliveRecordClass.\u003CName\u003Ek__BackingField"
+            "TestLibrary.AliveRecordClass.\u003CName\u003Ek__BackingField",
+            "TestLibrary.AliveRecordClass.EqualityContract",
+            "TestLibrary.AliveRecordClass.Equals(TestLibrary.AliveRecordClass)",
+            "TestLibrary.AliveRecordClass.Id",
+            "TestLibrary.AliveRecordClass.Name",
+            "TestLibrary.AliveRecordClass.PrintMembers(System.Text.StringBuilder)",
+            "TestLibrary.AliveRecordClass.ToString()",
+            "TestLibrary.AliveRecordClass.get_EqualityContract()",
+            "TestLibrary.AliveRecordClass.get_Id()",
+            "TestLibrary.AliveRecordClass.get_Name()"
           ]
         },
         {
@@ -130,7 +139,10 @@
           "Name": "TestLibrary.DeadEnum"
         },
         {
-          "Name": "TestLibrary.GenericTypeArgument"
+          "Name": "TestLibrary.GenericTypeArgument",
+          "ReferencedBy": [
+            "TestLibrary.AliveClassAndAliveMembers.AliveMethod()"
+          ]
         },
         {
           "Name": "TestLibrary.IAliveInterface",
@@ -155,7 +167,9 @@
         {
           "Name": "TestLibrary.TestAttribute",
           "ReferencedBy": [
-            "TestLibrary.GenericTypeArgument"
+            "TestLibrary.GenericTypeArgument",
+            "TestLibrary.TestAttribute..ctor(System.String)",
+            "TestLibrary.TestAttribute.\u003CName\u003Ek__BackingField"
           ]
         }
       ],
@@ -250,7 +264,7 @@
           ]
         },
         {
-          "Name": "TestLibrary.AliveClassAndAliveMembers.Item",
+          "Name": "TestLibrary.AliveClassAndAliveMembers.Item(System.Int32)",
           "ReferencedBy": [
             "TestLibrary.AliveClassAndAliveMembers.set_Item(System.Int32, System.Int32)"
           ]
@@ -300,13 +314,72 @@
         {
           "Name": "TestLibrary.AliveRecordClass.\u003CId\u003Ek__BackingField",
           "ReferencedBy": [
-            "TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)"
+            "TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)",
+            "TestLibrary.AliveRecordClass.Equals(TestLibrary.AliveRecordClass)",
+            "TestLibrary.AliveRecordClass.get_Id()"
           ]
         },
         {
           "Name": "TestLibrary.AliveRecordClass.\u003CName\u003Ek__BackingField",
           "ReferencedBy": [
-            "TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)"
+            "TestLibrary.AliveRecordClass..ctor(System.Int32, System.String)",
+            "TestLibrary.AliveRecordClass.Equals(TestLibrary.AliveRecordClass)",
+            "TestLibrary.AliveRecordClass.get_Name()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.EqualityContract",
+          "ReferencedBy": [
+            "TestLibrary.AliveRecordClass.get_EqualityContract()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.Equals(TestLibrary.AliveRecordClass)",
+          "ReferencedBy": [
+            "System.IEquatable\u00601",
+            "System.IEquatable\u00601.Equals(\u00600)"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.Id",
+          "ReferencedBy": [
+            "TestLibrary.AliveRecordClass.get_Id()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.Name",
+          "ReferencedBy": [
+            "TestLibrary.AliveRecordClass.get_Name()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.PrintMembers(System.Text.StringBuilder)",
+          "ReferencedBy": [
+            "TestLibrary.AliveRecordClass.ToString()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.ToString()",
+          "ReferencedBy": [
+            "System.Object.ToString()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.get_EqualityContract()",
+          "ReferencedBy": [
+            "TestLibrary.AliveRecordClass.Equals(TestLibrary.AliveRecordClass)"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.get_Id()",
+          "ReferencedBy": [
+            "TestLibrary.AliveRecordClass.PrintMembers(System.Text.StringBuilder)"
+          ]
+        },
+        {
+          "Name": "TestLibrary.AliveRecordClass.get_Name()",
+          "ReferencedBy": [
+            "TestLibrary.AliveRecordClass.PrintMembers(System.Text.StringBuilder)"
           ]
         },
         {
@@ -320,6 +393,18 @@
           "Name": "TestLibrary.MyThrownException..ctor()",
           "ReferencedBy": [
             "TestExe.Program.Main()"
+          ]
+        },
+        {
+          "Name": "TestLibrary.TestAttribute..ctor(System.String)",
+          "ReferencedBy": [
+            "TestLibrary.GenericTypeArgument"
+          ]
+        },
+        {
+          "Name": "TestLibrary.TestAttribute.\u003CName\u003Ek__BackingField",
+          "ReferencedBy": [
+            "TestLibrary.TestAttribute..ctor(System.String)"
           ]
         }
       ]

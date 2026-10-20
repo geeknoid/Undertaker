@@ -5,6 +5,7 @@ using System.Text;
 using ICSharpCode.Decompiler.Disassembler;
 using ICSharpCode.Decompiler.Metadata;
 using ICSharpCode.Decompiler.TypeSystem;
+using ICSharpCode.Decompiler.TypeSystem.Implementation;
 
 namespace Undertaker.Graph;
 
@@ -63,7 +64,9 @@ internal static class AssemblyProcessor
             }
 
             var typeSym = (TypeSymbol)DefineSymbol(type);
+            typeSym.MembersPopulated = true;
             RecordSymbolsReferencedByType(typeSym, type, cctor);
+            RecordDispatchImplementations(type);
 
             if (type.Kind == TypeKind.Enum)
             {
@@ -139,6 +142,135 @@ internal static class AssemblyProcessor
         return true;
 
         Symbol DefineSymbol(IEntity entity) => DefineSymbolIn(entity, asm);
+
+        Symbol GetMemberSymbol(IMember member)
+        {
+            var definition = member.MemberDefinition;
+            var module = definition.DeclaringTypeDefinition?.ParentModule;
+            return module == null
+                ? graph.UnhomedAssembly.GetSymbol(graph, definition)
+                : DefineSymbolIn(definition, graph.GetAssembly(module.AssemblyName));
+        }
+
+        void RecordDispatchImplementations(ITypeDefinition type)
+        {
+            foreach (var method in type.Methods.Concat(type.GetAccessors(options: GetMemberOptions.IgnoreInheritedMembers)).Where(m => m.IsOverride))
+            {
+                var declarations = InheritanceHelper.GetBaseMembers(method, false).OfType<IMethod>()
+                    .Where(m => m.IsVirtual || m.IsAbstract || m.IsOverride).ToArray();
+                foreach (var declaration in declarations)
+                {
+                    graph.RecordDispatchLink(GetMemberSymbol(declaration), GetMemberSymbol(method));
+                }
+                if (declarations.Length == 0)
+                {
+                    var objectType = type.GetNonInterfaceBaseTypes().FirstOrDefault(t => t.ReflectionName == "System.Object");
+                    if (objectType?.GetDefinition() is { ParentModule: not MetadataModule } objectDefinition
+                        && (method.Name is "ToString" or "GetHashCode" && method.Parameters.Count == 0
+                            || method.Name == "Equals" && method.Parameters.Count == 1
+                                && method.Parameters[0].Type.Equals(objectType)))
+                    {
+                        var objectAssembly = graph.GetAssembly(objectDefinition.ParentModule!.AssemblyName);
+                        var declaration = objectAssembly.GetSymbol(graph, objectDefinition.ReflectionName + "." + method.Name
+                            + "(" + string.Join(", ", method.Parameters.Select(p => p.Type.ReflectionName)) + ")", SymbolKind.Method);
+                        ((TypeSymbol)objectAssembly.GetSymbol(graph, objectDefinition)).AddMember(declaration);
+                        graph.RecordDispatchLink(declaration, GetMemberSymbol(method));
+                    }
+                }
+            }
+
+            foreach (var iface in type.GetAllBaseTypes().Where(t => t.Kind == TypeKind.Interface))
+            {
+                var implementingType = type.GetNonInterfaceBaseTypes().Reverse().FirstOrDefault(t =>
+                    t.DirectBaseTypes.Any(bt => bt.Kind == TypeKind.Interface && bt.GetAllBaseTypes().Contains(iface)));
+                if (implementingType == null)
+                {
+                    continue;
+                }
+                var candidates = implementingType.GetNonInterfaceBaseTypes().Reverse()
+                    .SelectMany(t => t.GetMethods(options: GetMemberOptions.IgnoreInheritedMembers)
+                        .Concat(t.GetAccessors(options: GetMemberOptions.IgnoreInheritedMembers)))
+                    .ToArray();
+                if (!iface.GetMethods().Any() && iface.GetDefinition()?.ParentModule is not MetadataModule)
+                {
+                    RecordKnownRuntimeInterface(iface, candidates);
+                }
+                foreach (var declaration in iface.GetMethods(options: GetMemberOptions.IgnoreInheritedMembers)
+                    .Concat(iface.GetAccessors(options: GetMemberOptions.IgnoreInheritedMembers)))
+                {
+                    IMethod? implementation = null;
+                    foreach (var declaringType in candidates.GroupBy(candidate => candidate.DeclaringType))
+                    {
+                        implementation = declaringType.FirstOrDefault(candidate =>
+                            candidate.ExplicitlyImplementedInterfaceMembers.Any(m => m.Equals(declaration)))
+                            ?? declaringType.FirstOrDefault(candidate =>
+                            !candidate.IsExplicitInterfaceImplementation
+                            && candidate.Accessibility == Accessibility.Public
+                            && candidate.IsStatic == declaration.IsStatic
+                            && SignatureComparer.Ordinal.Equals(candidate, declaration));
+                        if (implementation != null)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (implementation != null)
+                    {
+                        graph.RecordDispatchLink(GetMemberSymbol(declaration), GetMemberSymbol(implementation));
+                    }
+                }
+            }
+        }
+
+        void RecordKnownRuntimeInterface(IType iface, IEnumerable<IMethod> candidates)
+        {
+            // MinimalCorlib supplies framework type identities but no members.
+            var mappedNames = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var candidate in candidates.GroupBy(m => m.DeclaringType)
+                .SelectMany(level => level.OrderByDescending(m => m.IsExplicitInterfaceImplementation)))
+            {
+                var explicitDeclaration = candidate.ExplicitlyImplementedInterfaceMembers
+                    .OfType<IMethod>().FirstOrDefault(m => m.DeclaringType.Equals(iface));
+                var name = explicitDeclaration?.Name ?? candidate.Name;
+                if ((explicitDeclaration == null && candidate.Accessibility != Accessibility.Public)
+                    || candidate.IsStatic || candidate.TypeParameters.Count != 0)
+                {
+                    continue;
+                }
+                var parameters = candidate.Parameters;
+                var matches = iface.GetDefinition()!.ReflectionName switch
+                {
+                    "System.IDisposable" => name == "Dispose" && parameters.Count == 0,
+                    "System.Runtime.CompilerServices.IAsyncStateMachine" =>
+                        name == "MoveNext" && parameters.Count == 0
+                        || name == "SetStateMachine" && parameters.Count == 1 && parameters[0].Type.Equals(iface),
+                    "System.Collections.IEnumerable" or "System.Collections.Generic.IEnumerable`1" =>
+                        name == "GetEnumerator" && parameters.Count == 0,
+                    "System.Collections.ICollection" =>
+                        name == "get_Count" && parameters.Count == 0
+                        || name == "CopyTo" && parameters.Count == 2
+                            && parameters[0].Type.ReflectionName == "System.Array"
+                            && parameters[1].Type.ReflectionName == "System.Int32",
+                    "System.Collections.Generic.ICollection`1" =>
+                        name == "get_Count" && parameters.Count == 0
+                        || name == "CopyTo" && parameters.Count == 2
+                            && parameters[0].Type is ArrayType array && array.Dimensions == 1
+                            && array.ElementType.Equals(iface.TypeArguments[0])
+                            && parameters[1].Type.ReflectionName == "System.Int32",
+                    _ => false,
+                };
+                if (!matches || !mappedNames.Add(name))
+                {
+                    continue;
+                }
+                var definition = iface.GetDefinition()!;
+                var declaration = graph.GetAssembly(definition.ParentModule!.AssemblyName).GetSymbol(graph,
+                    definition.ReflectionName + "." + name + "("
+                    + string.Join(", ", parameters.Select(p => p.Type.ReflectionName)) + ")", SymbolKind.Method);
+                ((TypeSymbol)graph.GetAssembly(definition.ParentModule.AssemblyName).GetSymbol(graph, definition)).AddMember(declaration);
+                graph.RecordDispatchLink(declaration, GetMemberSymbol(candidate));
+            }
+        }
 
         Symbol DefineSymbolIn(IEntity entity, Assembly a)
         {
@@ -288,32 +420,12 @@ internal static class AssemblyProcessor
                 RecordReferenceToMember(methodSym, method.AccessorOwner);
             }
 
-            // an override depends on all base methods
-            if (method.IsOverride)
+            foreach (var im in InheritanceHelper.GetBaseMembers(method, true))
             {
-                foreach (var bt in method.DeclaringType.GetNonInterfaceBaseTypes())
+                if (im.DeclaringType.Kind == TypeKind.Interface || method.IsOverride)
                 {
-                    foreach (var bm in bt.GetMethods().Where(bm => bm.Name == method.Name && bm.Parameters.Count == method.Parameters.Count))
-                    {
-                        // very coarse matching, only looking at method name and parameter count and not parameter types (it gets too complicated given generics)
-                        RecordReferenceToMember(methodSym, bm);
-                    }
-                }
-            }
-
-            // a method depends on all interface methods it implements
-            foreach (var it in method.DeclaringType.GetAllBaseTypeDefinitions().Where(bt => bt.Kind == TypeKind.Interface))
-            {
-                foreach (var im in it.GetMethods().Where(bm => bm.Name == method.Name && bm.Parameters.Count == method.Parameters.Count))
-                {
-                    // very coarse matching, only looking at method name and parameter count and not parameter types (it gets too complicated given generics)
                     RecordReferenceToMember(methodSym, im);
                 }
-            }
-
-            foreach (var im in method.ExplicitlyImplementedInterfaceMembers)
-            {
-                RecordReferenceToMember(methodSym, im);
             }
 
             if (method.HasBody)
@@ -380,15 +492,22 @@ internal static class AssemblyProcessor
                                 var token = blobReader.ReadInt32();
                                 var handle = (EntityHandle)MetadataTokens.Handle(token);
 
-                                if (handle.Kind is HandleKind.TypeDefinition or HandleKind.TypeReference)
+                                if (handle.Kind is HandleKind.TypeDefinition or HandleKind.TypeReference or HandleKind.TypeSpecification)
                                 {
                                     var type = metadataModule.ResolveType(handle, default);
                                     RecordReferenceToType(methodSym, type);
                                 }
-                                else if (handle.Kind == HandleKind.MethodDefinition)
+                                else if (handle.Kind is HandleKind.MethodDefinition or HandleKind.MethodSpecification)
                                 {
                                     var m = metadataModule.ResolveMethod(handle, default);
                                     RecordReferenceToMember(methodSym, m);
+                                }
+                                else if (handle.Kind is HandleKind.FieldDefinition or HandleKind.MemberReference)
+                                {
+                                    if (metadataModule.ResolveEntity(handle) is IMember member)
+                                    {
+                                        RecordReferenceToMember(methodSym, member);
+                                    }
                                 }
 
                                 break;
@@ -426,12 +545,14 @@ internal static class AssemblyProcessor
             if (property.Getter != null)
             {
                 var sym = DefineSymbol(property.Getter);
+                graph.RecordReflectionAccessor(propertySym, sym);
                 RecordSymbolsReferencedByMethod(sym, property.Getter);
             }
 
             if (property.Setter != null)
             {
                 var sym = DefineSymbol(property.Setter);
+                graph.RecordReflectionAccessor(propertySym, sym);
                 RecordSymbolsReferencedByMethod(sym, property.Setter);
             }
 
@@ -477,12 +598,14 @@ internal static class AssemblyProcessor
             if (evt.AddAccessor != null)
             {
                 var sym = DefineSymbol(evt.AddAccessor);
+                graph.RecordReflectionAccessor(eventSym, sym);
                 RecordSymbolsReferencedByMethod(sym, evt.AddAccessor);
             }
 
             if (evt.RemoveAccessor != null)
             {
                 var sym = DefineSymbol(evt.RemoveAccessor);
+                graph.RecordReflectionAccessor(eventSym, sym);
                 RecordSymbolsReferencedByMethod(sym, evt.RemoveAccessor);
             }
 
@@ -525,29 +648,58 @@ internal static class AssemblyProcessor
             foreach (var attr in attributes)
             {
                 RecordReferenceToType(sym, attr.AttributeType);
+                if (attr.Constructor != null)
+                {
+                    RecordReferenceToMember(sym, attr.Constructor);
+                }
 
                 foreach (var arg in attr.NamedArguments)
                 {
                     RecordReferenceToType(sym, arg.Type);
+                    RecordAttributeValue(sym, arg.Value);
+                    var member = arg.Kind == CustomAttributeNamedArgumentKind.Field
+                        ? attr.AttributeType.GetFields(f => f.Name == arg.Name).Cast<IMember>().FirstOrDefault()
+                        : attr.AttributeType.GetProperties(p => p.Name == arg.Name).Cast<IMember>().FirstOrDefault();
+                    if (member != null)
+                    {
+                        RecordReferenceToMember(sym, member);
+                        if (member is IProperty { Setter: not null } property)
+                        {
+                            RecordReferenceToMember(sym, property.Setter);
+                        }
+                    }
                 }
 
                 foreach (var arg in attr.FixedArguments)
                 {
                     RecordReferenceToType(sym, arg.Type);
+                    RecordAttributeValue(sym, arg.Value);
+                }
+            }
+        }
+
+        void RecordAttributeValue(Symbol sym, object? value)
+        {
+            if (value is IType type)
+            {
+                RecordReferenceToType(sym, type);
+            }
+            else if (value is IEnumerable<CustomAttributeTypedArgument<IType>> elements)
+            {
+                foreach (var element in elements)
+                {
+                    RecordReferenceToType(sym, element.Type);
+                    RecordAttributeValue(sym, element.Value);
                 }
             }
         }
 
         void RecordReferenceToMember(Symbol fromSym, IMember toMember)
         {
-            var td = toMember.DeclaringTypeDefinition;
-            if (td?.ParentModule != null)
+            fromSym.RecordReferencedSymbol(GetMemberSymbol(toMember));
+            foreach (var argument in toMember.DeclaringType.TypeArguments)
             {
-                fromSym.RecordReferencedSymbol(graph.GetAssembly(td.ParentModule.AssemblyName).GetSymbol(graph, toMember));
-            }
-            else
-            {
-                fromSym.RecordReferencedSymbol(graph.UnhomedAssembly.GetSymbol(graph, toMember));
+                RecordReferenceToType(fromSym, argument);
             }
         }
 
@@ -568,12 +720,12 @@ internal static class AssemblyProcessor
                     }
 
                     var toSym = (TypeSymbol)definingAsm.GetSymbol(graph, td);
-                    if (toSym.TypeKind == TypeKind.Other)
+                    if (!toSym.MembersPopulated)
                     {
-                        toSym.TypeKind = t.Kind;
+                        toSym.MembersPopulated = true;
                         foreach (var member in td.Members)
                         {
-                            if (member is IField field && field.IsConst)
+                            if (td.Kind == TypeKind.Enum || member is IField { IsConst: true })
                             {
                                 continue;
                             }
@@ -593,6 +745,11 @@ internal static class AssemblyProcessor
                 foreach (var ta in t.TypeArguments)
                 {
                     RecordReferenceToType(fromSym, ta);
+                }
+
+                if (t is TypeWithElementType elementType)
+                {
+                    RecordReferenceToType(fromSym, elementType.ElementType, reflectionTarget);
                 }
 
                 t = t.DeclaringType;

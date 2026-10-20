@@ -5,6 +5,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Undertaker.Graph;
+using Undertaker.Graph.IO;
 
 namespace Undertaker;
 
@@ -195,7 +196,8 @@ internal static class Program
             && args.UnreferencedSymbols == null
             && args.NeedlessInternalsVisibleTo == null
             && args.AssemblyLayerCake == null
-            && args.DependencyDiagram == null)
+            && args.DependencyDiagram == null
+            && args.GraphDumps == null)
         {
             Out("No explicit output requested, generating default outputs");
 
@@ -266,10 +268,10 @@ internal static class Program
                     }
 
                     var s = l.Split(':', 2);
-                    if (s.Length != 2)
+                    if (s.Length != 2 || string.IsNullOrWhiteSpace(s[0]) || string.IsNullOrWhiteSpace(s[1]))
                     {
                         Error($"Line {lineNumber} in reflection symbol file {args.ReflectionSymbols.FullName} is not formatted correctly");
-                        continue;
+                        return 1;
                     }
 
                     var assemblyName = s[0].Trim();
@@ -282,6 +284,12 @@ internal static class Program
                     else if (assemblyName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
                     {
                         assemblyName = assemblyName.Substring(0, assemblyName.Length - 4);
+                    }
+
+                    if (string.IsNullOrWhiteSpace(assemblyName))
+                    {
+                        Error($"Line {lineNumber} in reflection symbol file {args.ReflectionSymbols.FullName} has an empty assembly name");
+                        return 1;
                     }
 
                     graph.RecordReflectionSymbol(assemblyName, symbolName);
@@ -344,7 +352,7 @@ internal static class Program
             graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.DataTestMethodAttribute");
             graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.GlobalTestCleanupAttribute");
             graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.GlobalTestInitializeAttribute");
-            graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.STATestMethod");
+            graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.STATestMethodAttribute");
             graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.TestCleanupAttribute");
             graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.TestInitializeAttribute");
             graph.RecordTestMethodAttribute("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute");
@@ -378,7 +386,7 @@ internal static class Program
         {
             Out("Using default reflection marker attributes");
 
-            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.AcceptsVerbsAttribute");
+            graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.AcceptVerbsAttribute");
             graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.ApiControllerAttribute");
             graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpDeleteAttribute");
             graph.RecordReflectionMarkerAttribute("Microsoft.AspNetCore.Mvc.HttpGetAttribute");
@@ -417,47 +425,61 @@ internal static class Program
         int badFmtCount = 0;
         int duplicateCount = 0;
 
-        var tasks = new HashSet<Task<LoadedAssembly>>(MaxConcurrentAssemblyLoads);
-        var map = new Dictionary<Task<LoadedAssembly>, FileInfo>(MaxConcurrentAssemblyLoads);
+        var tasks = new Queue<(Task<LoadedAssembly> Task, FileInfo File)>(MaxConcurrentAssemblyLoads);
+        var mergeFailed = false;
 
         Out("Loading assemblies...");
 
-        foreach (var folder in args.AssemblyFolders!)
+        try
         {
-            foreach (var file in folder.EnumerateFiles("*", SearchOption.AllDirectories))
+            foreach (var folder in args.AssemblyFolders!)
             {
-                if (!(file.Name.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) || file.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)))
+                foreach (var file in folder.EnumerateFiles("*", SearchOption.AllDirectories))
                 {
-                    continue;
+                    if (!(file.Name.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) || file.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)))
+                    {
+                        continue;
+                    }
+
+                    if (tasks.Count >= MaxConcurrentAssemblyLoads)
+                    {
+                        var pending = tasks.Dequeue();
+                        await CompleteTask(pending.Task, pending.File);
+                        if (mergeFailed)
+                        {
+                            break;
+                        }
+                    }
+
+                    tasks.Enqueue((Task.Run(() => new LoadedAssembly(file.FullName)), file));
                 }
 
-                if (graph.AssemblyLoaded(file.FullName))
+                if (mergeFailed)
                 {
-                    OutLoadStatus(ConsoleColor.Yellow, "Duplicate", $"{file.FullName}");
-                    duplicateCount++;
-                    continue;
+                    break;
                 }
-
-                if (tasks.Count >= MaxConcurrentAssemblyLoads)
-                {
-                    var t = await Task.WhenAny(tasks);
-                    await CompleteTask(t);
-                    _ = tasks.Remove(t);
-                }
-
-                var task = Task.Run(() => new LoadedAssembly(file.FullName));
-
-                _ = tasks.Add(task);
-                map.Add(task, file);
+            }
+        }
+        catch (Exception ex)
+        {
+            Error($"Unable to enumerate assembly inputs: {ex.Message}");
+            errorCount++;
+        }
+        finally
+        {
+            while (tasks.TryDequeue(out var pending))
+            {
+                await CompleteTask(pending.Task, pending.File);
             }
         }
 
-        await foreach (var task in Task.WhenEach(tasks))
-        {
-            await CompleteTask(task);
-        }
-
         Out($"Done loading assemblies: loaded {successCount}, duplicate(s) {duplicateCount}, not .NET {badFmtCount}, error(s) {errorCount}");
+
+        if (mergeFailed)
+        {
+            Error("An assembly merge failed; the incomplete graph cannot be analyzed");
+            return 1;
+        }
 
         if (errorCount > 0)
         {
@@ -473,7 +495,16 @@ internal static class Program
         }
 
         Out("Analyzing...");
-        var reporter = graph.Done(x => Out($"  {x}"));
+        Graph.Reporting.Reporter reporter;
+        try
+        {
+            reporter = graph.Done(x => Out($"  {x}"));
+        }
+        catch (Exception ex)
+        {
+            Error($"Unable to analyze assemblies: {ex.Message}");
+            return 1;
+        }
 
         if (args.Verbose)
         {
@@ -500,274 +531,132 @@ internal static class Program
             ? 1
             : 0;
 
-        async Task CompleteTask(Task<LoadedAssembly> task)
+        async Task CompleteTask(Task<LoadedAssembly> task, FileInfo file)
         {
-            var file = map[task];
-            _ = map.Remove(task);
-
+            LoadedAssembly la;
             try
             {
-                using (var la = await task)
-                {
-                    if (!graph.MergeAssembly(la))
-                    {
-                        OutLoadStatus(ConsoleColor.Yellow, "Duplicate", $"{file.FullName}");
-                        duplicateCount++;
-                    }
-                }
-
-                successCount++;
-                OutLoadStatus(ConsoleColor.White, "Loaded", $"{file.FullName}");
+                la = await task;
             }
             catch (BadImageFormatException)
             {
                 OutLoadStatus(ConsoleColor.Yellow, "Not .NET", $"{file.FullName}");
                 badFmtCount++;
+                return;
             }
             catch (Exception ex)
             {
-                OutLoadStatus(ConsoleColor.Red, "Error", $"{file.FullName}: {ex.Message}");
+                Error($"Unable to load {file.FullName}: {ex.Message}");
                 errorCount++;
+                return;
             }
-        }
 
-        bool OutputDeadSymbols()
-        {
-            if (args.DeadSymbols != null)
+            using (la)
             {
-                var path = args.DeadSymbols.FullName;
-                Out($"  Writing reports on dead symbols to {path}");
+                if (mergeFailed)
+                {
+                    return;
+                }
 
                 try
                 {
-                    var di = Directory.CreateDirectory(path);
-
-                    var report = reporter.CollectDeadSymbols();
-                    foreach (var asm in report.Assemblies)
+                    if (graph.MergeAssembly(la))
                     {
-                        var filePath = Path.Combine(di.FullName, asm.Assembly);
-                        filePath = args.CSV ? filePath + ".csv" : filePath + ".json";
-
-                        try
-                        {
-                            if (args.CSV)
-                            {
-                                using var writer = new StreamWriter(filePath);
-                                foreach (var sym in asm.DeadMembers)
-                                {
-                                    writer.WriteLine($"\"{sym.Name}\",{sym.Kind}");
-                                }
-
-                                foreach (var sym in asm.DeadTypes)
-                                {
-                                    writer.WriteLine($"\"{sym.Name}\",{sym.Kind}");
-                                }
-                            }
-                            else
-                            {
-                                using var file = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
-                                JsonSerializer.Serialize(file, asm, _serializationOptions);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Error($"Unable to write report on dead symbols to {filePath}: {ex.Message}");
-                            return false;
-                        }
+                        successCount++;
+                        OutLoadStatus(ConsoleColor.White, "Loaded", file.FullName);
+                    }
+                    else
+                    {
+                        duplicateCount++;
+                        OutLoadStatus(ConsoleColor.Yellow, "Duplicate", file.FullName);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Error($"Unable to create output directory for dead symbols report at {path}: {ex.Message}");
-                    return false;
+                    Error($"Unable to merge {file.FullName}: {ex.Message}");
+                    errorCount++;
+                    mergeFailed = true;
                 }
             }
-
-            return true;
         }
 
-        bool OutputUnreferencedSymbols()
-        {
-            if (args.UnreferencedSymbols != null)
-            {
-                var path = args.UnreferencedSymbols.FullName;
-                Out($"  Writing reports on unreferenced symbols to {path}");
-
-                try
+        bool OutputDeadSymbols() =>
+            OutputReports(args.DeadSymbols, "dead-symbols",
+                () => reporter.CollectDeadSymbols().Assemblies, asm => asm.Assembly,
+                (writer, asm) =>
                 {
-                    var di = Directory.CreateDirectory(path);
-
-                    var report = reporter.CollectUnreferencedSymbols();
-                    foreach (var asm in report.Assemblies)
+                    foreach (var sym in asm.DeadMembers.Concat(asm.DeadTypes))
                     {
-                        var filePath = Path.Combine(di.FullName, asm.Assembly);
-                        filePath = args.CSV ? filePath + ".csv" : filePath + ".json";
-
-                        try
-                        {
-                            if (args.CSV)
-                            {
-                                using var writer = new StreamWriter(filePath);
-                                foreach (var sym in asm.UnreferencedMembers)
-                                {
-                                    writer.WriteLine($"\"{sym.Name}\",{sym.Kind}");
-                                }
-
-                                foreach (var sym in asm.UnreferencedTypes)
-                                {
-                                    writer.WriteLine($"\"{sym.Name}\",{sym.Kind}");
-                                }
-                            }
-                            else
-                            {
-                                using var file = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
-                                JsonSerializer.Serialize(file, asm, _serializationOptions);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Error($"Unable to write report on unreferenced symbols to {filePath}: {ex.Message}");
-                            return false;
-                        }
+                        writer.WriteLine($"\"{sym.Name}\",{sym.Kind}");
                     }
-                }
-                catch (Exception ex)
+                });
+
+        bool OutputUnreferencedSymbols() =>
+            OutputReports(args.UnreferencedSymbols, "unreferenced-symbols",
+                () => reporter.CollectUnreferencedSymbols().Assemblies, asm => asm.Assembly,
+                (writer, asm) =>
                 {
-                    Error($"Unable to create output directory for unreferenced symbols report at {path}: {ex.Message}");
-                    return false;
-                }
+                    foreach (var sym in asm.UnreferencedMembers.Concat(asm.UnreferencedTypes))
+                    {
+                        writer.WriteLine($"\"{sym.Name}\",{sym.Kind}");
+                    }
+                });
+
+        bool OutputAliveSymbols() =>
+            OutputReports(args.AliveSymbols, "alive-symbols",
+                () => reporter.CollectAliveSymbols().Assemblies, asm => asm.Assembly);
+
+        bool OutputAliveByTestSymbols() =>
+            OutputReports(args.AliveByTestSymbols, "alive-by-test-symbols",
+                () => reporter.CollectAliveByTestSymbols().Assemblies, asm => asm.Assembly);
+
+        bool OutputNeedlesslyPublicSymbols() =>
+            OutputReports(args.NeedlesslyPublicSymbols, "needlessly-public-symbols",
+                () => reporter.CollectNeedlesslyPublicSymbols().Assemblies, asm => asm.Assembly,
+                (writer, asm) =>
+                {
+                    foreach (var sym in asm.NeedlesslyPublicMembers.Concat(asm.NeedlesslyPublicTypes))
+                    {
+                        writer.WriteLine($"\"{sym}\"");
+                    }
+                });
+
+        bool OutputReports<T>(DirectoryInfo? directory, string family, Func<IEnumerable<T>> collect,
+            Func<T, string> name, Action<TextWriter, T>? writeCsv = null)
+        {
+            if (directory == null)
+            {
+                return true;
             }
 
-            return true;
-        }
-
-        bool OutputAliveSymbols()
-        {
-            if (args.AliveSymbols != null)
+            Out($"  Writing {family} reports to {directory.FullName}");
+            try
             {
-                var path = args.AliveSymbols.FullName;
-                Out($"  Writing reports on alive symbols to {path}");
-
-                try
+                var output = new ReportDirectory(directory.FullName, family);
+                foreach (var report in collect())
                 {
-                    var di = Directory.CreateDirectory(path);
-
-                    var report = reporter.CollectAliveSymbols();
-                    foreach (var asm in report.Assemblies)
+                    output.Write(name(report), args.CSV && writeCsv != null ? ".csv" : ".json", stream =>
                     {
-                        var filePath = Path.Combine(di.FullName, asm.Assembly) + ".json";
-                        try
+                        if (args.CSV && writeCsv != null)
                         {
-                            using var file = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
-                            JsonSerializer.Serialize(file, asm, _serializationOptions);
+                            using var writer = new StreamWriter(stream, leaveOpen: true);
+                            writeCsv(writer, report);
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            Error($"Unable to write report on alive symbols to {filePath}: {ex.Message}");
-                            return false;
+                            JsonSerializer.Serialize(stream, report, _serializationOptions);
                         }
-                    }
+                    });
                 }
-                catch (Exception ex)
-                {
-                    Error($"Unable to create output directory for alive symbols report at {path}: {ex.Message}");
-                    return false;
-                }
+
+                output.Complete();
+                return true;
             }
-
-            return true;
-        }
-
-        bool OutputAliveByTestSymbols()
-        {
-            if (args.AliveByTestSymbols != null)
+            catch (Exception ex)
             {
-                var path = args.AliveByTestSymbols.FullName;
-                Out($"  Writing reports on symbols alive only by test to {path}");
-
-                try
-                {
-                    var di = Directory.CreateDirectory(path);
-
-                    var report = reporter.CollectAliveByTestSymbols();
-                    foreach (var asm in report.Assemblies)
-                    {
-                        var filePath = Path.Combine(di.FullName, asm.Assembly) + ".json";
-                        try
-                        {
-                            using var file = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
-                            JsonSerializer.Serialize(file, asm, _serializationOptions);
-                        }
-                        catch (Exception ex)
-                        {
-                            Error($"Unable to write report on symbols alive by test to {filePath}: {ex.Message}");
-                            return false;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Error($"Unable to create output directory for reports on symbols alive by tests at {path}: {ex.Message}");
-                    return false;
-                }
+                Error($"Unable to output {family} reports to {directory.FullName}: {ex.Message}");
+                return false;
             }
-
-            return true;
-        }
-
-        bool OutputNeedlesslyPublicSymbols()
-        {
-            if (args.NeedlesslyPublicSymbols != null)
-            {
-                var path = args.NeedlesslyPublicSymbols.FullName;
-                Out($"  Writing reports on needlessly public symbols to {path}");
-
-                try
-                {
-                    var di = Directory.CreateDirectory(path);
-
-                    var report = reporter.CollectNeedlesslyPublicSymbols();
-                    foreach (var asm in report.Assemblies)
-                    {
-                        var filePath = Path.Combine(di.FullName, asm.Assembly);
-                        filePath = args.CSV ? filePath + ".csv" : filePath + ".json";
-
-                        try
-                        {
-                            if (args.CSV)
-                            {
-                                using var writer = new StreamWriter(filePath);
-                                foreach (var sym in asm.NeedlesslyPublicMembers)
-                                {
-                                    writer.WriteLine($"\"{sym}\"");
-                                }
-
-                                foreach (var sym in asm.NeedlesslyPublicTypes)
-                                {
-                                    writer.WriteLine($"\"{sym}\"");
-                                }
-                            }
-                            else
-                            {
-                                using var file = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
-                                JsonSerializer.Serialize(file, asm, _serializationOptions);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Error($"Unable to write report on needlessly public symbols to {filePath}: {ex.Message}");
-                            return false;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Error($"Unable to create output directory for reports on needlessly public symbols at {path}: {ex.Message}");
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         bool OutputUnreferencedAssemblies()
@@ -775,12 +664,18 @@ internal static class Program
             if (args.UnreferencedAssemblies != null)
             {
                 var path = args.UnreferencedAssemblies.FullName;
-                Out($"  Writing report on unanalyzed assemblies to {path}");
+                Out($"  Writing report on unreferenced assemblies to {path}");
 
                 try
                 {
                     var report = reporter.CollectUnreferencedAssemblies();
-                    File.WriteAllLines(path, report);
+                    ReportFile.WriteText(path, writer =>
+                    {
+                        foreach (var assembly in report)
+                        {
+                            writer.WriteLine(assembly);
+                        }
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -802,7 +697,13 @@ internal static class Program
                 try
                 {
                     var report = reporter.CollectUnanalyzedAssemblies().Order();
-                    File.WriteAllLines(path, report);
+                    ReportFile.WriteText(path, writer =>
+                    {
+                        foreach (var assembly in report)
+                        {
+                            writer.WriteLine(assembly);
+                        }
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -827,20 +728,21 @@ internal static class Program
 
                     if (args.CSV)
                     {
-                        using var writer = new StreamWriter(path);
-                        foreach (var asm in report)
+                        ReportFile.WriteText(path, writer =>
                         {
-                            writer.WriteLine($"{asm.Assembly},{asm.Version},{asm.Path}");
-                            foreach (var other in asm.Duplicates)
+                            foreach (var asm in report)
                             {
-                                writer.WriteLine($"{asm.Assembly},{other.Version},{other.Path}");
+                                writer.WriteLine($"{asm.Assembly},{asm.Version},{asm.Path}");
+                                foreach (var other in asm.Duplicates)
+                                {
+                                    writer.WriteLine($"{asm.Assembly},{other.Version},{other.Path}");
+                                }
                             }
-                        }
+                        });
                     }
                     else
                     {
-                        using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
-                        JsonSerializer.Serialize(file, report, _serializationOptions);
+                        ReportFile.WriteJson(path, report, _serializationOptions);
                     }
                 }
                 catch (Exception ex)
@@ -853,55 +755,16 @@ internal static class Program
             return true;
         }
 
-        bool OutputNeedlessInternalsVisibleTo()
-        {
-            if (args.NeedlessInternalsVisibleTo != null)
-            {
-                var path = args.NeedlessInternalsVisibleTo.FullName;
-                Out($"  Writing reports on needless [InternalsVisibleTo] to {path}");
-
-                try
+        bool OutputNeedlessInternalsVisibleTo() =>
+            OutputReports(args.NeedlessInternalsVisibleTo, "needless-internals-visible-to",
+                reporter.CollectNeedlessInternalsVisibleTo, asm => asm.Assembly,
+                (writer, asm) =>
                 {
-                    var di = Directory.CreateDirectory(path);
-
-                    var report = reporter.CollectNeedlessInternalsVisibleTo();
-                    foreach (var asm in report)
+                    foreach (var other in asm.OtherAssemblies)
                     {
-                        var filePath = Path.Combine(di.FullName, asm.Assembly);
-                        filePath = args.CSV ? filePath + ".csv" : filePath + ".json";
-
-                        try
-                        {
-                            if (args.CSV)
-                            {
-                                using var writer = new StreamWriter(filePath);
-                                foreach (var other in asm.OtherAssemblies)
-                                {
-                                    writer.WriteLine($"{other}");
-                                }
-                            }
-                            else
-                            {
-                                using var file = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
-                                JsonSerializer.Serialize(file, asm, _serializationOptions);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Error($"Unable to output needless [InternalsVisibleTo] report to {filePath}: {ex.Message}");
-                            return false;
-                        }
+                        writer.WriteLine(other);
                     }
-                }
-                catch (Exception ex)
-                {
-                    Error($"Unable to create output directory for reports on needless [InternalsVisibleTo] at {path}: {ex.Message}");
-                    return false;
-                }
-            }
-
-            return true;
-        }
+                });
 
         bool OutputAssemblyLayerCake()
         {
@@ -913,8 +776,7 @@ internal static class Program
                 try
                 {
                     var cake = reporter.CreateAssemblyLayerCake();
-                    using var file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
-                    JsonSerializer.Serialize(file, cake, _serializationOptions);
+                    ReportFile.WriteJson(path, cake, _serializationOptions);
                 }
                 catch (Exception ex)
                 {
@@ -936,7 +798,7 @@ internal static class Program
                 try
                 {
                     var dd = reporter.CreateDependencyDiagram();
-                    File.WriteAllText(path, dd);
+                    ReportFile.WriteText(path, writer => writer.Write(dd));
                 }
                 catch (Exception ex)
                 {

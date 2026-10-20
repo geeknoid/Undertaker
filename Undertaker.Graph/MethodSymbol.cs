@@ -29,7 +29,10 @@ internal sealed class MethodSymbol(Assembly assembly, string name, SymbolId id) 
         }
         else
         {
-            Root = m.Name == "Main" && m.IsStatic;
+            if (m.Name == "Main" && m.IsStatic)
+            {
+                Root = NonTestRoot = true;
+            }
 
             if (m.DeclaringTypeDefinition?.GetDelegateInvokeMethod() != null)
             {
@@ -48,40 +51,6 @@ internal sealed class MethodSymbol(Assembly assembly, string name, SymbolId id) 
     {
         IsTestMethod = true;
         Root = true;
-    }
-
-    private int FindSignature()
-    {
-        // find the first ( in the name string
-        // from there, backup to find the previous . or the begining of the string
-        var index = Name.IndexOf('(');
-        if (index < 0)
-        {
-            var lastDotIndex = Name.LastIndexOf('.');
-            var start = (lastDotIndex < 0 ? 0 : lastDotIndex + 1);
-            return start;
-        }
-        else
-        {
-            var lastDotIndex = Name.LastIndexOf('.', index);
-            var start = lastDotIndex < 0 ? 0 : lastDotIndex + 1;
-            return start;
-        }
-    }
-
-    /// <summary>
-    /// See if this method has a similar signature to another method.
-    /// </summary>
-    public bool SameSignature(MethodSymbol other)
-    {
-        var thisIndex = FindSignature();
-        var otherIndex = other.FindSignature();
-
-        var thisCount = Name.Length - thisIndex;
-        var otherCount = other.Name.Length - otherIndex;
-
-        return thisCount == otherCount
-            && string.CompareOrdinal(Name, thisIndex, other.Name, otherIndex, thisCount) == 0;
     }
 
     public override string ToString() => Name;

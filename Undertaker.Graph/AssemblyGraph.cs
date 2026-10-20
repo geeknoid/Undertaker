@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Reflection;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using ICSharpCode.Decompiler.TypeSystem;
 using Undertaker.Graph.Misc;
@@ -14,6 +15,8 @@ namespace Undertaker.Graph;
 /// Once you create a graph, you then augment it with assembly state one by one in order to build up the graph.
 /// After all the assemblies are loaded, you can then collect reports to get information about all the dead
 /// or alive symbols across all the assemblies.
+/// Register all root, reflection, and test policies before merging any assembly.
+/// A merge or finalization failure permanently invalidates the graph; create a new graph to retry.
 /// </remarks>
 public sealed class AssemblyGraph
 {
@@ -24,6 +27,10 @@ public sealed class AssemblyGraph
     private readonly Dictionary<string, HashSet<string>> _reflectionSymbols = [];
     private List<IReadOnlyList<string>>? _layerCake;
     private string? _dependencyDiagram;
+    private GraphState _state;
+    private readonly HashSet<(SymbolId Declaration, SymbolId Implementation)> _dispatchLinks = [];
+    private readonly HashSet<(SymbolId Owner, SymbolId Accessor)> _reflectionAccessorLinks = [];
+    private enum GraphState { Registration, Building, Finalizing, Finalized, Failed }
     internal SymbolTable SymbolTable { get; } = new();
     internal Assembly UnhomedAssembly { get; } = new Assembly("$$UNHOMED$$", root: false);
 
@@ -32,12 +39,27 @@ public sealed class AssemblyGraph
         _assemblies[UnhomedAssembly.Name] = UnhomedAssembly;
     }
 
+    /// <summary>
+    /// Inspects the file's metadata identity and records its actual version if already loaded.
+    /// </summary>
+    /// <exception cref="BadImageFormatException">The file is not a managed assembly.</exception>
+    /// <exception cref="InvalidOperationException">The graph has failed or finalization has started.</exception>
     public bool AssemblyLoaded(string path)
     {
-        var name = Path.GetFileNameWithoutExtension(path);
+        EnsureBuildingAllowed();
+        using var stream = File.OpenRead(path);
+        using var pe = new PEReader(stream);
+        var metadata = System.Reflection.Metadata.PEReaderExtensions.GetMetadataReader(pe);
+        if (!metadata.IsAssembly)
+        {
+            throw new BadImageFormatException("The file does not contain an assembly manifest.");
+        }
+
+        var definition = metadata.GetAssemblyDefinition();
+        var name = metadata.GetString(definition.Name);
         if (_assemblies.TryGetValue(name, out var asm) && asm.Loaded)
         {
-            asm.AddDuplicate(path, new Version(0, 0, 0, 0));
+            asm.AddDuplicate(path, definition.Version);
             return true;
         }
 
@@ -54,12 +76,10 @@ public sealed class AssemblyGraph
     /// 
     /// Any public symbol in a root assembly is marked as a root symbol within the graph.
     /// </remarks>
+    /// <exception cref="InvalidOperationException">Assembly merging or entity creation has already started.</exception>
     public void RecordRootAssembly(string assemblyName)
     {
-        if (_layerCake != null)
-        {
-            throw new InvalidOperationException("Cannot add root assemblies after the graph has been finalized.");
-        }
+        EnsureRegistrationAllowed();
 
         _ = _rootAssemblies.Add(assemblyName);
     }
@@ -67,12 +87,15 @@ public sealed class AssemblyGraph
     /// <summary>
     /// Indicates a particular symbol should be treated as though it is accessed via reflection.
     /// </summary>
+    /// <remarks>
+    /// Names use metadata reflection names. Method names include a parenthesized parameter-type list
+    /// and generic methods include a double-backtick arity suffix before that list.
+    /// Indexer properties also include a parenthesized parameter-type list.
+    /// </remarks>
+    /// <exception cref="InvalidOperationException">Assembly merging or entity creation has already started.</exception>
     public void RecordReflectionSymbol(string assemblyName, string symbolName)
     {
-        if (_layerCake != null)
-        {
-            throw new InvalidOperationException("Cannot add root assemblies after the graph has been finalized.");
-        }
+        EnsureRegistrationAllowed();
 
         if (!_reflectionSymbols.TryGetValue(assemblyName, out var symbols))
         {
@@ -86,12 +109,10 @@ public sealed class AssemblyGraph
     /// <summary>
     /// Registers an attribute that marks a test method.
     /// </summary>
+    /// <exception cref="InvalidOperationException">Assembly merging or entity creation has already started.</exception>
     public void RecordTestMethodAttribute(string attributeName)
     {
-        if (_layerCake != null)
-        {
-            throw new InvalidOperationException("Cannot add test method attributes after the graph has been finalized.");
-        }
+        EnsureRegistrationAllowed();
 
         _ = _testMethodAttributes.Add(attributeName);
     }
@@ -99,12 +120,10 @@ public sealed class AssemblyGraph
     /// <summary>
     /// Registers an attribute that marks a symbol as being accessed via reflection.
     /// </summary>
+    /// <exception cref="InvalidOperationException">Assembly merging or entity creation has already started.</exception>
     public void RecordReflectionMarkerAttribute(string attributeName)
     {
-        if (_layerCake != null)
-        {
-            throw new InvalidOperationException("Cannot add reflection marker attributes after the graph has been finalized.");
-        }
+        EnsureRegistrationAllowed();
 
         _ = _reflectionMarkerAttributes.Add(attributeName);
     }
@@ -112,22 +131,44 @@ public sealed class AssemblyGraph
     /// <summary>
     /// Merge a new asssembly into the graph.
     /// </summary>
+    /// <remarks>Registration must be completed before the first merge. A failed merge permanently invalidates this graph.</remarks>
+    /// <exception cref="InvalidOperationException">The graph has failed or finalization has started.</exception>
     public bool MergeAssembly(LoadedAssembly la)
     {
-        if (_layerCake != null)
+        EnsureBuildingAllowed();
+        _state = GraphState.Building;
+        try
         {
-            throw new InvalidOperationException("Cannot merge new assemblies after the graph has been finalized.");
+            var result = AssemblyProcessor.Merge(this, la);
+
+            // Reclaim excess capacity periodically during large scans.
+            if (_assemblies.Count % 256 == 0)
+            {
+                TrimExcess();
+            }
+            return result;
         }
-
-        var result = AssemblyProcessor.Merge(this, la);
-
-        // every once in a while, try to reclaim wasted space so we minimize RAM usage
-        if (_assemblies.Count % 256 == 0)
+        catch
         {
-            TrimExcess();
+            _state = GraphState.Failed;
+            throw;
         }
+    }
 
-        return result;
+    private void EnsureRegistrationAllowed()
+    {
+        if (_state != GraphState.Registration)
+        {
+            throw new InvalidOperationException("Graph policies must be registered before the first merge or entity creation.");
+        }
+    }
+
+    private void EnsureBuildingAllowed()
+    {
+        if (_state is not (GraphState.Registration or GraphState.Building))
+        {
+            throw new InvalidOperationException("Cannot load assemblies after graph finalization has started or an operation has failed.");
+        }
     }
 
     private void TrimExcess()
@@ -142,6 +183,10 @@ public sealed class AssemblyGraph
 
     internal Assembly GetAssembly(string assemblyName)
     {
+        if (_state == GraphState.Registration)
+        {
+            _state = GraphState.Building;
+        }
         if (!_assemblies.TryGetValue(assemblyName, out var asm))
         {
             asm = new Assembly(assemblyName, _rootAssemblies.Contains(assemblyName));
@@ -154,6 +199,12 @@ public sealed class AssemblyGraph
     internal bool IsTestMethodAttribute(string attributeName) => _testMethodAttributes.Contains(attributeName);
     internal bool IsReflectionMarkerAttribute(string attributeName) => _reflectionMarkerAttributes.Contains(attributeName);
     internal bool IsReflectionSymbol(string assemblyName, string symbolName) => _reflectionSymbols.TryGetValue(assemblyName, out var symbols) && symbols.Contains(symbolName);
+
+    internal void RecordDispatchLink(Symbol declaration, Symbol implementation) =>
+        _dispatchLinks.Add((declaration.Id, implementation.Id));
+
+    internal void RecordReflectionAccessor(Symbol owner, Symbol accessor) =>
+        _reflectionAccessorLinks.Add((owner.Id, accessor.Id));
 
     private void MarkUsedSymbols(Action<string> log)
     {
@@ -198,95 +249,15 @@ public sealed class AssemblyGraph
 
     private void HookupDerivedSymbols(Action<string> log)
     {
-        /// For all interface types, we need to create a reference from interface members to any implementations of these members.
-        log("Linking interface members to matching implementations");
-        foreach (var asm in _assemblies.Values)
+        log("Linking dispatch declarations to metadata-resolved implementations");
+        foreach (var (declarationId, implementationId) in _dispatchLinks)
         {
-            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
+            var declaration = SymbolTable.GetSymbol(declarationId);
+            var implementation = SymbolTable.GetSymbol(implementationId);
+            declaration.RecordReferencedSymbol(implementation);
+            if (!declaration.Assembly.Loaded && declaration.DeclaringType is { } declaringType)
             {
-                foreach (var ifaceMember in sym.Members.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
-                {
-                    foreach (var derivedType in sym.DerivedTypes.Select(SymbolTable.GetSymbol).Cast<TypeSymbol>())
-                    {
-                        foreach (var derivedMember in derivedType.Members.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
-                        {
-                            if (ifaceMember.SameSignature(derivedMember))
-                            {
-                                ifaceMember.RecordReferencedSymbol(derivedMember);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // If a method is an override or is virtual, we must create a reference to all implementations of the member in any derived types
-        log("Linking virtual and override methods to derived implementations");
-        foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
-        {
-            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>())
-            {
-                foreach (var member in sym.Members.Select(SymbolTable.GetSymbol).Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsVirtualOrOverrideOrAbstract))
-                {
-                    foreach (var derived in sym.DerivedTypes.Select(SymbolTable.GetSymbol).Cast<TypeSymbol>())
-                    {
-                        foreach (var derivedMember in derived.Members.Select(SymbolTable.GetSymbol).Where(x => x.Kind == SymbolKind.Method).Cast<MethodSymbol>().Where(member => member.IsOverride))
-                        {
-                            if (member.SameSignature(derivedMember))
-                            {
-                                member.RecordReferencedSymbol(derivedMember);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // For interface types in unanalyzed assemblies, we need to create a reference from the interface type to all implementations of its members
-        log("Linking interface members in unanalyzed assemblies to derived implementations");
-        foreach (var asm in _assemblies.Values.Where(asm => !asm.Loaded))
-        {
-            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Interface))
-            {
-                foreach (var derivedType in sym.DerivedTypes.Select(SymbolTable.GetSymbol).Cast<TypeSymbol>())
-                {
-                    foreach (var ifaceMember in sym.Members.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
-                    {
-                        foreach (var derivedMember in derivedType.Members.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Method).Cast<MethodSymbol>())
-                        {
-                            if (ifaceMember.SameSignature(derivedMember))
-                            {
-                                sym.RecordReferencedSymbol(derivedMember);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // For classes in unanalyzed assemblies, we need to create a reference from the class type to all implementations of its abstract or virtual members 
-        log("Linking virtual and override methods in unanalyzed assemblies to derived implementations");
-        foreach (var asm in _assemblies.Values.Where(asm => !asm.Loaded))
-        {
-            foreach (var sym in asm.Symbols.Select(SymbolTable.GetSymbol).Where(sym => sym.Kind == SymbolKind.Type).Cast<TypeSymbol>().Where(sym => sym.TypeKind == TypeKind.Class))
-            {
-                foreach (var classMember in sym.Members.Select(SymbolTable.GetSymbol).Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>())
-                {
-                    foreach (var derivedType in sym.DerivedTypes.Select(SymbolTable.GetSymbol).Cast<TypeSymbol>())
-                    {
-                        foreach (var derivedMember in derivedType.Members.Select(SymbolTable.GetSymbol).Where(member => member.Kind == SymbolKind.Method).Cast<MethodSymbol>())
-                        {
-                            if (classMember.SameSignature(derivedMember))
-                            {
-                                sym.RecordReferencedSymbol(derivedMember);
-                                break;
-                            }
-                        }
-                    }
-                }
+                SymbolTable.GetSymbol(declaringType).RecordReferencedSymbol(implementation);
             }
         }
     }
@@ -303,6 +274,15 @@ public sealed class AssemblyGraph
                 {
                     member.SetReflectionTarget();
                 }
+            }
+        }
+
+        foreach (var (ownerId, accessorId) in _reflectionAccessorLinks)
+        {
+            var owner = SymbolTable.GetSymbol(ownerId);
+            if (owner.ReflectionTarget)
+            {
+                owner.RecordReferencedSymbol(SymbolTable.GetSymbol(accessorId));
             }
         }
     }
@@ -502,22 +482,42 @@ public sealed class AssemblyGraph
     /// Completes the graph and returns a reporter to extract meaning from the graph.
     /// </summary>
     /// <param name="log">Receives progress messages as the graph analysis is performed.</param>
+    /// <remarks>A failed finalization permanently invalidates this graph. Successful finalization is idempotent.</remarks>
+    /// <exception cref="InvalidOperationException">An earlier merge or finalization failed, or finalization is already running.</exception>
     public Reporter Done(Action<string> log)
     {
-        if (_layerCake == null)
+        if (_state == GraphState.Finalized)
+        {
+            return new Reporter(_assemblies, SymbolTable, _layerCake!, _dependencyDiagram!);
+        }
+        EnsureBuildingAllowed();
+        ArgumentNullException.ThrowIfNull(log);
+        _state = GraphState.Finalizing;
+        try
         {
             TrimExcess();
             HackSystemTypes();
 
-            // we need to do these first, since the code below will introduce downward links in the graph which leads to cycles
+            HandleUnhomedReferences(log);
+            foreach (var asm in _assemblies.Values.Where(asm => asm.Loaded))
+            {
+                asm.SnapshotDependencies(this);
+            }
+
+            // Synthetic dispatch edges must not affect real assembly dependency snapshots.
             _layerCake = CreateAssemblyLayerCake();
             _dependencyDiagram = CreateDependencyDiagram();
 
-            HandleUnhomedReferences(log);
             HookupDerivedSymbols(log);
             PropageteReflectionTarget(log);
             MarkUsedSymbols(log);
             HandleConstants(log);
+            _state = GraphState.Finalized;
+        }
+        catch
+        {
+            _state = GraphState.Failed;
+            throw;
         }
 
         return new Reporter(_assemblies, SymbolTable, _layerCake, _dependencyDiagram!);
